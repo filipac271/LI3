@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "mainmode.h": "c",
+        "maintests.h": "c"
+    }
+}
