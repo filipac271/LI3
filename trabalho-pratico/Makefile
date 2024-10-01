@@ -1,10 +1,8 @@
 CC := gcc
 
 EXEC := programa-principal
-CFLAGS :=-Wall -Wextra -pedantic -O2 -Iinclude 
-
-#LDFLAGS :=`pkg-config --libs glib-2.0` -lm Quando começarmos a usar as bibliotecas mexemos nisto
-
+CFLAGS := -Wall -Wextra -pedantic -O2 -Iinclude `pkg-config --cflags glib-2.0`
+LDFLAGS := `pkg-config --libs glib-2.0` -lm 
 
 SRC := $(shell find src/ -name "*.c")
 OBJ := $(SRC:src/%.c=build/%.o)
@@ -13,7 +11,7 @@ OBJ := $(SRC:src/%.c=build/%.o)
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
-	@$(CC) $(CFLAGS)  $^ -o $@ ; echo "[Compiling] $@"
+	@$(CC) $(OBJ) $(LDFLAGS) -o $@ ; echo "[Compiling] $@"
 
 build/%.o: src/%.c
 	@mkdir -p build
@@ -23,5 +21,3 @@ build/%.o: src/%.c
 clean:
 	rm -rf build/*
 	rm -f programa-principal
-
-

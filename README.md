@@ -1,5 +1,5 @@
 # Laboratórios de Informática III (2024/2025)
 
-* Nome Completo Aluno 1 - AXXXXXX - username github
-* Nome Completo Aluno 2 - AXXXXXX - username github
-* Nome Completo Aluno 3 - AXXXXXX - username github
+* Diogo José Ribeiro e Ribeiro - A106906 - DIOGO4810
+* Carolina Silva Martins - A107285 - Carolllina
+* Filipa Cangueiro Gonçalves - A107329 - filipac271
