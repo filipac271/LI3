@@ -1,7 +1,7 @@
 CC := gcc
 
 EXEC := programa-principal
-CFLAGS := -Wall -Wextra -pedantic -O2 -Iinclude `pkg-config --cflags glib-2.0`
+CFLAGS := -Wall -g -Og -std=gnu99 -Wextra -pedantic -O2 -Iinclude `pkg-config --cflags glib-2.0`
 LDFLAGS := `pkg-config --libs glib-2.0` -lm 
 
 SRC := $(shell find src/ -name "*.c")
