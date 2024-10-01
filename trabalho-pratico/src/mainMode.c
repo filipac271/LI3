@@ -31,8 +31,11 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
     }
 
     parser(ficheiros[0]);
-    //parser(ficheiros[1]);
-    //parser(ficheiros[2]);
+    parser(ficheiros[1]);
+    parser(ficheiros[2]);
+
+    
+
 
     // Fechar os ficheiros depois de os usar (exemplo)
     for (int i = 0; i < numFiles; ++i) {
