@@ -4,6 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "mainParser.h"
+#include "parsermusica.h"
 
 #define NUM_FILES 3
 

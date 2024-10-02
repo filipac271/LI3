@@ -5,6 +5,8 @@
         "artistscontroller.h": "c",
         "stdlib.h": "c",
         "unistd.h": "c",
+        "musicscontroller.h": "c",
+        "parsermusica.h": "c",
         "artistsparser.h": "c",
         "mainparser.h": "c"
     }
