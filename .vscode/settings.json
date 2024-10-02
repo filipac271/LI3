@@ -1,9 +1,11 @@
 {
-    "files.associations": {
-        "mainmode.h": "c",
-        "maintests.h": "c",
-        "artistscontroller.h": "c",
-        "stdlib.h": "c",
-        "unistd.h": "c"
-    }
+  "files.associations": {
+    "mainmode.h": "c",
+    "maintests.h": "c",
+    "artistscontroller.h": "c",
+    "stdlib.h": "c",
+    "unistd.h": "c",
+    "musicscontroller.h": "c",
+    "parsermusica.h": "c"
+  }
 }

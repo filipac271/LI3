@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "mainParser.h"
+#include "parsermusica.h"
 
 #define NUM_FILES 3
 
@@ -30,9 +31,9 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
         }
     }
 
-    parser(ficheiros[0]);
-    parser(ficheiros[1]);
-    parser(ficheiros[2]);
+    //parser(ficheiros[0]);
+    parser_musica(ficheiros[1]);
+    //parser(ficheiros[2]);
 
     
 
