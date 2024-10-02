@@ -1,38 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
+#include <unistd.h>
+#include "artistsController.h"
 
-#define LINE_SIZE 1024 * 16
-#define TOKEN_SIZE 20
+#define TOKEN_SIZE 10
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+// Função callback para imprimir a hash table
+void print_artist_entry (gpointer key, gpointer value, gpointer user_data) {
+    char* id = (char*)key;
+    ArtistsData* artist = (ArtistsData*)value;
 
-#define LINE_SIZE 1024 * 16
-#define TOKEN_SIZE 20
+    print_artist(artist);
+}
+
+// Função para imprimir toda a hash table
+void print_all_artists(GHashTable* artists_table) {
+    printf("----- Hash Table de Artistas -----\n");
+    sleep(3);
+    g_hash_table_foreach(artists_table, print_artist_entry, NULL);
+    printf("----- Fim da Hash Table -----\n");
+}
 
 void parser(FILE *file) {
-    char first_line[LINE_SIZE];
-    char lines[LINE_SIZE];
+    char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
+    size_t len = 0;     // Tamanho do buffer usado pelo getline
+
     char* tokens[TOKEN_SIZE];
 
-    // Skip da primeira linha explicativa do ficheiro
-    fgets(first_line, LINE_SIZE, file);
+    GHashTable* artists_table = init_artists_table();
 
-    while (fgets(lines, LINE_SIZE, file) != NULL) {
+    // Skip da primeira linha explicativa do ficheiro
+    getline(&line, &len, file);
+
+    while (getline(&line, &len, file) != -1) {
         // Remove a nova linha no final, se existir
-        int len = strlen(lines);
-        if (len > 0 && lines[len - 1] == '\n') {
-            lines[len - 1] = '\0';
+        if (line[strlen(line) - 1] == '\n') {
+            line[strlen(line) - 1] = '\0';
         }
 
-        // Como o strsep modifica as strings que dá parse (substituindo o delimitador por \0) 
-        // É essencial usar uma "cópia" da string principal (lines) lineCopy
-
-        char* lineCopy = lines; 
+        char* lineCopy = line;  // Usar o ponteiro da linha original
         int i = 0;
-        
+
         // Divide a linha em tokens usando strsep
         char* token = strsep(&lineCopy, ";");  // Dá o primeiro valor a token para poder entrar no loop
         while (token != NULL && i < TOKEN_SIZE) {
@@ -40,9 +50,30 @@ void parser(FILE *file) {
             token = strsep(&lineCopy, ";");  // Pegar o próximo token
         }
 
-        // Imprimir os tokens
-        for (int j = 0; j < i; j++) {
-            printf("Token %d: %s\n", j, tokens[j]);
-        }
-    }
+        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+        char* id = tokens[0];
+        char* name = tokens[1];
+        char* description = tokens[2];
+        float ganho = atof(tokens[3]);  // Conversão de string para float
+        char** grupo = NULL;  // Aqui, o grupo pode ser gerenciado como necessário
+        char* country = tokens[4];
+        char* type = tokens[5];
+
+        // Inserir os dados na hash table
+        insert_artist_into_table(artists_table, id, name, description, ganho, grupo, country, type);
+
+    }  
+    
+    // Verificar se o artista foi inserido corretamente
+    ArtistsData* looked = lookup_artist(artists_table,"\"A0000143\"");
+    print_artist(looked);
+
+    //Como imprimir todos os artistas
+    //print_all_artists(artists_table);
+    
+    // Libera a memória alocada por getline
+    free(line);
+    
+    // Destruir a hash table após o uso
+    g_hash_table_destroy(artists_table);
 }
