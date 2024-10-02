@@ -3,34 +3,18 @@
 #include <string.h>
 #include <glib.h>
 #include <unistd.h>
-#include "artistsController.h"
+#include "parsermusica.h"
 #include "musicsController.h"
 
 #define TOKEN_SIZE 10
 
-// Função callback para imprimir a hash table
-void print_artist_entry (gpointer key, gpointer value, gpointer user_data) {
-    char* id = (char*)key;
-    ArtistsData* artist = (ArtistsData*)value;
-
-    print_artist(artist);
-}
-
-// Função para imprimir toda a hash table
-void print_all_artists(GHashTable* artists_table) {
-    printf("----- Hash Table de Artistas -----\n");
-    sleep(3);
-    g_hash_table_foreach(artists_table, print_artist_entry, NULL);
-    printf("----- Fim da Hash Table -----\n");
-}
-
-void parser(FILE *file) {
+void parser_musica(FILE *file) {
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
     size_t len = 0;     // Tamanho do buffer usado pelo getline
 
     char* tokens[TOKEN_SIZE];
 
-    GHashTable* artists_table = init_artists_table();
+    GHashTable* hash_musica = iniciar_hash_musica();
 
     // Skip da primeira linha explicativa do ficheiro
     getline(&line, &len, file);
@@ -52,29 +36,33 @@ void parser(FILE *file) {
         }
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
-        char* id = tokens[0];
-        char* name = tokens[1];
-        char* description = tokens[2];
-        float ganho = atof(tokens[3]);  // Conversão de string para float
-        char** grupo = NULL;  // Aqui, o grupo pode ser gerenciado como necessário
-        char* country = tokens[4];
-        char* type = tokens[5];
+        char *music_id = tokens[0];
+        char *music_title = tokens[1];
+        char *music_artist_id = tokens[2];
+        char *music_duration = tokens[3];
+        char *music_genre = tokens[4];
+        char *music_year = tokens[5];
+        char *music_lyrics = tokens[6];
 
         // Inserir os dados na hash table
-        insert_artist_into_table(artists_table, id, name, description, ganho, grupo, country, type);
+        inserir_musica_na_htable(hash_musica, music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics);
 
     }  
     
     // Verificar se o artista foi inserido corretamente
-    ArtistsData* looked = lookup_artist(artists_table,"\"A0000143\"");
-    print_artist(looked);
+    //falar para depois fazer uma geral desta
+    // MusicData* looked = lookup_musica(hash_musica,"\"S0040231\"");
+    // print_musicas(looked);
+
 
     //Como imprimir todos os artistas
-    //print_all_artists(artists_table);
+    //print_musics(hash_musica);
     
     // Libera a memória alocada por getline
     free(line);
     
     // Destruir a hash table após o uso
-    g_hash_table_destroy(artists_table);
+    g_hash_table_destroy(hash_musica);
 }
+
+
