@@ -2,9 +2,10 @@
 #define MAINPARSER_H
 
 #include <stdio.h>  
+#include <stdlib.h>
 
 
-void parser(FILE *file);
+void parser(FILE** file);
 
 
 #endif

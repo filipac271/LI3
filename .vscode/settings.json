@@ -4,6 +4,8 @@
         "maintests.h": "c",
         "artistscontroller.h": "c",
         "stdlib.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "artistsparser.h": "c",
+        "mainparser.h": "c"
     }
 }
