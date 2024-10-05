@@ -3,10 +3,13 @@
 #include <string.h>
 #include <time.h>
 #include "mainParser.h"
+#include "userParser.h"
 
 #define NUM_FILES 3
 
 void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int numFiles) {
+    
+  
     // Aloca memória para armazenar os ponteiros para os ficheiros
     FILE** ficheiros = malloc(numFiles * sizeof(FILE*));
 
@@ -31,8 +34,8 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
     }
 
     parser(ficheiros[0]);
-    parser(ficheiros[1]);
-    parser(ficheiros[2]);
+  parser(ficheiros[1]);
+    userParser(ficheiros[2]);
 
     
 
@@ -54,6 +57,7 @@ int principal(char** argv) {
     char* subpastaSemErros = "sem_erros";    // Define a subpasta a ser usada 
     char* subpastaComErros = "com_erros";    // Define a subpasta a ser usada 
     
+  
 
     // Lista de nomes de ficheiros na subpasta
     char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
