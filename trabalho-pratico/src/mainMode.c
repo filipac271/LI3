@@ -6,12 +6,17 @@
 #include <glib.h>
 #include "mainParser.h"
 #include "parsermusica.h"
+
+#include "userParser.h"
 #include "artistsController.h"
 #include "querieManager.h"
 
 #define NUM_FILES 3
 
+
+
 void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int numFiles, char* queriesFile) {
+
     // Aloca memória para armazenar os ponteiros para os ficheiros
     FILE** ficheiros = malloc(numFiles * sizeof(FILE*));
     FILE* queriesInput;
@@ -40,12 +45,9 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
         }
     }
 
-
     tablesHashed = parser(ficheiros);
-    
-    
-    queries(tablesHashed,queriesInput);
 
+    queries(tablesHashed,queriesInput);
     //print_all_artists(tablesHashed[0]);
     //print_all_artists(tablesHashed[1]);
     //print_all_artists(tablesHashed[2]);
@@ -75,7 +77,9 @@ int principal(char** argv) {
     char* pastaPrincipal = argv[1];  // Recebe a pasta principal como argumento
     char* subpastaSemErros = "sem_erros";    // Define a subpasta a ser usada 
     char* subpastaComErros = "com_erros";    // Define a subpasta a ser usada 
+
     char* queriesFile = argv[2];
+
 
     // Lista de nomes de ficheiros na subpasta
     char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
