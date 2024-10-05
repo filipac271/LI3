@@ -8,7 +8,7 @@
 
 #define TOKEN_SIZE 10
 
-void parser_musica(FILE *file) {
+GHashTable* parser_musica(FILE *file) {
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
     size_t len = 0;     // Tamanho do buffer usado pelo getline
 
@@ -62,7 +62,9 @@ void parser_musica(FILE *file) {
     free(line);
     
     // Destruir a hash table após o uso
-    g_hash_table_destroy(hash_musica);
+    //g_hash_table_destroy(hash_musica);
+
+    return hash_musica;
 }
 
 

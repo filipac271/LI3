@@ -8,7 +8,7 @@
 #define TOKEN_SIZE 10
 
 
-void parser_artists(FILE *file) {
+GHashTable* parser_artists(FILE *file) {
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
     size_t len = 0;     // Tamanho do buffer usado pelo getline
 
@@ -40,13 +40,16 @@ void parser_artists(FILE *file) {
         char* name = tokens[1];
         char* description = tokens[2];
         float ganho = atof(tokens[3]);  // Conversão de string para float
-        char** grupo = NULL;  // Aqui, o grupo pode ser gerenciado como necessário
-        char* country = tokens[4];
-        char* type = tokens[5];
+        char* grupo = tokens[4];  // Aqui, o grupo pode ser gerenciado como necessário
+        char* country = tokens[5];
+        char* type = tokens[6];
+
+
+        
 
         // Inserir os dados na hash table
         insert_artist_into_table(artists_table, id, name, description, ganho, grupo, country, type);
-        
+
     }  
     
     // Verificar se o artista foi inserido corretamente
@@ -55,10 +58,11 @@ void parser_artists(FILE *file) {
 
     //Como imprimir todos os artistas
     //print_all_artists(artists_table);
-    
+
     // Libera a memória alocada por getline
     free(line);
     
     // Destruir a hash table após o uso
-    g_hash_table_destroy(artists_table);
+    //g_hash_table_destroy(artists_table);
+    return artists_table;
 }

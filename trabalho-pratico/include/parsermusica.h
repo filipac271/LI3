@@ -2,9 +2,10 @@
 #define MUSICPARSER_H
 
 #include <stdio.h>  
+#include <glib.h>
 
 
-void parser_musica(FILE *file);
+GHashTable* parser_musica(FILE *file);
 
 
 #endif

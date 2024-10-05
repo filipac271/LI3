@@ -8,6 +8,7 @@
         "musicscontroller.h": "c",
         "parsermusica.h": "c",
         "artistsparser.h": "c",
-        "mainparser.h": "c"
+        "mainparser.h": "c",
+        "string.h": "c"
     }
 }

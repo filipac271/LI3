@@ -3,8 +3,11 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <glib.h>
 #include "mainParser.h"
 #include "parsermusica.h"
+#include "artistsController.h"
+#include "querieManager.h"
 
 #define NUM_FILES 3
 
@@ -12,6 +15,7 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
     // Aloca memória para armazenar os ponteiros para os ficheiros
     FILE** ficheiros = malloc(numFiles * sizeof(FILE*));
     FILE* queriesInput;
+    GHashTable** tablesHashed;
 
     if (ficheiros == NULL) {
         printf("Erro de alocação de memória\n");
@@ -37,8 +41,16 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
     }
 
 
-    parser(ficheiros);
+    tablesHashed = parser(ficheiros);
     
+    
+    queries(tablesHashed,queriesInput);
+
+    //print_all_artists(tablesHashed[0]);
+    //print_all_artists(tablesHashed[1]);
+    //print_all_artists(tablesHashed[2]);
+
+
 
     // Fechar os ficheiros depois de os usar (exemplo)
     for (int i = 0; i < numFiles; ++i) {
@@ -47,6 +59,12 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
         }
     }
     fclose(queriesInput);
+
+    //Destruir as hash tables 0- artistas  1- musicas  2- utilizadores
+    g_hash_table_destroy(tablesHashed[0]);
+    g_hash_table_destroy(tablesHashed[1]);
+
+    free(tablesHashed);
 
     // Liberta a memória alocada
     free(ficheiros);

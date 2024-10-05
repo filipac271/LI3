@@ -3,7 +3,9 @@
 
 #include <stdio.h>  
 #include <stdlib.h>
+#include <glib.h>
 
-void parser_artists(FILE *file);
+
+GHashTable* parser_artists(FILE *file);
 
 #endif

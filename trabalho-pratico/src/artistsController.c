@@ -78,7 +78,7 @@ void insert_artist_into_table(GHashTable* artists_table, char* id, char* name, c
     // Inserir na hash table usando o id como chave
     g_hash_table_insert(artists_table, strdup(id), new_artist);
     //printf("Artista inserido:%s\n",new_artist->id);
-    //print_artist(new_artist);
+    print_artist(new_artist);
 }
 
 // Função para procurar um artista pelo ID
@@ -101,5 +101,6 @@ void print_all_artists(GHashTable* artists_table) {
     printf("----- Hash Table de Artistas -----\n");
     sleep(3);
     g_hash_table_foreach(artists_table, print_artist_entry, NULL);
+    sleep(3);
     printf("----- Fim da Hash Table -----\n");
 }

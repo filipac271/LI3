@@ -3,9 +3,11 @@
 
 #include <stdio.h>  
 #include <stdlib.h>
+#include <string.h>
+#include <glib.h>
 
 
-void parser(FILE** file);
+GHashTable** parser(FILE** file);
 
 
 #endif
