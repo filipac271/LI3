@@ -1,79 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <glib.h>
 #include <unistd.h>
-#include "artistsController.h"
+#include "../include/artistsParser.h"
 
-#define TOKEN_SIZE 10
 
-// Função callback para imprimir a hash table
-void print_artist_entry (gpointer key, gpointer value, gpointer user_data) {
-    char* id = (char*)key;
-    ArtistsData* artist = (ArtistsData*)value;
+  void parser(FILE** ficheiros){
 
-    print_artist(artist);
-}
+     for (int i = 0; i < 3; i++)
+    {
 
-// Função para imprimir toda a hash table
-void print_all_artists(GHashTable* artists_table) {
-    printf("----- Hash Table de Artistas -----\n");
-    sleep(3);
-    g_hash_table_foreach(artists_table, print_artist_entry, NULL);
-    printf("----- Fim da Hash Table -----\n");
-}
 
-void parser(FILE *file) {
-    char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
-    size_t len = 0;     // Tamanho do buffer usado pelo getline
-
-    char* tokens[TOKEN_SIZE];
-
-    GHashTable* artists_table = init_artists_table();
-
-    // Skip da primeira linha explicativa do ficheiro
-    getline(&line, &len, file);
-
-    while (getline(&line, &len, file) != -1) {
-        // Remove a nova linha no final, se existir
-        if (line[strlen(line) - 1] == '\n') {
-            line[strlen(line) - 1] = '\0';
+          // Verifica se o ficheiro foi aberto corretamente
+        if (ficheiros[i] == NULL) {
+            printf("Erro: Ficheiro %d não foi aberto corretamente.\n", i);
+            continue;  // Ignora este ficheiro e passa para o próximo
         }
 
-        char* lineCopy = line;  // Usar o ponteiro da linha original
-        int i = 0;
 
-        // Divide a linha em tokens usando strsep
-        char* token = strsep(&lineCopy, ";");  // Dá o primeiro valor a token para poder entrar no loop
-        while (token != NULL && i < TOKEN_SIZE) {
-            tokens[i++] = token;  // Armazenar o token no array
-            token = strsep(&lineCopy, ";");  // Pegar o próximo token
-        }
+          
+        switch (i)
+            {
+            case 0 :
+                parser_artists(ficheiros[0]);
+                break;
 
-        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
-        char* id = tokens[0];
-        char* name = tokens[1];
-        char* description = tokens[2];
-        float ganho = atof(tokens[3]);  // Conversão de string para float
-        char** grupo = NULL;  // Aqui, o grupo pode ser gerenciado como necessário
-        char* country = tokens[4];
-        char* type = tokens[5];
+             case 1 :
+                parser_artists(ficheiros[1]);
 
-        // Inserir os dados na hash table
-        insert_artist_into_table(artists_table, id, name, description, ganho, grupo, country, type);
+                 break;  
 
-    }  
+             case 2 :
+                parser_artists(ficheiros[2]);
+                    
+                 break;
+
+             default:
+                break;
+            }    
+    }
     
-    // Verificar se o artista foi inserido corretamente
-    ArtistsData* looked = lookup_artist(artists_table,"\"A0000143\"");
-    print_artist(looked);
+    
 
-    //Como imprimir todos os artistas
-    //print_all_artists(artists_table);
-    
-    // Libera a memória alocada por getline
-    free(line);
-    
-    // Destruir a hash table após o uso
-    g_hash_table_destroy(artists_table);
-}
+
+
+   }
