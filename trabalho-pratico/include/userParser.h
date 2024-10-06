@@ -2,9 +2,10 @@
 #define USERPARSER_H
 
 #include <stdio.h>  
+#include <glib.h>
 
 char** likedSongs(char* songs, int numberS);
-void userParser(FILE *file);
+GHashTable* userParser(FILE *file);
 
 
 #endif

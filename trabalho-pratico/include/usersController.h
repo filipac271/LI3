@@ -22,7 +22,10 @@ void freeUser (User* user);
 
 
 GHashTable* createTable();
+void printUser(User* user);
 void insertUser(GHashTable* table, User* user);
+void print_all_users(GHashTable* userTable);
+void print_user_entry (gpointer key, gpointer value, gpointer user_data);
 User* fetchUser(GHashTable* table, char* username);
 
 

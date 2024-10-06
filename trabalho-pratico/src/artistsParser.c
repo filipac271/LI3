@@ -4,14 +4,60 @@
 #include <glib.h>
 #include <unistd.h>
 #include "artistsController.h"
+#include "utilidades.h"
 
 #define TOKEN_SIZE 10
 
 
-void parser_artists(FILE *file) {
-    char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
-    size_t len = 0;     // Tamanho do buffer usado pelo getline
+char** divideGroup(char* group, int numMembros)
+{
+    // Verificar se a string é vazia ("[]")
+    if (strcmp(group, "\"[]\"") == 0) {
+        // Alocar um array vazio
+        char** result_array = malloc(sizeof(char*));
+        result_array[0] = "-1";  // Marcar o fim do array
+        return result_array;
+    }
 
+
+    // Retira os primeiros elementos, por exemplo: "['
+    char* group_copy = &group[3];
+    char* artistas_array[numMembros];
+    int i = 0;
+
+    // Obter o primeiro elemento separado por aspas simples
+    char* membro = strsep(&group_copy, "\'");
+
+    // Dividir os itens do grupo
+    while (membro != NULL && i < numMembros) {
+        artistas_array[i++] = membro;  // Armazena o token no array
+        membro = strsep(&group_copy, "\''");  // Salta a vírgula e o espaço
+        membro = strsep(&group_copy, "\''");  // Pega o próximo membro entre aspas
+    }
+
+    // Aloca o array de strings
+    char** result_array = malloc((numMembros + 1) * sizeof(char*));
+
+    // Copia os itens do array temporário para o array final
+    for (int j = 0; j < numMembros; j++) {
+        result_array[j] = artistas_array[j];
+    }
+
+    // Adiciona um NULL no final para marcar o fim do array
+    result_array[numMembros] = NULL;
+
+    // Libera a memória temporária
+    free(group_copy);
+
+    return result_array;
+}
+
+
+
+
+GHashTable* parser_artists(FILE *file) {
+    char* line = NULL;
+    size_t len = 0;
     char* tokens[TOKEN_SIZE];
 
     GHashTable* artists_table = init_artists_table();
@@ -25,40 +71,46 @@ void parser_artists(FILE *file) {
             line[strlen(line) - 1] = '\0';
         }
 
-        char* lineCopy = line;  // Usar o ponteiro da linha original
+        char* lineCopy = line;
         int i = 0;
 
         // Divide a linha em tokens usando strsep
-        char* token = strsep(&lineCopy, ";");  // Dá o primeiro valor a token para poder entrar no loop
+        char* token = strsep(&lineCopy, ";");
         while (token != NULL && i < TOKEN_SIZE) {
             tokens[i++] = token;  // Armazenar o token no array
-            token = strsep(&lineCopy, ";");  // Pegar o próximo token
+            token = strsep(&lineCopy, ";");
         }
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
-        char* id = tokens[0];
-        char* name = tokens[1];
-        char* description = tokens[2];
-        float ganho = atof(tokens[3]);  // Conversão de string para float
-        char** grupo = NULL;  // Aqui, o grupo pode ser gerenciado como necessário
-        char* country = tokens[4];
-        char* type = tokens[5];
+        char* id = remove_quotes(tokens[0]);
+        char* name = remove_quotes(tokens[1]);
+        char* description = remove_quotes(tokens[2]);
+        char* ganhos = remove_quotes(tokens[3]);
+        float clean_ganhos = atof(ganhos);
+        char* grupo = tokens[4];
+        char* country = remove_quotes(tokens[5]);
+        char* type = remove_quotes(tokens[6]);
 
-        // Inserir os dados na hash table
-        insert_artist_into_table(artists_table, id, name, description, ganho, grupo, country, type);
-        
-    }  
-    
-    // Verificar se o artista foi inserido corretamente
-    //ArtistsData* looked = lookup_artist(artists_table,"\"A0000143\"");
-    //print_artist(looked);
+        int numMembros = 1;
 
-    //Como imprimir todos os artistas
-    //print_all_artists(artists_table);
-    
+        // Conta o número de membros do grupo
+        for (int i = 2; grupo[i] != '\0'; i++) {
+            if (grupo[i] == ',') numMembros++;
+        }
+
+        char** grupos_id = divideGroup(grupo, numMembros);
+
+        // Insere os dados na hash table
+        insert_artist_into_table(artists_table, id, name, description, clean_ganhos, grupos_id, country, type, numMembros);
+
+        // Libera as strings alocadas com remove_quotes
+        freeCleanerArtist(id,name,description,ganhos,country,type);
+
+        free(grupos_id);
+    }
+
     // Libera a memória alocada por getline
     free(line);
-    
-    // Destruir a hash table após o uso
-    g_hash_table_destroy(artists_table);
+
+    return artists_table;
 }

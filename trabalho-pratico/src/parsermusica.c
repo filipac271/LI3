@@ -5,10 +5,12 @@
 #include <unistd.h>
 #include "parsermusica.h"
 #include "musicsController.h"
+#include "utilidades.h"
+
 
 #define TOKEN_SIZE 10
 
-void parser_musica(FILE *file) {
+GHashTable* parser_musica(FILE *file) {
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
     size_t len = 0;     // Tamanho do buffer usado pelo getline
 
@@ -36,22 +38,24 @@ void parser_musica(FILE *file) {
         }
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
-        char *music_id = tokens[0];
-        char *music_title = tokens[1];
-        char *music_artist_id = tokens[2];
-        char *music_duration = tokens[3];
-        char *music_genre = tokens[4];
-        char *music_year = tokens[5];
-        char *music_lyrics = tokens[6];
+        char *music_id = remove_quotes(tokens[0]);
+        char *music_title = remove_quotes(tokens[1]);
+        char *music_artist_id = remove_quotes(tokens[2]);
+        char *music_duration = remove_quotes(tokens[3]);
+        char *music_genre = remove_quotes(tokens[4]);
+        char *music_year = remove_quotes(tokens[5]);
+        char *music_lyrics = remove_quotes(tokens[6]);
 
         // Inserir os dados na hash table
         inserir_musica_na_htable(hash_musica, music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics);
+
+        freeCleanerMusics(music_id,music_title,music_artist_id,music_duration,music_genre,music_year,music_lyrics);
 
     }  
     
     // Verificar se o artista foi inserido corretamente
     //falar para depois fazer uma geral desta
-    // MusicData* looked = lookup_musica(hash_musica,"\"S0040231\"");
+    // MusicData* looked = lookup_musica(hash_musica,"S0040231");
     // print_musicas(looked);
 
 
@@ -60,9 +64,10 @@ void parser_musica(FILE *file) {
     
     // Libera a memória alocada por getline
     free(line);
+
     
-    // Destruir a hash table após o uso
-    g_hash_table_destroy(hash_musica);
+
+    return hash_musica;
 }
 
 

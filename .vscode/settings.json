@@ -8,6 +8,13 @@
         "musicscontroller.h": "c",
         "parsermusica.h": "c",
         "artistsparser.h": "c",
-        "mainparser.h": "c"
+        "mainparser.h": "c",
+        "string.h": "c",
+        "time.h": "c",
+        "userparser.h": "c",
+        "userscontroller.h": "c",
+        "glib.h": "c",
+        "utilidades.h": "c",
+        "querie1.h": "c"
     }
 }

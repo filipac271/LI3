@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "mainParser.h"
 #include <glib.h>
+#include <unistd.h>
+#include "mainParser.h"
 #include "musicsController.h"
 
 
@@ -110,9 +111,10 @@ void print_music_entry (gpointer key, gpointer value, gpointer user_data) {
 }
 
 // Função para imprimir toda a hash table
-void print_musics(GHashTable* musica) {
-    printf("----- Hash Table de Artistas -----\n");
+void print_all_musics(GHashTable* musica) {
+    printf("----- Hash Table de Musicas -----\n");
     sleep(3);
     g_hash_table_foreach(musica, print_music_entry, NULL);
+    sleep(3);
     printf("----- Fim da Hash Table -----\n");
 }
