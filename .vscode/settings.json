@@ -11,6 +11,10 @@
         "mainparser.h": "c",
         "string.h": "c",
         "time.h": "c",
-        "userparser.h": "c"
+        "userparser.h": "c",
+        "userscontroller.h": "c",
+        "glib.h": "c",
+        "utilidades.h": "c",
+        "querie1.h": "c"
     }
 }

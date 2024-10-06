@@ -25,18 +25,8 @@ void printUser(User* user) {
     else printf("N tenho nada para printar\n");
 }
 
-int countStrings(char** array) {
-    int count = 0;
-    while (array[count] != NULL) {  // Continua até encontrar um NULL
-        count++;  
-        
-    }
- printf("%d\n",count);
-    return count;
-}
 
 // Cria um novo user 
-
 User* newUser (char* username_, char* email_, char* first_name, char* last_name, char * birth_Date, char* pais, char* subscricao, char** liked_Songs_id,int songsN)
 {
     User* user= malloc(sizeof(User));
@@ -50,14 +40,10 @@ User* newUser (char* username_, char* email_, char* first_name, char* last_name,
     user->subscription_type=strdup(subscricao); 
   
     user->liked_songs_id = malloc((songsN+1) * sizeof(char*));  // Aloca memória para o array de ponteiros
-
-
     for (int i = 0; i < songsN; i++) {
-
-      user->liked_songs_id[i] = strdup(liked_Songs_id[i]);  // Duplica cada string
-   
+      user->liked_songs_id[i] = strdup(liked_Songs_id[i]);  // Duplica cada string  
     }
-    
+
   
     user->number_liked_songs= songsN;
     
@@ -96,10 +82,10 @@ void freeUser(User* user) {
 GHashTable* createTable() {
    GHashTable* usersTable=g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)freeUser);
        if (usersTable == NULL) {
-        printf("Erro: Hash table não foi criada.\n");
+        printf("Erro: Hash table dos users não foi criada.\n");
         exit(1);
     } else {
-        printf("Hash table criada com sucesso.\n");
+        printf("Hash table dos users criada com sucesso.\n");
     }
     return usersTable;
 }
@@ -128,7 +114,7 @@ void print_user_entry (gpointer key, gpointer value, gpointer user_data) {
 
 // Função para imprimir toda a hash table
 void print_all_users(GHashTable* userTable) {
-    printf("----- Hash Table de Artistas -----\n");
+    printf("----- Hash Table de Users -----\n");
     sleep(3);
     g_hash_table_foreach(userTable, print_user_entry, NULL);
     printf("----- Fim da Hash Table -----\n");

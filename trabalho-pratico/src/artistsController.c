@@ -92,10 +92,10 @@ GHashTable* init_artists_table() {
 
     // Verificar se a hash table foi criada corretamente
     if (artists_table == NULL) {
-        printf("Erro: Hash table não foi criada.\n");
+        printf("Erro: Hash table dos artistas não foi criada.\n");
         exit(1);
     } else {
-        printf("Hash table criada com sucesso.\n");
+        printf("Hash table dos artistas criada com sucesso.\n");
     }
 
     return artists_table;

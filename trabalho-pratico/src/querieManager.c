@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <glib.h>
+#include <querie1.h>
 
 
 void queries (GHashTable** tables, FILE* querieFile){
@@ -15,8 +16,6 @@ size_t len = 0;     // Tamanho do buffer usado pelo getline
 
 
 
-// Skip da primeira linha explicativa do ficheiro
-getline(&line, &len, querieFile);
 
 
 for (int i = 0; getline(&line, &len, querieFile) != -1;i++) {
@@ -25,12 +24,14 @@ for (int i = 0; getline(&line, &len, querieFile) != -1;i++) {
             line[strlen(line) - 1] = '\0';
         }
 
+    
 
 
     switch (line[0])
     {
     case '1':
-    
+    //line +2 para ignorar o tipo de querie e o espaço
+      querie1(tables[2],line+2);
       break;
     
     case '2':
@@ -39,6 +40,7 @@ for (int i = 0; getline(&line, &len, querieFile) != -1;i++) {
       break;
 
     case '3':
+      
 
       break;
     
@@ -50,7 +52,8 @@ for (int i = 0; getline(&line, &len, querieFile) != -1;i++) {
 
 
 }    
-
+ // Libera a memória alocada por getline
+    free(line);
 
 
 }

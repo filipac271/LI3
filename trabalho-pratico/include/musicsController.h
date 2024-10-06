@@ -17,7 +17,7 @@ MusicData* lookup_musica(GHashTable* musica, char* music_id);
 
 void print_music_entry (gpointer key, gpointer value, gpointer user_data);
 
-void print_musics(GHashTable* musica);
+void print_all_musics(GHashTable* musica);
 
 
 #endif

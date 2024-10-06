@@ -8,6 +8,8 @@
 #include "parsermusica.h"
 #include "userParser.h"
 #include "artistsController.h"
+#include "usersController.h"
+#include "musicsController.h"
 #include "querieManager.h"
 
 #define NUM_FILES 3
@@ -47,9 +49,10 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
     tablesHashed = parser(ficheiros);
 
     queries(tablesHashed,queriesInput);
+    
     //print_all_artists(tablesHashed[0]);
-    //print_all_artists(tablesHashed[1]);
-    //print_all_artists(tablesHashed[2]);
+    //print_all_musics(tablesHashed[1]);
+    //print_all_users(tablesHashed[2]);
 
 
 

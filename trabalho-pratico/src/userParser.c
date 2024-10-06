@@ -4,6 +4,7 @@
 #include <glib.h>
 #include <unistd.h>
 #include "usersController.h"
+#include "utilidades.h"
 
 
 #define TOKEN_SIZE 8
@@ -38,11 +39,6 @@ char** likedSongs(char* songs, int numberS)
 
     // Liberta a memória alocada para uma string auxiliar do processo
     free(song_copy);  
-
-
-
-
-
 
 
     return liked_songs_id;
@@ -80,32 +76,31 @@ GHashTable* userParser(FILE *file) {
         }
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
-        char* username = tokens[0];
-        char* email= tokens[1];
-        char* nome = tokens[2];
-        char* apelido = tokens[3]; 
-        char* birth_date = tokens[4];
-        char* country = tokens[5];
-        char* subscription_type= tokens[6];
+        char* username = remove_quotes(tokens[0]);
+        char* email= remove_quotes(tokens[1]);
+        char* nome = remove_quotes(tokens[2]);
+        char* apelido = remove_quotes(tokens[3]); 
+        char* birth_date = remove_quotes(tokens[4]);
+        char* country = remove_quotes(tokens[5]);
+        char* subscription_type= remove_quotes(tokens[6]);
         char* songs=tokens[7];
 
         int nM=1;
         
         // Conta o numero de liked songs do user
-        for (int i = 2; songs[i]!='\0'; i++) {
-            
-        if (songs[i] == ',') nM++;
+        for (int i = 2; songs[i]!='\0'; i++){    
+            if (songs[i] == ',') nM++;
+        }
 
-    }
  
-     char** liked_songs_id =likedSongs(songs,nM);
+        char** liked_songs_id =likedSongs(songs,nM);
   
 
         // Inserir os dados na hash table
-       User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,nM);
+        User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,nM);
         insertUser(userTable,user);
         free(liked_songs_id);
-
+        freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
 
         
     }  
@@ -115,10 +110,8 @@ GHashTable* userParser(FILE *file) {
     // Liberta a memória alocada por getline
     free(line);
 
-    print_all_users(userTable);
     
-    // Destruir a hash table após o uso
-    //g_hash_table_destroy(userTable); 
+; 
 
     return userTable;
  
