@@ -21,3 +21,4 @@ build/%.o: src/%.c
 clean:
 	rm -rf build/*
 	rm -f programa-principal
+	rm -f resultados/*.txt
