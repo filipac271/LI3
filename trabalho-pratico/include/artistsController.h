@@ -4,7 +4,7 @@
 
 typedef struct artists ArtistsData;
 
-void insert_artist_into_table(GHashTable* artists_table,char* id, char* name, char* description, float ganho, char** grupo, char* country, char* type);
+void insert_artist_into_table(GHashTable* artists_table,char* id, char* name, char* description, float ganho, char** grupo, char* country, char* type,int numMembros);
 
 
 GHashTable* init_artists_table();

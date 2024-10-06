@@ -3,6 +3,7 @@
 #include <glib.h>
 #include "../include/artistsParser.h"
 #include "parsermusica.h"
+#include "userParser.h"
 
 GHashTable** parser(FILE** ficheiros) {
     // Aloca um array para três ponteiros de GHashTable
@@ -30,7 +31,7 @@ GHashTable** parser(FILE** ficheiros) {
                 break;
 
             case 2:
-
+                hash_tables[2] = userParser(ficheiros[2]);
                 break;
 
             default:

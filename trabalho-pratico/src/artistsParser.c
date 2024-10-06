@@ -8,6 +8,57 @@
 #define TOKEN_SIZE 10
 
 
+char** divideGroup(char* group, int numMembros)
+{
+    // Verificar se a string é vazia ("[]")
+    if (strcmp(group, "\"[]\"") == 0) {
+        // Alocar um array vazio
+        char** result_array = malloc(sizeof(char*));
+        result_array[0] = "-1";  // Marcar o fim do array
+        return result_array;
+    }
+
+
+    // Retira os primeiros elementos, por exemplo: "['
+    char* group_copy = strdup(&group[3]);
+    char* artistas_array[numMembros];
+    int i = 0;
+
+    // Obter o primeiro elemento separado por aspas simples
+    char* membro = strsep(&group_copy, "\'");
+
+    // Dividir os itens do grupo
+    while (membro != NULL && i < numMembros) {
+        artistas_array[i++] = membro;  // Armazena o token no array
+        membro = strsep(&group_copy, "\''");  // Salta a vírgula e o espaço
+        membro = strsep(&group_copy, "\''");  // Pega o próximo membro entre aspas
+    }
+
+    // Aloca o array de strings
+    char** result_array = malloc((numMembros + 1) * sizeof(char*));
+
+    // Copia os itens do array temporário para o array final
+    for (int j = 0; j < numMembros; j++) {
+        result_array[j] = strdup(artistas_array[j]);
+    }
+
+    // Adiciona um NULL no final para marcar o fim do array
+    result_array[numMembros] = NULL;
+
+    // Libera a memória temporária
+    free(group_copy);
+
+    return result_array;
+}
+
+
+
+
+
+
+
+
+
 GHashTable* parser_artists(FILE *file) {
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
     size_t len = 0;     // Tamanho do buffer usado pelo getline
@@ -44,11 +95,29 @@ GHashTable* parser_artists(FILE *file) {
         char* country = tokens[5];
         char* type = tokens[6];
 
+        int numMembros=1;
+        
+        // printf("%s\n\n\n",grupo);
+        // sleep(1);
 
+        // Conta o numero de liked songs do user
+        for (int i = 2; grupo[i]!='\0'; i++) {
+            
+        if (grupo[i] == ',') numMembros++;
+
+        }
         
 
+
+        char** grupos_id = divideGroup(grupo,numMembros);
+
         // Inserir os dados na hash table
-        insert_artist_into_table(artists_table, id, name, description, ganho, grupo, country, type);
+        insert_artist_into_table(artists_table, id, name, description, ganho, grupos_id, country, type,numMembros);
+        
+        
+       
+    
+
 
     }  
     

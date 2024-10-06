@@ -6,7 +6,6 @@
 #include <glib.h>
 #include "mainParser.h"
 #include "parsermusica.h"
-
 #include "userParser.h"
 #include "artistsController.h"
 #include "querieManager.h"
@@ -65,6 +64,7 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
     //Destruir as hash tables 0- artistas  1- musicas  2- utilizadores
     g_hash_table_destroy(tablesHashed[0]);
     g_hash_table_destroy(tablesHashed[1]);
+    g_hash_table_destroy(tablesHashed[2]);
 
     free(tablesHashed);
 

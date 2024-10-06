@@ -14,7 +14,7 @@
 char** likedSongs(char* songs, int numberS)
 {
     // Retira os primeiros elementos : "[' 
-    char* song_copy = strdup(&songs[3]);
+    char* song_copy = &songs[3];
     char* likedSong[numberS];
     int i = 0;
     
@@ -32,18 +32,24 @@ char** likedSongs(char* songs, int numberS)
    
     //Passa para o array de strings as cancoes ja divididas
     for (int s = 0; s < numberS; s++) {
-        liked_songs_id[s] = strdup(likedSong[s]);  // Duplicar cada ID
+        liked_songs_id[s] = likedSong[s];  // Duplicar cada ID
    
     }
 
     // Liberta a memória alocada para uma string auxiliar do processo
     free(song_copy);  
 
+
+
+
+
+
+
     return liked_songs_id;
 }
 
 
-void userParser(FILE *file) {
+GHashTable* userParser(FILE *file) {
 
   
 
@@ -98,17 +104,23 @@ void userParser(FILE *file) {
         // Inserir os dados na hash table
        User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,nM);
         insertUser(userTable,user);
-  
+        free(liked_songs_id);
 
+
+        
     }  
+
+
  
     // Liberta a memória alocada por getline
     free(line);
 
-    //print_all_users(userTable);
+    print_all_users(userTable);
     
     // Destruir a hash table após o uso
-    g_hash_table_destroy(userTable); 
+    //g_hash_table_destroy(userTable); 
+
+    return userTable;
  
 }
 

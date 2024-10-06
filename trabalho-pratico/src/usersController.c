@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "./usersController.h"
 
 //Dá print de um user
@@ -48,7 +49,7 @@ User* newUser (char* username_, char* email_, char* first_name, char* last_name,
     user->country=strdup(pais);
     user->subscription_type=strdup(subscricao); 
   
-    user->liked_songs_id = malloc(songsN * sizeof(char*));  // Aloca memória para o array de ponteiros
+    user->liked_songs_id = malloc((songsN+1) * sizeof(char*));  // Aloca memória para o array de ponteiros
 
 
     for (int i = 0; i < songsN; i++) {
@@ -107,6 +108,8 @@ GHashTable* createTable() {
 void insertUser(GHashTable* table, User* user)
 {
        g_hash_table_insert(table, strdup(user->username), user);
+
+      // printUser(user);
 }
 
 // Procurar (ou "Dar fetch")  um user na hash Table

@@ -9,6 +9,8 @@
         "parsermusica.h": "c",
         "artistsparser.h": "c",
         "mainparser.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "time.h": "c",
+        "userparser.h": "c"
     }
 }
