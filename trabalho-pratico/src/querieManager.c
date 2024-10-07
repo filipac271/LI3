@@ -31,7 +31,7 @@ for (int i = 0; getline(&line, &len, querieFile) != -1;i++) {
     {
     case '1':
     //line +2 para ignorar o tipo de querie e o espaço
-      querie1(tables[2],line+2);
+      querie1(tables[2],line+2,i);
       break;
     
     case '2':
