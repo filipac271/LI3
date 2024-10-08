@@ -7,8 +7,12 @@
 
 
 int validaUser(char* email, char* date, char* type){
+    int t = 1;
+    int d = 1;
+    int e = 1;
+    if (!(strcmp(type, "premium") == 0 || strcmp(type, "normal") == 0)) t = 0;
 
-
-return 0;
+    
+return (t & d & e);
 
 }

@@ -66,71 +66,69 @@ GHashTable* userParser(FILE *file) {
     // Skip da primeira linha explicativa do ficheiro
     getline(&line, &len, file);
 
-    fprintf(errosFileUser,"%s\n",line);
+    fprintf(errosFileUser,"%s",line);
 
-    while (getline(&line, &len, file) != -1) {
-        // Remove a nova linha no final, se existir
-        if (line[strlen(line) - 1] == '\n') {
-            line[strlen(line) - 1] = '\0';
-        }
+while (getline(&line, &len, file) != -1) {
+    // Remove a nova linha no final, se existir
+    if (line[strlen(line) - 1] == '\n') {
+        line[strlen(line) - 1] = '\0';
+    }
 
-        char* lineCopy = line;  // Usar o ponteiro da linha original
-        int i = 0;
+    // Cria uma cópia da linha para não alterar a original
+    char* lineCopy = line;  // Duplicar a linha original
+    // Cria um buffer local para armazenar uma cópia da linha
+    char lineOutput[1024];
+    strncpy(lineOutput, line, 1024);  // Copia a linha para o buffer local
+    lineOutput[1024 - 1] = '\0'; // Garante a terminação da string
+    int i = 0;
 
-        // Divide a linha em tokens 
-        char* token = strsep(&lineCopy, ";");  
-        while (token != NULL && i < TOKEN_SIZE) {
-            tokens[i++] = token;  
-            token = strsep(&lineCopy, ";");  
-        }
+    // Divide a linha em tokens usando a cópia
+    char* token = strsep(&lineCopy, ";");  
+    while (token != NULL && i < TOKEN_SIZE) {
+        tokens[i++] = token;  
+        token = strsep(&lineCopy, ";");  
+    }
 
-        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
-        char* username = remove_quotes(tokens[0]);
-        char* email= remove_quotes(tokens[1]);
-        char* nome = remove_quotes(tokens[2]);
-        char* apelido = remove_quotes(tokens[3]); 
-        char* birth_date = remove_quotes(tokens[4]);
-        char* country = remove_quotes(tokens[5]);
-        char* subscription_type= remove_quotes(tokens[6]);
-        char* songs=tokens[7];
+   
 
-        int isValid = validaUser(tokens[1],tokens[4],tokens[6]);
+    // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+    char* username = remove_quotes(tokens[0]);
+    char* email= remove_quotes(tokens[1]);
+    char* nome = remove_quotes(tokens[2]);
+    char* apelido = remove_quotes(tokens[3]); 
+    char* birth_date = remove_quotes(tokens[4]);
+    char* country = remove_quotes(tokens[5]);
+    char* subscription_type= remove_quotes(tokens[6]);
+    char* songs=tokens[7];
 
-        if(isValid){
-           int nM=1;
+    int isValid = validaUser(email,birth_date,subscription_type);
+    if (isValid) {
+        int nM = 1;
         
-        // Conta o numero de liked songs do user
-        for (int i = 2; songs[i]!='\0'; i++){    
+        // Conta o número de liked songs do user
+        for (int i = 2; songs[i] != '\0'; i++) {    
             if (songs[i] == ',') nM++;
         }
 
- 
-        char** liked_songs_id =likedSongs(songs,nM);
-  
+        char** liked_songs_id = likedSongs(songs, nM);
 
         // Inserir os dados na hash table
-        User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,nM);
-        insertUser(userTable,user);
+        User* user = newUser(username, email, nome, apelido, birth_date, country, subscription_type, liked_songs_id, nM);
+        insertUser(userTable, user);
         free(liked_songs_id); 
-        }else{
-            fprintf(errosFileUser,"%s\n",line);
-        }
-        
-        freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
+    } else {
+        fprintf(errosFileUser, "%s\n", lineOutput);
+    }
 
-        
-    }  
+    freeCleanerUsers(username, email, nome, apelido, birth_date, country, subscription_type);
+}  
 
-    fclose(errosFileUser);
- 
-    // Liberta a memória alocada por getline
-    free(line);
+fclose(errosFileUser);
 
-    
+// Liberta a memória alocada por getline
+free(line);
 
-
-    return userTable;
- 
+return userTable;
 }
 
 
