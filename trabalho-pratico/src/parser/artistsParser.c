@@ -1,12 +1,16 @@
+#include "controler/artistsController.h"
+#include "parser/artistsParser.h"
+#include "utilidades.h"
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
 #include <unistd.h>
-#include "artistsController.h"
-#include "utilidades.h"
 
 #define TOKEN_SIZE 10
+
 
 
 char** divideGroup(char* group, int numMembros)
@@ -65,12 +69,15 @@ GHashTable* parser_artists(FILE *file) {
     // Skip da primeira linha explicativa do ficheiro
     getline(&line, &len, file);
 
+    
+
     while (getline(&line, &len, file) != -1) {
         // Remove a nova linha no final, se existir
         if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
         }
-
+        
+        
         char* lineCopy = line;
         int i = 0;
 
@@ -92,16 +99,20 @@ GHashTable* parser_artists(FILE *file) {
         char* type = remove_quotes(tokens[6]);
 
         int numMembros = 1;
-
-        // Conta o número de membros do grupo
+        if(strcmp(grupo ,"\"[]\"") == 0){
+            numMembros = 0;
+        }else{
+                 // Conta o número de membros do grupo
         for (int i = 2; grupo[i] != '\0'; i++) {
             if (grupo[i] == ',') numMembros++;
+        } 
         }
-
+        
         char** grupos_id = divideGroup(grupo, numMembros);
 
+        ArtistsData* newArtist = create_artist(id, name, description, clean_ganhos, grupos_id, country, type, numMembros);
         // Insere os dados na hash table
-        insert_artist_into_table(artists_table, id, name, description, clean_ganhos, grupos_id, country, type, numMembros);
+        insert_artist_into_table(artists_table, newArtist,id);
 
         // Libera as strings alocadas com remove_quotes
         freeCleanerArtist(id,name,description,ganhos,country,type);

@@ -1,20 +1,21 @@
 {
-    "files.associations": {
-        "mainmode.h": "c",
-        "maintests.h": "c",
-        "artistscontroller.h": "c",
-        "stdlib.h": "c",
-        "unistd.h": "c",
-        "musicscontroller.h": "c",
-        "parsermusica.h": "c",
-        "artistsparser.h": "c",
-        "mainparser.h": "c",
-        "string.h": "c",
-        "time.h": "c",
-        "userparser.h": "c",
-        "userscontroller.h": "c",
-        "glib.h": "c",
-        "utilidades.h": "c",
-        "querie1.h": "c"
-    }
+  "files.associations": {
+    "mainmode.h": "c",
+    "maintests.h": "c",
+    "artistscontroller.h": "c",
+    "stdlib.h": "c",
+    "unistd.h": "c",
+    "musicscontroller.h": "c",
+    "parsermusica.h": "c",
+    "artistsparser.h": "c",
+    "mainparser.h": "c",
+    "string.h": "c",
+    "time.h": "c",
+    "userparser.h": "c",
+    "userscontroller.h": "c",
+    "glib.h": "c",
+    "utilidades.h": "c",
+    "querie1.h": "c",
+    "stdio.h": "c"
+  }
 }

@@ -1,10 +1,15 @@
+#include "controler/usersController.h"
+#include "parser/userParser.h"
+#include "utilidades.h"
+#include "validacao/validaUser.h"
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
 #include <unistd.h>
-#include "usersController.h"
-#include "utilidades.h"
+
 
 
 #define TOKEN_SIZE 8
@@ -47,6 +52,12 @@ char** likedSongs(char* songs, int numberS)
 
 GHashTable* userParser(FILE *file) {
 
+
+    char *filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/users_errors.csv");
+    FILE *errosFileUser = fopen(filename, "w");
+
+    free(filename);
   
 
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
@@ -58,6 +69,8 @@ GHashTable* userParser(FILE *file) {
 
     // Skip da primeira linha explicativa do ficheiro
     getline(&line, &len, file);
+
+    fprintf(errosFileUser,"%s\n",line);
 
     while (getline(&line, &len, file) != -1) {
         // Remove a nova linha no final, se existir
@@ -85,7 +98,10 @@ GHashTable* userParser(FILE *file) {
         char* subscription_type= remove_quotes(tokens[6]);
         char* songs=tokens[7];
 
-        int nM=1;
+        int isValid = validaUser(tokens[1],tokens[4],tokens[6]);
+
+        if(isValid){
+           int nM=1;
         
         // Conta o numero de liked songs do user
         for (int i = 2; songs[i]!='\0'; i++){    
@@ -99,19 +115,23 @@ GHashTable* userParser(FILE *file) {
         // Inserir os dados na hash table
         User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,nM);
         insertUser(userTable,user);
-        free(liked_songs_id);
+        free(liked_songs_id); 
+        }else{
+            fprintf(errosFileUser,"%s\n",line);
+        }
+        
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
 
         
     }  
 
-
+    fclose(errosFileUser);
  
     // Liberta a memória alocada por getline
     free(line);
 
     
-; 
+
 
     return userTable;
  

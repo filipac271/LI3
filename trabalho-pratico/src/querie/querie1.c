@@ -1,7 +1,11 @@
+#include "controler/usersController.h"
+#include "querie/querie1.h"
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-#include "usersController.h"
+
 
 // Função para calcular a idade
 int calcular_idade(const char* data_nascimento_str) {
@@ -35,10 +39,10 @@ char *filename = malloc(sizeof(char) * 256);
 
  
   
-  User* utilizador = fetchUser(usersTable,id);
+User* utilizador = fetchUser(usersTable,id);
 if (utilizador != NULL)
 {
-        int idade = calcular_idade(utilizador->birth_date);
+      int idade = calcular_idade(utilizador->birth_date);
       fprintf(output_file,"%s;%s;%s;%d;%s",utilizador->email,utilizador->nome,utilizador->apelido,idade,utilizador->country);
 
 }else printf("ENTROU %s \n",id);
@@ -46,4 +50,3 @@ if (utilizador != NULL)
 fclose(output_file);
 
 }
-
