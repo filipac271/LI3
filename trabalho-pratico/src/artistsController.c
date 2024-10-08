@@ -54,7 +54,7 @@ ArtistsData* create_artist(char* id, const char* name, char* description, float 
 
 
     for (int i = 0; i < numMembros; i++) {
-        if(new_artist->grupo[i] != "-1")      new_artist->grupo[i] = strdup(grupo[i]);  // Duplica cada string
+         new_artist->grupo[i] = strdup(grupo[i]);  // Duplica cada string
 
     }
 
@@ -101,10 +101,10 @@ GHashTable* init_artists_table() {
     return artists_table;
 }
 // Função para inserir um artista na hash table
-void insert_artist_into_table(GHashTable* artists_table, char* id, char* name, char* description, float ganho, char** grupo, char* country, char* type,int numMembros) {
+void insert_artist_into_table(GHashTable* artists_table, ArtistsData* new_artist,char* id) {
 
     // Criar um novo artista
-    ArtistsData* new_artist = create_artist(id, name, description, ganho, grupo, country, type,numMembros);
+    //ArtistsData* new_artist = create_artist(id, name, description, ganho, grupo, country, type,numMembros);
     
     // Inserir na hash table usando o id como chave
     g_hash_table_insert(artists_table, strdup(id), new_artist);

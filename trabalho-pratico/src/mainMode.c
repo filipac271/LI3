@@ -46,6 +46,8 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
         }
     }
 
+    
+
     tablesHashed = parser(ficheiros);
 
     queries(tablesHashed,queriesInput);
