@@ -95,12 +95,15 @@ GHashTable* parser_artists(FILE *file) {
         char* type = remove_quotes(tokens[6]);
 
         int numMembros = 1;
-        int j;
-        // Conta o número de membros do grupo
-        for (j = 2; grupo[j] != '\0'; j++) {
-            if (grupo[j] == ',') numMembros++;
+        if(strcmp(grupo ,"\"[]\"") == 0){
+            numMembros = 0;
+        }else{
+                 // Conta o número de membros do grupo
+        for (int i = 2; grupo[i] != '\0'; i++) {
+            if (grupo[i] == ',') numMembros++;
+        } 
         }
-        if(j == 2) numMembros = 0;
+        
         char** grupos_id = divideGroup(grupo, numMembros);
 
         ArtistsData* newArtist = create_artist(id, name, description, clean_ganhos, grupos_id, country, type, numMembros);

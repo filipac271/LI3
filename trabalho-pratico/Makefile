@@ -22,3 +22,4 @@ clean:
 	rm -rf build/*
 	rm -f programa-principal
 	rm -f resultados/*.txt
+	rm -f resultados/*.csv

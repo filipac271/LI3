@@ -26,12 +26,14 @@ void print_artist(ArtistsData* artist) {
         printf("Ganho por Stream: %.2f\n", artist->ganho_por_stream);
         printf("Grupo:\n");
         
-        for (int i = 0; i < artist->numMembrosGrupo; i++) {
-            // Verificar se o membro do grupo é válido
-            if (strcmp(artist->grupo[i], "-1") != 0) {
+        if(artist->numMembrosGrupo > 0){
+          for (int i = 0; i < artist->numMembrosGrupo; i++) {
+
                 printf("%s\n", artist->grupo[i]);
-            }else printf("SOLO SINGER");
-        }
+            
+        }  
+        }else printf("SOLO SINGER");
+        
         
         printf("\n");
         
