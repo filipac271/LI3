@@ -1,12 +1,16 @@
+#include "controler/artistsController.h"
+#include "parser/artistsParser.h"
+#include "utilidades.h"
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
 #include <unistd.h>
-#include "artistsController.h"
-#include "utilidades.h"
 
 #define TOKEN_SIZE 10
+
 
 
 char** divideGroup(char* group, int numMembros)

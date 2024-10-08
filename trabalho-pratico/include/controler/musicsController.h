@@ -1,5 +1,6 @@
 #ifndef MUSICS_H
 #define MUSICS_H
+#include <glib.h>
 
 typedef struct music MusicData;
 

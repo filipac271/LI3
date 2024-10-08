@@ -1,9 +1,12 @@
+#include "controler/usersController.h"
+#include "validacao/validaUser.h"
+
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "./usersController.h"
+
 
 //Dá print de um user
 void printUser(User* user) {
@@ -15,11 +18,11 @@ void printUser(User* user) {
         printf("Data aniversario: %s\n", user->birth_date);
         printf("pais: %s\n", user->country);
         printf("SUBS: %s\n", user->subscription_type);
-       printf("cancoes :\n");
-       for(int i=0; i<user->number_liked_songs;i++)
-       {
+        printf("cancoes :\n");
+        for(int i=0; i<user->number_liked_songs;i++)
+        {
         printf("%s  ",user->liked_songs_id[i]);
-       }
+        }
         printf("\n");
     }
     else printf("N tenho nada para printar\n");
@@ -30,7 +33,7 @@ void printUser(User* user) {
 User* newUser (char* username_, char* email_, char* first_name, char* last_name, char * birth_Date, char* pais, char* subscricao, char** liked_Songs_id,int songsN)
 {
     User* user= malloc(sizeof(User));
-  
+    
     user->username=strdup(username_);
     user->email=strdup(email_);
     user->nome=strdup(first_name);

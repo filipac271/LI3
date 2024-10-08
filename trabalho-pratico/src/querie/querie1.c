@@ -1,7 +1,11 @@
+#include "controler/usersController.h"
+#include "querie/querie1.h"
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-#include "usersController.h"
+
 
 // Função para calcular a idade
 int calcular_idade(const char* data_nascimento_str) {
@@ -46,4 +50,3 @@ if (utilizador != NULL)
 fclose(output_file);
 
 }
-
