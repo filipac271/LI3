@@ -1,11 +1,14 @@
+#include "controler/musicsController.h"
+#include "main/mainParser.h"
+
+#include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <glib.h>
+
 #include <unistd.h>
-#include "mainParser.h"
-#include "musicsController.h"
+
 
 
 struct music{

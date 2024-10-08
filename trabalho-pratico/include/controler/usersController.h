@@ -1,5 +1,6 @@
 #ifndef USERSCONTROLLER_H
 #define USERSCONTROLLER_H
+#include <glib.h>
 
 typedef struct users
 {

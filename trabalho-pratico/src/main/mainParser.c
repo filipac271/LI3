@@ -1,9 +1,11 @@
+#include "parser/artistsParser.h"
+#include "parser/parsermusica.h"
+#include "parser/userParser.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-#include "../include/artistsParser.h"
-#include "parsermusica.h"
-#include "userParser.h"
+
 
 GHashTable** parser(FILE** ficheiros) {
     // Aloca um array para três ponteiros de GHashTable

@@ -1,18 +1,21 @@
+#include "main/mainParser.h"
+#include "parser/parsermusica.h"
+#include "parser/userParser.h"
+#include "controler/artistsController.h"
+#include "controler/usersController.h"
+#include "controler/musicsController.h"
+#include "querie/querieManager.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <glib.h>
-#include "mainParser.h"
-#include "parsermusica.h"
-#include "userParser.h"
-#include "artistsController.h"
-#include "usersController.h"
-#include "musicsController.h"
-#include "querieManager.h"
+
 
 #define NUM_FILES 3
+
 
 
 
@@ -46,13 +49,15 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
         }
     }
 
+    
+
     tablesHashed = parser(ficheiros);
 
     queries(tablesHashed,queriesInput);
     
-    //print_all_artists(tablesHashed[0]);
-    //print_all_musics(tablesHashed[1]);
-    //print_all_users(tablesHashed[2]);
+    print_all_artists(tablesHashed[0]);
+    print_all_musics(tablesHashed[1]);
+    print_all_users(tablesHashed[2]);
 
 
 
