@@ -93,7 +93,7 @@ int principal(char** argv) {
     char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
 
     // Chama a função para ler os ficheiros
-    lerFicheiros(pastaPrincipal, subpastaSemErros, fileNames, NUM_FILES,queriesFile);
+    lerFicheiros(pastaPrincipal, subpastaComErros, fileNames, NUM_FILES,queriesFile);
 
     return 0;
 }
