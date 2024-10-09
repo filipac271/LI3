@@ -2,19 +2,7 @@
 #define USERSCONTROLLER_H
 #include <glib.h>
 
-typedef struct users
-{
-char* username;
-char* email;
-char* nome;
-char* apelido;
-char* birth_date;
-char* country;
-char* subscription_type;
-char** liked_songs_id;
-int number_liked_songs;
-
-}User;
+typedef struct users User;
 
 
 
@@ -28,6 +16,18 @@ void insertUser(GHashTable* table, User* user);
 void print_all_users(GHashTable* userTable);
 void print_user_entry (gpointer key, gpointer value, gpointer user_data);
 User* fetchUser(GHashTable* table, char* username);
+
+
+char* getUserEmail(User* user);
+char* getUserNome(User* user);
+char* getUserApelido(User* user);
+char* getUserBirthDate(User* user);
+char* getUserCountry(User* user);
+char* getUserSubscryptionType(User* user);
+char** getUserLikedSongs(User* user);
+int getUserNumberLikedSongs(User* user);
+
+
 
 
 #endif
