@@ -7,6 +7,19 @@
 #include <string.h>
 #include <unistd.h>
 
+struct users
+{
+    char* username;
+    char* email;
+    char* nome;
+    char* apelido;
+    char* birth_date;
+    char* country;
+    char* subscription_type;
+    char** liked_songs_id;
+    int number_liked_songs;
+
+};
 
 //Dá print de um user
 void printUser(User* user) {
@@ -121,4 +134,46 @@ void print_all_users(GHashTable* userTable) {
     sleep(3);
     g_hash_table_foreach(userTable, print_user_entry, NULL);
     printf("----- Fim da Hash Table -----\n");
+}
+
+
+
+// Retorna a data de nascimento
+ char* getUserBirthDate(User* user) {
+    return user->birth_date;
+}
+
+// Retorna o email
+ char* getUserEmail(User* user) {
+    return user->email;
+}
+
+// Retorna o nome
+ char* getUserNome(User* user) {
+    return user->nome;
+}
+
+// Retorna o apelido
+ char* getUserApelido(User* user) {
+    return user->apelido;
+}
+
+// Retorna o país
+ char* getUserCountry(User* user) {
+    return user->country;
+}
+
+// Retorna o SubscryptionType
+ char* getUserSubscryptionType(User* user) {
+    return user->subscription_type;
+}
+
+// Retorna o liked_songs
+ char** getUserLikedSongs(User* user) {
+    return user->liked_songs_id;
+}
+
+// Retorna o número de liked_songs
+ int getUserNumberLikedSongs(User* user) {
+    return user->number_liked_songs;
 }
