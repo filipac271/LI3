@@ -70,7 +70,7 @@ GHashTable* userParser(FILE *file) {
     // Skip da primeira linha explicativa do ficheiro
     getline(&line, &len, file);
 
-    fprintf(errosFileUser,"%s\n",line);
+    fprintf(errosFileUser,"%s",line);
 
     while (getline(&line, &len, file) != -1) {
         // Remove a nova linha no final, se existir
@@ -79,6 +79,10 @@ GHashTable* userParser(FILE *file) {
         }
 
         char* lineCopy = line;  // Usar o ponteiro da linha original
+        // Cria um buffer local para armazenar uma cópia da linha
+        char lineOutput[1024];
+        strncpy(lineOutput, line, 1024);  // Copia a linha para o buffer local
+        lineOutput[1024 - 1] = '\0'; // Garante a terminação da string
         int i = 0;
 
         // Divide a linha em tokens 
@@ -98,7 +102,7 @@ GHashTable* userParser(FILE *file) {
         char* subscription_type= remove_quotes(tokens[6]);
         char* songs=tokens[7];
 
-        int isValid = validaUser(tokens[1],tokens[4],tokens[6]);
+        int isValid = validaUser(email,birth_date,subscription_type);
 
         if(isValid){
            int nM=1;
@@ -117,7 +121,7 @@ GHashTable* userParser(FILE *file) {
         insertUser(userTable,user);
         free(liked_songs_id); 
         }else{
-            fprintf(errosFileUser,"%s\n",line);
+            fprintf(errosFileUser,"%s\n",lineOutput);
         }
         
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);

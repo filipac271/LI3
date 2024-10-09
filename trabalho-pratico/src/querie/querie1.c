@@ -45,7 +45,7 @@ if (utilizador != NULL)
       int idade = calcular_idade(utilizador->birth_date);
       fprintf(output_file,"%s;%s;%s;%d;%s",utilizador->email,utilizador->nome,utilizador->apelido,idade,utilizador->country);
 
-}else printf("ENTROU %s \n",id);
+}
 
 fclose(output_file);
 
