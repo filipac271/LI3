@@ -18,7 +18,6 @@ void queries (GHashTable** tables, FILE* querieFile){
   size_t len = 0;     // Tamanho do buffer usado pelo getline
 
   for (int i = 0; getline(&line, &len, querieFile) != -1; i++) {
-    printf("Entrou\n");
 
     // Verifica se a linha tem pelo menos 1 caractere
     if (strlen(line) == 0) continue;
