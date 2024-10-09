@@ -1,5 +1,7 @@
-#include "controler/usersController.h"
+#include "../../include/controler/usersController.h"
 #include "querie/querie1.h"
+#include "../../include/controler/artistsController.h"
+
 
 
 #include <stdio.h>
@@ -37,15 +39,16 @@ char *filename = malloc(sizeof(char) * 256);
 
   free(filename);
 
+
  
-  
 User* utilizador = fetchUser(usersTable,id);
 if (utilizador != NULL)
 {
-      int idade = calcular_idade(utilizador->birth_date);
-      fprintf(output_file,"%s;%s;%s;%d;%s",utilizador->email,utilizador->nome,utilizador->apelido,idade,utilizador->country);
 
-}else printf("ENTROU %s \n",id);
+      int idade = calcular_idade( getUserBirthDate(utilizador));
+      fprintf(output_file,"%s;%s;%s;%d;%s",getUserEmail(utilizador),  getUserNome(utilizador),  getUserApelido(utilizador), idade, getUserCountry(utilizador));
+
+}
 
 fclose(output_file);
 

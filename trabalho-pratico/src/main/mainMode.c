@@ -55,9 +55,9 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
 
     queries(tablesHashed,queriesInput);
     
-    print_all_artists(tablesHashed[0]);
-    print_all_musics(tablesHashed[1]);
-    print_all_users(tablesHashed[2]);
+    //print_all_artists(tablesHashed[0]);
+    //print_all_musics(tablesHashed[1]);
+    //print_all_users(tablesHashed[2]);
 
 
 
