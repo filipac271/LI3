@@ -121,3 +121,48 @@ void print_all_musics(GHashTable* musica) {
     sleep(3);
     printf("----- Fim da Hash Table -----\n");
 }
+
+
+//Getters
+
+char* get_music_id (MusicData* music){
+  return music->music_id;
+}
+
+char* get_music_title (MusicData* music){
+  return music->music_title;
+}
+
+char* get_music_artist_id (MusicData* music){
+  return music->music_artist_id;
+}
+
+char* get_music_duration (MusicData* music){
+  return music->music_duration;
+}
+
+
+int duration_to_seconds(char* music_duration) {
+    int hours, minutes, seconds;
+
+    sscanf(music_duration, "%d:%d:%d", &hours, &minutes, &seconds);
+
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
+//getter que dá a duraçao em segundos
+int get_music_duration_seconds (MusicData* musica){
+  return (duration_to_seconds(get_music_duration(musica)));
+}
+
+char* get_music_genre (MusicData* music){
+  return music->music_genre;
+}
+
+char* get_music_year (MusicData* music){
+  return music->music_year;
+}
+
+char* get_music_lyrics (MusicData* music){
+  return music->music_lyrics;
+}
