@@ -1,4 +1,5 @@
 #include "validacao/validaUser.h"
+#include "utilidades.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,9 @@ int validaUser(char* email, char* date, char* type){
     int e = 1;
     if (!(strcmp(type, "premium") == 0 || strcmp(type, "normal") == 0)) t = 0;
 
+    d = validaData(date);
+
+    e = validaEmail(email);
     
 return (t & d & e);
 

@@ -19,7 +19,7 @@
 
 
 
-void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int numFiles, char* queriesFile) {
+void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* queriesFile) {
 
     // Aloca memória para armazenar os ponteiros para os ficheiros
     FILE** ficheiros = malloc(numFiles * sizeof(FILE*));
@@ -37,7 +37,7 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
         // Constrói o caminho completo: pastaPrincipal/subpasta/nomeFicheiro
         // O snprintf junta os argumentos para criar uma diretoria que armazena em filePath
         char filePath[1024];
-        snprintf(filePath, sizeof(filePath), "%s/%s/%s", pastaPrincipal, subpasta, fileNames[i]);
+        snprintf(filePath, sizeof(filePath), "%s/%s", pastaPrincipal, fileNames[i]);
 
         // Abre o ficheiro no modo de leitura
         ficheiros[i] = fopen(filePath, "r");
@@ -83,9 +83,7 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
 int principal(char** argv) {
 
     char* pastaPrincipal = argv[1];  // Recebe a pasta principal como argumento
-    char* subpastaSemErros = "sem_erros";    // Define a subpasta a ser usada 
-    char* subpastaComErros = "com_erros";    // Define a subpasta a ser usada 
-
+    
     char* queriesFile = argv[2];
 
 
@@ -93,7 +91,7 @@ int principal(char** argv) {
     char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
 
     // Chama a função para ler os ficheiros
-    lerFicheiros(pastaPrincipal, subpastaSemErros, fileNames, NUM_FILES,queriesFile);
+    lerFicheiros(pastaPrincipal, fileNames, NUM_FILES,queriesFile);
 
     return 0;
 }
