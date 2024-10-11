@@ -29,7 +29,7 @@ GHashTable** parser(FILE** ficheiros) {
                 break;
 
             case 1:
-                hash_tables[1] = parser_musica(ficheiros[1]);   // Armazena a tabela de músicas
+                hash_tables[1] = parser_musica(ficheiros[1],hash_tables[0]);   // Armazena a tabela de músicas
                 break;
 
             case 2:
