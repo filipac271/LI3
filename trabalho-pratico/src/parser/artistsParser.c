@@ -119,7 +119,7 @@ GHashTable* parser_artists(FILE *file) {
 
         free(grupos_id);
     }
-
+    
     // Libera a memória alocada por getline
     free(line);
 

@@ -2,11 +2,11 @@
 #include "querie/querie1.h"
 #include "../../include/controler/artistsController.h"
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
+
+
 
 
 // Função para calcular a idade
