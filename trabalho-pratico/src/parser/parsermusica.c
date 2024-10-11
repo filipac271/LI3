@@ -1,6 +1,7 @@
 #include "parser/parsermusica.h"
 #include "controler/musicsController.h"
 #include "utilidades.h"
+#include "validacao/validaMusic.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,6 +86,16 @@ char** divideArtists(char* music_artist) {
 
 
 GHashTable* parser_musica(FILE *file) {
+
+
+
+    char *filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/musics_errors.csv");
+    FILE *errosFileMusics = fopen(filename, "w");
+
+    free(filename);
+
+
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
     size_t len = 0;     // Tamanho do buffer usado pelo getline
 
@@ -95,6 +106,9 @@ GHashTable* parser_musica(FILE *file) {
     // Skip da primeira linha explicativa do ficheiro
     getline(&line, &len, file);
 
+    fprintf(errosFileMusics,"%s",line);
+
+
     while (getline(&line, &len, file) != -1) {
         // Remove a nova linha no final, se existir
         if (line[strlen(line) - 1] == '\n') {
@@ -102,6 +116,12 @@ GHashTable* parser_musica(FILE *file) {
         }
 
         char* lineCopy = line;  // Usar o ponteiro da linha original
+
+        // Cria um buffer local para armazenar uma cópia da linha
+        char lineOutput[2048];
+        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
+        lineOutput[2048 - 1] = '\0'; // Garante a terminação da string
+
         int i = 0;
 
         // Divide a linha em tokens usando strsep
@@ -109,7 +129,7 @@ GHashTable* parser_musica(FILE *file) {
         while (token != NULL && i < TOKEN_SIZE) {
             tokens[i++] = token;  // Armazenar o token no array
             token = strsep(&lineCopy, ";");  // Pegar o próximo token
-        }
+        } 
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
         char *music_id = remove_quotes(tokens[0]);
@@ -142,9 +162,17 @@ GHashTable* parser_musica(FILE *file) {
             continue;
         }
 
-        // Inserir os dados na hash table
+        int isValid = validaMusic(music_duration);
+        if(isValid){
+            // Inserir os dados na hash table
         inserir_musica_na_htable(hash_musica, music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
         //printf("Número de artistas após: %d\n", num_artistId);
+
+        
+
+    }   else{
+            fprintf(errosFileMusics,"%s\n",lineOutput);
+        }
 
         int j;
 
@@ -153,14 +181,14 @@ GHashTable* parser_musica(FILE *file) {
         }
         free(music_artist_id);
 
-        freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
-
-    }  
+        freeCleanerMusics(music_id,music_title,music_artist_id,music_duration,music_genre,music_year,music_lyrics);
+    }
     // MusicData* looked = lookup_musica(hash_musica,"S0040231");
     // print_musicas(looked);
     //Como imprimir todos os artistas
    //print_all_musics(hash_musica);
     
+    fclose (errosFileMusics);
     // Libera a memória alocada por getline
     free(line);
     return hash_musica;
