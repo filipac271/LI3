@@ -16,6 +16,8 @@
     "glib.h": "c",
     "utilidades.h": "c",
     "querie1.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "validamusic.h": "c",
+    "validaartista.h": "c"
   }
 }

@@ -1,6 +1,7 @@
 #include "controler/artistsController.h"
 #include "parser/artistsParser.h"
 #include "utilidades.h"
+#include "validacao/validaArtista.h"
 
 
 #include <stdio.h>
@@ -60,6 +61,15 @@ char** divideGroup(char* group, int numMembros)
 
 
 GHashTable* parser_artists(FILE *file) {
+
+
+    char *filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/artists_errors.csv");
+    FILE *errosFileArtists = fopen(filename, "w");
+
+    free(filename);
+
+
     char* line = NULL;
     size_t len = 0;
     char* tokens[TOKEN_SIZE];
@@ -68,6 +78,8 @@ GHashTable* parser_artists(FILE *file) {
 
     // Skip da primeira linha explicativa do ficheiro
     getline(&line, &len, file);
+
+    fprintf(errosFileArtists,"%s",line);
 
     
 
@@ -79,6 +91,12 @@ GHashTable* parser_artists(FILE *file) {
         
         
         char* lineCopy = line;
+        // Cria um buffer local para armazenar uma cópia da linha
+        char lineOutput[2048];
+        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
+        lineOutput[2048 - 1] = '\0'; // Garante a terminação da string
+
+
         int i = 0;
 
         // Divide a linha em tokens usando strsep
@@ -98,7 +116,13 @@ GHashTable* parser_artists(FILE *file) {
         char* country = remove_quotes(tokens[5]);
         char* type = remove_quotes(tokens[6]);
 
-        int numMembros = 1;
+
+        int isValid = validaArtista(grupo,type);
+
+
+
+        if(isValid){
+            int numMembros = 1;
         if(strcmp(grupo ,"\"[]\"") == 0){
             numMembros = 0;
         }else{
@@ -113,12 +137,19 @@ GHashTable* parser_artists(FILE *file) {
         ArtistsData* newArtist = create_artist(id, name, description, clean_ganhos, grupos_id, country, type, numMembros);
         // Insere os dados na hash table
         insert_artist_into_table(artists_table, newArtist,id);
+        free(grupos_id);
 
+        }else{
+            fprintf(errosFileArtists,"%s\n",lineOutput);
+
+        }
+        
         // Libera as strings alocadas com remove_quotes
         freeCleanerArtist(id,name,description,ganhos,country,type);
 
-        free(grupos_id);
     }
+
+    fclose(errosFileArtists);
 
     // Libera a memória alocada por getline
     free(line);
