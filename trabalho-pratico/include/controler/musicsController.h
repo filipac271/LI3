@@ -27,7 +27,7 @@ char* get_music_id (MusicData* music);
 
 char* get_music_title (MusicData* music);
 
-char* get_music_artist_id (MusicData* music);
+char** get_music_artist_id (MusicData* music);
 
 char* get_music_duration (MusicData* music);
 

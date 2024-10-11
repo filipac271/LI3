@@ -39,6 +39,7 @@ void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* q
         char filePath[1024];
         snprintf(filePath, sizeof(filePath), "%s/%s", pastaPrincipal, fileNames[i]);
 
+        
         // Abre o ficheiro no modo de leitura
         ficheiros[i] = fopen(filePath, "r");
 

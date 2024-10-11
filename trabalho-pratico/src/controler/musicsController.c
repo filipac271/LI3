@@ -61,7 +61,7 @@ MusicData* new_music(char* music_id, char* music_title, char** music_artist_id, 
   n_music->music_lyrics = strdup(music_lyrics);
 
   if (!n_music->music_id || !n_music->music_title || !n_music->music_artist_id || !n_music->music_duration || !n_music->music_genre || !n_music->music_lyrics) {
-        printf(stderr, "Memory allocation failed for one or more fields in new_music\n");
+        printf("Memory allocation failed for one or more fields in new_music\n");
         free_musica(n_music);
         exit(1);
     }
@@ -174,7 +174,7 @@ char* get_music_title (MusicData* music){
   return music->music_title;
 }
 
-char* get_music_artist_id (MusicData* music){
+char** get_music_artist_id (MusicData* music){
   return music->music_artist_id;
 }
 

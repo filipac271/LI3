@@ -14,42 +14,38 @@
 #define TOKEN_SIZE 10
 
 char** divideArtists(char* music_artist) {
-    //tamanho da string original
-    int len = strlen(music_artist);
-    
-    //se a sting nao tiver len > 2 ou se nao tiver entre [] nao funciona 
-    if (len < 2 || music_artist[0] != '[' || music_artist[len - 1] != ']') {
-        printf(stderr, "Formato inválido da string.\n");
-        return NULL;
-    }
 
     // tira os [ ] e o \0
     // [ 'aooooo', 'a00000' ]\0
     char* artistId_copy = &music_artist[2];
     int copy_len = strlen(artistId_copy);
 
-    artistId_copy[copy_len-1] = NULL;
-    artistId_copy[copy_len-2] = '\0';
-
-
-    
-    // if (artistId_copy == NULL) {
-    //     printf("g_strndup falhou");
-    //     g_free(artistId_copy);
-    //     return NULL;
-    // }
-
     int numMembros = contar_elementos(artistId_copy);
-    
+
 
     //aloca espaço para os membros mais um para o \0
     char** result_array = malloc((numMembros + 1) * sizeof(char*));
+
     if (result_array == NULL) {
         printf("malloc falhou");
         g_free(artistId_copy);
         free(result_array);
         return NULL;
     }
+    if(music_artist[0] == 'A'){
+        result_array[0] = music_artist;
+
+        return result_array;
+    }
+    /*
+    //se a sting nao tiver len > 2 ou se nao tiver entre [] nao funciona 
+    if (len < 2 || music_artist[0] != '[' || music_artist[len - 1] != ']') {
+        printf( "Formato inválido da string:%s\n",music_artist);
+        
+    }*/
+
+    artistId_copy[copy_len-1] = NULL;
+    artistId_copy[copy_len-2] = '\0';
 
     int i = 0;
     char* artist;
@@ -85,7 +81,7 @@ char** divideArtists(char* music_artist) {
 
 
 
-GHashTable* parser_musica(FILE *file) {
+GHashTable* parser_musica(FILE *file,GHashTable* artistsTable) {
 
 
 
@@ -141,53 +137,31 @@ GHashTable* parser_musica(FILE *file) {
         char *music_lyrics = remove_quotes(tokens[6]);
 
         int num_artistId = contar_elementos(music_artists);
-      //  printf("%d\n", num_artistId);
-       // printf("%s\n", music_artists);
-       // printf("%d\n", num_artistId);
 
         char** music_artist_id = divideArtists(music_artists);
-        if (music_artist_id == NULL && num_artistId > 0) {
-                         //   printf("%d\n", num_artistId);
 
-            fprintf(stderr, "Falha ao dividir artistas para music_id: %s\n", music_id);
-            // Decida como proceder: pular a inserção, definir artistas como NULL, etc.
-            // Aqui, vamos pular a inserção
-            free(lineCopy);
-            freeCleanerMusics(music_id, music_title, music_artists, music_duration, music_genre, music_year, music_lyrics);
-            int k;
-            for(k= 0;i < num_artistId; k++){
-            free(music_artist_id[k]);
-            }
-            free(music_artist_id);
-            continue;
-        }
 
-        int isValid = validaMusic(music_duration);
+        int isValid = validaMusic(music_duration,music_artist_id,artistsTable);
         if(isValid){
+
             // Inserir os dados na hash table
         inserir_musica_na_htable(hash_musica, music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
-        //printf("Número de artistas após: %d\n", num_artistId);
-
         
-
-    }   else{
+        //printf("Número de artistas após: %d\n", num_artistId);
+        }else{
             fprintf(errosFileMusics,"%s\n",lineOutput);
         }
 
-        int j;
+        
 
-        for(j = 0;i < num_artistId; j++){
-            free(music_artist_id[j]);
-        }
+
         free(music_artist_id);
 
-        freeCleanerMusics(music_id,music_title,music_artist_id,music_duration,music_genre,music_year,music_lyrics);
+        freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
     }
     // MusicData* looked = lookup_musica(hash_musica,"S0040231");
     // print_musicas(looked);
-    //Como imprimir todos os artistas
-   //print_all_musics(hash_musica);
-    
+
     fclose (errosFileMusics);
     // Libera a memória alocada por getline
     free(line);
