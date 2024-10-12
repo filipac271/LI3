@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
+#include <unistd.h> 
 
 struct querie3
 {
@@ -47,7 +48,6 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
             {
                array[a].numMusicas++;
                inserido=1;
-                printf("%s\n",array[a].genero);
               
             }
            
@@ -57,7 +57,7 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
             array[a].genero=genero;
             array[a].numMusicas=1;
             array[a+1].numMusicas=-1;
-             printf("%s\n",array[a].genero);
+            
          }
 
       }
@@ -94,10 +94,18 @@ if(array[0].numMusicas!=-1)
        fprintf(output_file,"%s;%d\n",array[i].genero,array[i].numMusicas);
       
    }
+  
+ 
 
+if(array[0].numMusicas!=-1)
+{
+  int fd = fileno(output_file);  // Get the file descriptor
+        ftruncate(fd, 0);
+}
+fclose(output_file);
+  free(filename);
 
  
-   free(filename);
-   fclose(output_file);
+   
 }
 
