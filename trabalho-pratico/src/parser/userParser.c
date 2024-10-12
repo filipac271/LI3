@@ -2,7 +2,8 @@
 #include "parser/userParser.h"
 #include "utilidades.h"
 #include "validacao/validaUser.h"
-
+#include "querie/querie3.h"
+#include "querie/querie1.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,11 +11,50 @@
 #include <glib.h>
 #include <unistd.h>
 
+struct ageUsers
+{
+    char** likedSongs;
+    int numberSongs;
+};
 
+// struct ageUsers
+// {
+//     char* genero;
+//     int num ;
+// };
 
 #define TOKEN_SIZE 8
 
 
+// Function to add new songs to the list at position `i`
+Age* addLikedSongs( Age* songsByAge, int idade,char** newSongs,int newSongCount)  {
+    // Check if the position i already has a list of songs  
+    
+    if (songsByAge[idade].numberSongs == 0) {
+        // No existing songs, just add the new songs   
+    
+        songsByAge[idade].likedSongs = (char**)malloc(newSongCount * sizeof(char*));
+        for (int j = 0; j < newSongCount; j++) {
+            songsByAge[idade].likedSongs[j] = strdup(newSongs[j]);  // Copy the song strings
+        }
+        songsByAge[idade].numberSongs = newSongCount;
+    } else {
+        // There are existing songs, merge the new ones
+        int oldSongCount = songsByAge[idade].numberSongs;
+        int totalSongs = oldSongCount + newSongCount;
+
+        // Reallocate memory to accommodate both old and new songs
+        songsByAge[idade].likedSongs = (char**)realloc(songsByAge[idade].likedSongs, totalSongs * sizeof(char*));
+        
+        // Copy the new songs to the existing list
+        for (int j = 0; j < newSongCount; j++) {
+            songsByAge[idade].likedSongs[oldSongCount + j] = strdup(newSongs[j]);
+        }
+        songsByAge[idade].numberSongs = totalSongs; // Update the song count
+    }
+  return songsByAge;
+    
+}
 
 //dividir a string das liked_songs_id num arrays de stings (cada string um id)
 char** likedSongs(char* songs, int numberS)
@@ -28,11 +68,11 @@ char** likedSongs(char* songs, int numberS)
 
     //Divide as liked songs 
     while (likedSongs != NULL && i < numberS) {
-        likedSong[i++] = likedSongs;  // Armazenar o token no array
+        likedSong[i++] = likedSongs;  // Armazenar o token no array 
         likedSongs = strsep(&song_copy, "\'");  
         likedSongs = strsep(&song_copy, "\'"); 
     }
-
+   
     // Alocação do array de strings liked_songs_id
     char** liked_songs_id = malloc((numberS+1 ) * sizeof(char*));
    
@@ -41,16 +81,16 @@ char** likedSongs(char* songs, int numberS)
         liked_songs_id[s] = likedSong[s];  // Duplicar cada ID
    
     }
-
+liked_songs_id[numberS] = NULL;
     // Liberta a memória alocada para uma string auxiliar do processo
-    free(song_copy);  
+  //  free(song_copy);  
 
 
     return liked_songs_id;
 }
 
 
-GHashTable* userParser(FILE *file) {
+GHashTable* userParser(FILE *file, Age* songsByAge) {
 
 
     char *filename = malloc(sizeof(char) * 256);
@@ -105,32 +145,35 @@ GHashTable* userParser(FILE *file) {
         int isValid = validaUser(email,birth_date,subscription_type);
 
         if(isValid){
-           int nM=1;
+           int numberSongs=1;
         
         // Conta o numero de liked songs do user
         for (int i = 2; songs[i]!='\0'; i++){    
-            if (songs[i] == ',') nM++;
+            if (songs[i] == ',') numberSongs++;
         }
 
- 
-        char** liked_songs_id =likedSongs(songs,nM);
+         
+        char** liked_songs_id =likedSongs(songs,numberSongs);
+        int idade= calcular_idade(birth_date);
+       
+    songsByAge= addLikedSongs(songsByAge,idade,liked_songs_id,numberSongs);
   
-
         // Inserir os dados na hash table
-        User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,nM);
-        insertUser(userTable,user);
-        free(liked_songs_id); 
+        User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,numberSongs);
+         insertUser(userTable,user);
+          
+       free(liked_songs_id); 
         }else{
             fprintf(errosFileUser,"%s\n",lineOutput);
         }
         
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
-
-        
-    }  
+  
+    
+    }   
 
     fclose(errosFileUser);
- 
+    
     // Liberta a memória alocada por getline
     free(line);
 

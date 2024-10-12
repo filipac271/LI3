@@ -6,8 +6,9 @@
 #include <string.h>
 #include <glib.h>
 
+#include "parser/userParser.h"
 
-GHashTable** parser(FILE** file);
+GHashTable** parser(FILE** ficheiros, Age* songsByAge);
 
 
 #endif

@@ -17,5 +17,6 @@
     "utilidades.h": "c",
     "querie1.h": "c",
     "stdio.h": "c"
-  }
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }

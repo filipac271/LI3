@@ -20,5 +20,6 @@ void print_music_entry (gpointer key, gpointer value, gpointer user_data);
 
 void print_all_musics(GHashTable* musica);
 
+char* get_music_genre (MusicData* music);
 
 #endif

@@ -121,3 +121,8 @@ void print_all_musics(GHashTable* musica) {
     sleep(3);
     printf("----- Fim da Hash Table -----\n");
 }
+
+
+char* get_music_genre (MusicData* music){
+  return music->music_genre;
+}
