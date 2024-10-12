@@ -141,7 +141,7 @@ GHashTable* parser_musica(FILE *file,GHashTable* artistsTable) {
         char** music_artist_id = divideArtists(music_artists);
 
 
-        int isValid = validaMusic(music_duration,music_artist_id,artistsTable);
+        int isValid = validaMusic(music_duration,music_artist_id,artistsTable,num_artistId);
         if(isValid){
 
             // Inserir os dados na hash table
