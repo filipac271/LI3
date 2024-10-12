@@ -46,16 +46,14 @@ if (utilizador != NULL)
 
       int idade = calcular_idade( getUserBirthDate(utilizador));
       fprintf(output_file,"%s;%s;%s;%d;%s\n",getUserEmail(utilizador),  getUserNome(utilizador),  getUserApelido(utilizador), idade, getUserCountry(utilizador)); 
-    fclose(output_file);
 }
 if(utilizador==NULL)
 {
-
-  int fd = fileno(output_file);  // Get the file descriptor
-        ftruncate(fd, 0);
+  fprintf(output_file,"\n");
 }
 
   free(filename);
+  fclose(output_file);
 
 
 

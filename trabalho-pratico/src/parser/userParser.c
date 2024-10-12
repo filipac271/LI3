@@ -30,8 +30,8 @@ Age addLikedSongs( Age songsByAge,char** newSongs,int newSongCount)  {
        
     songsByAge.likedSongs=(char**)malloc(newSongCount * sizeof(char*));
        for (int j = 0; j < newSongCount; j++) {
-            songsByAge.likedSongs[j] = strdup(newSongs[j]);  // Copy the song strings
-            
+            songsByAge[idade].likedSongs[j] = strdup(newSongs[j]);  // Copy the song strings
+
         }
         songsByAge.numberSongs = newSongCount;
     } else {
@@ -42,8 +42,8 @@ Age addLikedSongs( Age songsByAge,char** newSongs,int newSongCount)  {
         songsByAge.likedSongs = (char**)realloc(songsByAge.likedSongs, totalSongs * sizeof(char*));
 
         for (int j = 0; j < newSongCount; j++) {
-            songsByAge.likedSongs[oldSongCount + j] =strdup( newSongs[j]);
-       
+            songsByAge[idade].likedSongs[oldSongCount + j] = strdup(newSongs[j]);
+
         }
         songsByAge.numberSongs = totalSongs; // Update the song count
     }
