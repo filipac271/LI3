@@ -164,6 +164,7 @@ void print_all_musics(GHashTable* musica) {
 
 
 
+
 //Getters
 
 char* get_music_id (MusicData* music){
@@ -206,4 +207,5 @@ char* get_music_year (MusicData* music){
 
 char* get_music_lyrics (MusicData* music){
   return music->music_lyrics;
+
 }

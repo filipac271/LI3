@@ -16,7 +16,11 @@
 
 #define NUM_FILES 3
 
-
+struct ageUsers
+{
+    char** likedSongs;
+    int numberSongs;
+};
 
 
 void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* queriesFile) {
@@ -25,6 +29,9 @@ void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* q
     FILE** ficheiros = malloc(numFiles * sizeof(FILE*));
     FILE* queriesInput;
     GHashTable** tablesHashed;
+    Age songsByAge [130];
+     memset(songsByAge, 0, sizeof(songsByAge));
+
 
     if (ficheiros == NULL) {
         printf("Erro de alocação de memória\n");
@@ -52,9 +59,9 @@ void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* q
 
     
 
-    tablesHashed = parser(ficheiros);
+    tablesHashed = parser(ficheiros,songsByAge);
 
-    queries(tablesHashed,queriesInput);
+    queries(tablesHashed,queriesInput, songsByAge);
     
     //print_all_artists(tablesHashed[0]);
     //print_all_musics(tablesHashed[1]);

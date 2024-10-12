@@ -42,7 +42,4 @@ char* get_music_year (MusicData* music);
 char* get_music_lyrics (MusicData* music);
 
 
-
-
-
 #endif

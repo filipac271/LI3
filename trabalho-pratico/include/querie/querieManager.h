@@ -6,9 +6,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
+#include "parser/userParser.h" 
 
+void queries (GHashTable** tables, FILE* querieFile, Age* userByAge);
 
-void queries (GHashTable** tables, FILE* querieFile);
 
 
 #endif

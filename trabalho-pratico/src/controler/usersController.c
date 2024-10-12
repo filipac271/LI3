@@ -1,5 +1,7 @@
 #include "controler/usersController.h"
 #include "validacao/validaUser.h"
+#include "utilidades.h"
+
 
 #include <glib.h>
 #include <stdio.h>
@@ -20,6 +22,11 @@ struct users
     int number_liked_songs;
 
 };
+
+
+
+
+
 
 //Dá print de um user
 void printUser(User* user) {
@@ -68,6 +75,7 @@ User* newUser (char* username_, char* email_, char* first_name, char* last_name,
 }
 
 
+
 void freeUser(User* user) {
     
      if (user == NULL)
@@ -83,13 +91,13 @@ void freeUser(User* user) {
     free(user->country); 
     free(user->subscription_type);
  
-    int i;
-    for( i=0;i<user->number_liked_songs;i++)
-       {  
-         free(user->liked_songs_id[i]);  
-       }
+    // int i;
+    // for( i=0;i<user->number_liked_songs;i++)
+    //    {  
+    //      free(user->liked_songs_id[i]);  
+    //    }
     
-    free(user->liked_songs_id);
+    // free(user->liked_songs_id);
     free(user); 
 }
 
@@ -177,3 +185,8 @@ void print_all_users(GHashTable* userTable) {
  int getUserNumberLikedSongs(User* user) {
     return user->number_liked_songs;
 }
+
+
+
+
+

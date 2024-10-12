@@ -28,6 +28,4 @@ char** getUserLikedSongs(User* user);
 int getUserNumberLikedSongs(User* user);
 
 
-
-
 #endif
