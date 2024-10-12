@@ -67,7 +67,7 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
         continue; 
       } 
       else{
-         printf("%d\n",i);
+        
             free(userByAge[i].likedSongs);
          
       }
