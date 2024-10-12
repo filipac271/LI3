@@ -22,12 +22,12 @@ struct ageUsers
 #define TOKEN_SIZE 8
 
 
-// Function to add new songs to the list at position `i`
+// Adiciona as cancoes à idade certa
 Age* addLikedSongs( Age* songsByAge, int idade,char** newSongs,int newSongCount)  {
-    // Check if the position i already has a list of songs  
+   
     
     if (songsByAge[idade].numberSongs == 0) {
-        // No existing songs, just add the new songs   
+       
     
         songsByAge[idade].likedSongs = (char**)malloc(newSongCount * sizeof(char*));
         for (int j = 0; j < newSongCount; j++) {
@@ -35,14 +35,14 @@ Age* addLikedSongs( Age* songsByAge, int idade,char** newSongs,int newSongCount)
         }
         songsByAge[idade].numberSongs = newSongCount;
     } else {
-        // There are existing songs, merge the new ones
+        // Quando já há cancoes
         int oldSongCount = songsByAge[idade].numberSongs;
         int totalSongs = oldSongCount + newSongCount;
 
-        // Reallocate memory to accommodate both old and new songs
+        
         songsByAge[idade].likedSongs = (char**)realloc(songsByAge[idade].likedSongs, totalSongs * sizeof(char*));
         
-        // Copy the new songs to the existing list
+        
         for (int j = 0; j < newSongCount; j++) {
             songsByAge[idade].likedSongs[oldSongCount + j] = strdup(newSongs[j]);
         }
@@ -90,7 +90,7 @@ liked_songs_id[numberS] = NULL;
 GHashTable* userParser(FILE *file, Age* songsByAge,GHashTable* musicsTable) {
 
 
-
+  
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/users_errors.csv");
     FILE *errosFileUser = fopen(filename, "w");
@@ -109,6 +109,7 @@ GHashTable* userParser(FILE *file, Age* songsByAge,GHashTable* musicsTable) {
     getline(&line, &len, file);
 
     fprintf(errosFileUser,"%s",line);
+
 
     while (getline(&line, &len, file) != -1) {
         // Remove a nova linha no final, se existir
@@ -149,9 +150,7 @@ GHashTable* userParser(FILE *file, Age* songsByAge,GHashTable* musicsTable) {
 
          
         char** liked_songs_id =likedSongs(songs,numberSongs);
-        int idade= calcular_idade(birth_date);
-       
-    songsByAge= addLikedSongs(songsByAge,idade,liked_songs_id,numberSongs);
+ 
 
  
      
@@ -159,31 +158,34 @@ GHashTable* userParser(FILE *file, Age* songsByAge,GHashTable* musicsTable) {
         int isValid = validaUser(email,birth_date,subscription_type,musicsTable,liked_songs_id,numberSongs);
 
         if(isValid){
-          
+                 int idade= calcular_idade(birth_date);
+       
+    songsByAge= addLikedSongs(songsByAge,idade,liked_songs_id,numberSongs);
         
 
         // Inserir os dados na hash table
 
         User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,numberSongs);
-         insertUser(userTable,user);
-          
+         insertUser(userTable,user); 
+       
   
         }else{
             fprintf(errosFileUser,"%s\n",lineOutput);
+          
         }
 
 
         free(liked_songs_id); 
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
   
-    
+   
     }   
 
     fclose(errosFileUser);
     
     // Liberta a memória alocada por getline
     free(line);
-
+ 
     
 
 

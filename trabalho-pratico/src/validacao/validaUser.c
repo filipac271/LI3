@@ -21,8 +21,8 @@ int validaUser(char* email, char* date, char* type,GHashTable* musicsTable,char*
 
     e = validaEmail(email);
 
-
     for (int i = 0; i < numSongs; i++) {
+       
     if (likedSongs[i] == NULL) {
         printf("Erro: artistsId[%d] é NULL\n", i);
         existMusic = 0;
@@ -34,10 +34,10 @@ int validaUser(char* email, char* date, char* type,GHashTable* musicsTable,char*
     if (g_hash_table_lookup(musicsTable, likedSongs[i]) == NULL) {
         //printf("Artista %s não encontrado na hash table\n", artistsId[i]);
         existMusic = 0;
+        
         break;
     }
 }
-
 
 
 
