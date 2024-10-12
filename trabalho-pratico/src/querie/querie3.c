@@ -36,12 +36,12 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
       for(int j=0;j<usersByAge[i].numberSongs;j++)
       { 
       
-      
+     
          MusicData* song= lookup_musica(music,usersByAge[i].likedSongs[j]);
-        
          char* genero=get_music_genre(song);
          int inserido=0;
          int a;
+       //Ver se o genero está presente no array 
          for( a=0;array[a].numMusicas!=-1 && !inserido;a++)
          {
             if(strcmp(array[a].genero,genero)==0)
@@ -52,6 +52,7 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
             }
            
          }
+         //insere o genero se nao estiver no array
          if(!inserido)
          {
             array[a].genero=genero;
@@ -85,10 +86,17 @@ if(array[0].numMusicas!=-1)
         array[j + 1] = key;
     }
 }
+
     char *filename = malloc(sizeof(char) * 256);
   sprintf(filename, "resultados/command%d_output.txt",num+1);
   FILE *output_file = fopen(filename, "w");
 
+if(array[0].numMusicas==-1)
+{
+  int fd = fileno(output_file);  // Get the file descriptor
+        ftruncate(fd, 0);
+     
+}
    for(int i=0;array[i].numMusicas!=-1;i++)
    {
        fprintf(output_file,"%s;%d\n",array[i].genero,array[i].numMusicas);
@@ -97,11 +105,7 @@ if(array[0].numMusicas!=-1)
   
  
 
-if(array[0].numMusicas!=-1)
-{
-  int fd = fileno(output_file);  // Get the file descriptor
-        ftruncate(fd, 0);
-}
+
 fclose(output_file);
   free(filename);
 
