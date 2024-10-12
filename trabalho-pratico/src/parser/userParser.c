@@ -50,7 +50,7 @@ char** likedSongs(char* songs, int numberS)
 }
 
 
-GHashTable* userParser(FILE *file) {
+GHashTable* userParser(FILE *file,GHashTable* musicsTable) {
 
 
     char *filename = malloc(sizeof(char) * 256);
@@ -84,7 +84,7 @@ GHashTable* userParser(FILE *file) {
         strncpy(lineOutput, line, 1024);  // Copia a linha para o buffer local
         lineOutput[1024 - 1] = '\0'; // Garante a terminação da string
         int i = 0;
-
+        int nM=1;
         // Divide a linha em tokens 
         char* token = strsep(&lineCopy, ";");  
         while (token != NULL && i < TOKEN_SIZE) {
@@ -102,11 +102,6 @@ GHashTable* userParser(FILE *file) {
         char* subscription_type= remove_quotes(tokens[6]);
         char* songs=tokens[7];
 
-        int isValid = validaUser(email,birth_date,subscription_type);
-
-        if(isValid){
-           int nM=1;
-        
         // Conta o numero de liked songs do user
         for (int i = 2; songs[i]!='\0'; i++){    
             if (songs[i] == ',') nM++;
@@ -114,16 +109,23 @@ GHashTable* userParser(FILE *file) {
 
  
         char** liked_songs_id =likedSongs(songs,nM);
+
+        int isValid = validaUser(email,birth_date,subscription_type,musicsTable,liked_songs_id,nM);
+
+        if(isValid){
+          
+        
   
 
         // Inserir os dados na hash table
         User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,nM);
         insertUser(userTable,user);
-        free(liked_songs_id); 
         }else{
             fprintf(errosFileUser,"%s\n",lineOutput);
         }
-        
+
+
+        free(liked_songs_id); 
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
 
         
