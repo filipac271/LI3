@@ -5,7 +5,7 @@
 #include <glib.h>
 
 char** likedSongs(char* songs, int numberS);
-GHashTable* userParser(FILE *file);
+GHashTable* userParser(FILE *file,GHashTable* musicsTable);
 
 
 #endif

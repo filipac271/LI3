@@ -33,7 +33,7 @@ GHashTable** parser(FILE** ficheiros) {
                 break;
 
             case 2:
-                hash_tables[2] = userParser(ficheiros[2]);      // Armazena a tabela de users
+                hash_tables[2] = userParser(ficheiros[2],hash_tables[1]);      // Armazena a tabela de users
                 break;
 
             default:
