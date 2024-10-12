@@ -28,26 +28,24 @@ Age* addLikedSongs( Age* songsByAge, int idade,char** newSongs,int newSongCount)
     
     if (songsByAge[idade].numberSongs == 0) {
        
-    
-        songsByAge[idade].likedSongs = (char**)malloc(newSongCount * sizeof(char*));
-        for (int j = 0; j < newSongCount; j++) {
-            songsByAge[idade].likedSongs[j] = strdup(newSongs[j]);  // Copy the song strings
+    songsByAge[idade].likedSongs=(char**)malloc(newSongCount * sizeof(char*));
+       for (int j = 0; j < newSongCount; j++) {
+            songsByAge[idade].likedSongs[j] = newSongs[j];  // Copy the song strings
         }
         songsByAge[idade].numberSongs = newSongCount;
     } else {
         // Quando já há cancoes
         int oldSongCount = songsByAge[idade].numberSongs;
         int totalSongs = oldSongCount + newSongCount;
-
-        
+          
         songsByAge[idade].likedSongs = (char**)realloc(songsByAge[idade].likedSongs, totalSongs * sizeof(char*));
-        
-        
+
         for (int j = 0; j < newSongCount; j++) {
-            songsByAge[idade].likedSongs[oldSongCount + j] = strdup(newSongs[j]);
+            songsByAge[idade].likedSongs[oldSongCount + j] = newSongs[j];
         }
         songsByAge[idade].numberSongs = totalSongs; // Update the song count
     }
+   // free(newSongs);
   return songsByAge;
     
 }
@@ -159,9 +157,9 @@ GHashTable* userParser(FILE *file, Age* songsByAge,GHashTable* musicsTable) {
 
         if(isValid){
                  int idade= calcular_idade(birth_date);
-       
+    
     songsByAge= addLikedSongs(songsByAge,idade,liked_songs_id,numberSongs);
-        
+          
 
         // Inserir os dados na hash table
 
@@ -182,7 +180,7 @@ GHashTable* userParser(FILE *file, Age* songsByAge,GHashTable* musicsTable) {
     }   
 
     fclose(errosFileUser);
-    
+ 
     // Liberta a memória alocada por getline
     free(line);
  
