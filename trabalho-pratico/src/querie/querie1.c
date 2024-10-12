@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-
+#include <unistd.h> 
 
 // Função para calcular a idade
 int calcular_idade(const char* data_nascimento_str) {
@@ -35,23 +35,26 @@ int calcular_idade(const char* data_nascimento_str) {
 void querie1(GHashTable* usersTable, char* id,int i){
 char *filename = malloc(sizeof(char) * 256);
   sprintf(filename, "resultados/command%d_output.txt",i+1);
-  FILE *output_file = fopen(filename, "w");
 
-  free(filename);
 
 
  
 User* utilizador = fetchUser(usersTable,id);
+ FILE *output_file = fopen(filename, "w");
 if (utilizador != NULL)
-{
+{ 
 
       int idade = calcular_idade( getUserBirthDate(utilizador));
-      fprintf(output_file,"%s;%s;%s;%d;%s\n",getUserEmail(utilizador),  getUserNome(utilizador),  getUserApelido(utilizador), idade, getUserCountry(utilizador));
-
-}else{
+      fprintf(output_file,"%s;%s;%s;%d;%s\n",getUserEmail(utilizador),  getUserNome(utilizador),  getUserApelido(utilizador), idade, getUserCountry(utilizador)); 
+}
+if(utilizador==NULL)
+{
   fprintf(output_file,"\n");
 }
 
-fclose(output_file);
+  free(filename);
+  fclose(output_file);
+
+
 
 }

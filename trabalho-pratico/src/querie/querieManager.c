@@ -76,6 +76,7 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
         free(userByAge[i].likedSongs[j]);
       }
        free(userByAge[i].likedSongs);
+
          
       }
    }
