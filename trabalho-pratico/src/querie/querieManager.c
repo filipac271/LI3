@@ -59,7 +59,19 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
         break;
     }
   }
-
+  for(int i=0; i<130;i++)
+   {
+      if(userByAge[i].likedSongs==NULL)
+      {
+         
+        continue; 
+      } 
+      else{
+         printf("%d\n",i);
+            free(userByAge[i].likedSongs);
+         
+      }
+   }
   // Libera a memória alocada por getline
   free(line);
 }
