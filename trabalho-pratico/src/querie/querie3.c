@@ -26,15 +26,14 @@ struct ageUsers
 
 void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
 {
-   struct querie3 array[15];//ver numero de generos
+   struct querie3 array[15];
   array[0].numMusicas=-1;
-//   printf(" %d \n",usersByAge[0].numberSongs);
+
     for(int i=min;i<max+1 ;i++)
-    {// printf("%d  \n",i);
+    {
       for(int j=0;j<usersByAge[i].numberSongs;j++)
       { 
-         // printf("%d %d \n",i,j);
-         // printf("%s\n",usersByAge[i].likedSongs[j]);
+        
       
       
          MusicData* song= lookup_musica(music,usersByAge[i].likedSongs[j]);
@@ -65,17 +64,11 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
    
    }
 
-   // for(int i=0;array[i].numMusicas!=-1; i++)
-   // {
-   //    printf("%s\n",array[i].genero);
-   //    printf("%d\n",array[i].numMusicas);
-   // }
-  
 
 if(array[0].numMusicas!=-1)
 {
 
-   //printf("%s\n", array[0].genero );
+   
     for (int i = 1; array[i].numMusicas!=-1; i++) {
       struct querie3 key=array[i];
         int  nm = array[i].numMusicas;  // Elemento a ser inserido na posição correta
