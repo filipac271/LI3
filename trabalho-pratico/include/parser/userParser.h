@@ -6,7 +6,7 @@
 
 typedef struct ageUsers Age;
 
-Age addLikedSongs( Age songsByAge,char** newSongs,int newSongCount) ;
+Age* addLikedSongs( Age* songsByAge, int idade,char** newSongs,int newSongCount) ;
 char** likedSongs(char* songs, int numberS);
 
 GHashTable* userParser(FILE *file, Age* songsByAge, GHashTable* musicsTable);
