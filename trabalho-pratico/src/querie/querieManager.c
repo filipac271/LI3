@@ -52,6 +52,7 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
          
         sscanf(line+1, "%d %d", &min, &max);
        //  printf("%d %d\n",min,max);
+                
         querie3(i,tables[1],min,max,userByAge);
         break;
 
@@ -59,19 +60,28 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
         break;
     }
   }
+
+
+
   for(int i=0; i<130;i++)
    {
       if(userByAge[i].likedSongs==NULL)
       {
-         
         continue; 
       } 
       else{
-         printf("%d\n",i);
-            free(userByAge[i].likedSongs);
+        
+      for (int j = 0; j < userByAge[i].numberSongs ; j++)
+      {
+        free(userByAge[i].likedSongs[j]);
+      }
+       free(userByAge[i].likedSongs);
          
       }
    }
+
+
+
   // Libera a memória alocada por getline
   free(line);
 }

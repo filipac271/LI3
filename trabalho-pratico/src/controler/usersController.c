@@ -91,13 +91,12 @@ void freeUser(User* user) {
     free(user->country); 
     free(user->subscription_type);
  
-    // int i;
-    // for( i=0;i<user->number_liked_songs;i++)
-    //    {  
-    //      free(user->liked_songs_id[i]);  
-    //    }
-    
-    // free(user->liked_songs_id);
+    int i;
+    for( i=0;i<user->number_liked_songs;i++)
+       {  
+         free(user->liked_songs_id[i]);  
+       }
+    free(user->liked_songs_id);
     free(user); 
 }
 

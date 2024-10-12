@@ -108,7 +108,7 @@ void print_musicas(MusicData * musica){
     printf("MUSIC_GENRE: %s\n", musica->music_genre);
     printf("MUSIC_YEAR: %s\n", musica->music_year);
     printf("MUSIC_LYRICS: %s\n", musica->music_lyrics);
-  }
+  }else{printf("N existe esta musica\n");}
 }
 
 
