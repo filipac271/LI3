@@ -8,18 +8,8 @@
 #include <stdlib.h>
 #include <glib.h>
 
-// struct ageUsers
-// {
-//     char** likedSongs;
-//     int numberSongs;
-// };
 
-struct ageUsers
-{
-    char* genero;
-    int num ;
-    int p;
-};
+
 
 GHashTable** parser(FILE** ficheiros, Age* songsByAge) {
     // Aloca um array para três ponteiros de GHashTable
@@ -43,17 +33,14 @@ GHashTable** parser(FILE** ficheiros, Age* songsByAge) {
                 break;
 
             case 1:
-              
-                hash_tables[1] = parser_musica(ficheiros[1]);   // Armazena a tabela de músicas
+              hash_tables[1] = parser_musica(ficheiros[1],hash_tables[0]);   // Armazena a tabela de músicas
                 break;
+
 
             case 2:
-            
-                hash_tables[2] = userParser(ficheiros[2],songsByAge);      // Armazena a tabela de users
-             
-                   
+                hash_tables[2] = userParser(ficheiros[2],songsByAge,hash_tables[1]);      // Armazena a tabela de users
                 break;
-
+                   
             default:
                 break;
         }

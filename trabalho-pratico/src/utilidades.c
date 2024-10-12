@@ -5,6 +5,7 @@
 #include <time.h>
 #include <glib.h>
 #include <unistd.h>
+#include <ctype.h>
 
 
 
@@ -70,4 +71,122 @@ void freeCleanerUsers(char* username,char* email,char* nome ,char*  apelido,char
         free(subscription_type);
 
 
+}
+
+
+int validaData(char* date) {
+    int year, month, day;
+
+    // Verifica o tamanho esperado da string (aaaa/mm/dd = 10 caracteres)
+    if (strlen(date) != 10) {
+        return 0;
+    }
+
+    // Verifica o formato: os caracteres nas posições 4 e 7 devem ser '/'
+    if (date[4] != '/' || date[7] != '/') {
+        return 0;
+    }
+
+    // Usa sscanf para extrair ano, mês e dia da string
+    if (sscanf(date, "%d/%d/%d", &year, &month, &day) != 3) {
+        return 0;
+    }
+
+    // Verifica os valores de ano, mês e dia
+    if (year < 0 || month < 1 || month > 12 || day < 1 || day > 31) {
+        return 0;
+    }
+
+    // Verifica se a data é mais recente que 2024/09/09
+    if (year > 2024 || (year == 2024 && month > 9) || (year == 2024 && month == 9 && day > 9)) {
+        return 0;
+    }
+
+    return 1;
+}
+
+
+
+int validaEmail(char* email) {
+    int i = 0, j = 0, k = 0;
+
+    // Verificar o username (antes do '@')
+    for (i = 0; email[i] != '@'; i++) {
+        if (!(islower(email[i]) || isdigit(email[i]))) {
+            return 0;  // O username contém caracteres inválidos
+        }
+    }
+
+    // Verificar se há pelo menos um caractere no username
+    if (i == 0) {
+        return 0;  // O username não pode ser vazio
+    }
+
+    i++;  // Saltar o '@'
+
+    // Verificar o lstring (antes do '.')
+    for (j = 0; email[i] != '.'; i++, j++) {
+        if (!(islower(email[i]))) {
+            return 0;  // lstring contém caracteres inválidos
+        }
+    }
+
+    // Verificar se o lstring tem pelo menos 1 caractere
+    if (j == 0) {
+        return 0;  // lstring não pode ser vazio
+    }
+
+    i++;  // Saltar o '.'
+
+    // Verificar o rstring (após o '.')
+    for (k = 0; email[i] != '\0'; i++, k++) {
+        if (!(islower(email[i]))) {
+            return 0;  // rstring contém caracteres inválidos
+        }
+    }
+
+    // Verificar se o rstring tem 2 ou 3 caracteres
+    if (k != 2 && k != 3) {
+        return 0;  // rstring deve ter 2 ou 3 caracteres
+    }
+
+    return 1;  // O e-mail é válido
+}
+
+
+
+int validaDuraçao (char* duracao){
+        int hh, mm, ss;
+
+    // Verificar se a duração tem exatamente 8 caracteres (no formato hh:mm:ss)
+    if (strlen(duracao) != 8) {
+        return 0;  // Formato inválido
+    }
+
+    // Verificar se os separadores são ':'
+    if (duracao[2] != ':' || duracao[5] != ':') {
+        return 0;  // Separadores inválidos
+    }
+
+    // Usar sscanf para extrair horas, minutos e segundos no formato esperado
+    if (sscanf(duracao, "%2d:%2d:%2d", &hh, &mm, &ss) != 3) {
+        return 0;  // Formato inválido
+    }
+
+    // Verificar se as horas estão entre 0 e 99
+    if (hh < 0 || hh > 99) {
+        return 0;  // Horas inválidas
+    }
+
+    // Verificar se os minutos estão entre 0 e 59
+    if (mm < 0 || mm > 59) {
+        return 0;  // Minutos inválidos
+    }
+
+    // Verificar se os segundos estão entre 0 e 59
+    if (ss < 0 || ss > 59) {
+        return 0;  // Segundos inválidos
+    }
+
+    return 1;  // Duração válida
 }

@@ -16,4 +16,17 @@ ArtistsData* lookup_artist(GHashTable* artists_table, char* id);
 void print_artist_entry (gpointer key, gpointer value, gpointer user_data);
 void print_all_artists(GHashTable* artists_table);
 void print_artist(ArtistsData* artist);
+
+
+char* getArtistId(ArtistsData* artista);
+char* getArtistName (ArtistsData* artista);
+char* getArtistDescriçao (ArtistsData* artista);
+float getArtistGanho(ArtistsData* artista);
+char** getArtistGrupo (ArtistsData* artista);
+char* getArtistCountry (ArtistsData* artista);
+char* getArtistType (ArtistsData* artista);
+int getArtistNumMembros (ArtistsData* artista);
+
+
+
 #endif

@@ -141,3 +141,35 @@ void print_all_artists(GHashTable* artists_table) {
     sleep(3);
     printf("----- Fim da Hash Table -----\n");
 }
+
+char* getArtistId(ArtistsData* artista){
+    return artista->id;
+}
+
+char* getArtistName(ArtistsData* artista){
+    return artista->name;
+}
+
+char* getArtistDescriçao(ArtistsData* artista){
+    return artista->descriçao;
+}
+
+float getArtistGanho(ArtistsData* artista){
+    return artista->ganho_por_stream;
+}
+
+char** getArtistGrupo(ArtistsData* artista){
+    return artista->grupo;
+}
+
+char* getArtistCountry(ArtistsData* artista){
+    return artista->country;
+}
+
+char* getArtistType(ArtistsData* artista){
+    return artista->type;
+}
+
+int getArtistNumMembros(ArtistsData* artista){
+    return artista->numMembrosGrupo;
+}

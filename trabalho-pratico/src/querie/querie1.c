@@ -46,7 +46,7 @@ if (utilizador != NULL)
 {
 
       int idade = calcular_idade( getUserBirthDate(utilizador));
-      fprintf(output_file,"%s;%s;%s;%d;%s",getUserEmail(utilizador),  getUserNome(utilizador),  getUserApelido(utilizador), idade, getUserCountry(utilizador));
+      fprintf(output_file,"%s;%s;%s;%d;%s\n",getUserEmail(utilizador),  getUserNome(utilizador),  getUserApelido(utilizador), idade, getUserCountry(utilizador));
 
 }
 
