@@ -97,8 +97,7 @@ if(array[0].numMusicas!=-1)
 
 if(array[0].numMusicas==-1)
 {
-  int fd = fileno(output_file);  // Get the file descriptor
-        ftruncate(fd, 0);
+  fprintf(output_file,"\n");
      
 }
    for(int i=0;array[i].numMusicas!=-1;i++)

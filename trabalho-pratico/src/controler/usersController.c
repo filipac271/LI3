@@ -99,7 +99,7 @@ void freeUser(User* user) {
     free(user->liked_songs_id);
     free(user); 
 }
-
+    
 
 // Criar uma nova hash table
 GHashTable* createTable() {
