@@ -17,9 +17,9 @@ void insertUser(GHashTable* table, User* user,char* id);
 void print_all_users(UsersData* data);
 void print_user_entry (gpointer key, gpointer value, gpointer user_data);
 User* fetchUser(GHashTable* table, char* username);
-void destroyUsersTable(UsersData* data);
-
-
+void destroyUsersData(UsersData* data);
+Age* getUsersByAge(UsersData* data);
+Age* insertLikedSongs( Age* usersByAge, int idade,char** newSongs,int newSongCount);
 GHashTable* getUserTable(UsersData* data);
 
 

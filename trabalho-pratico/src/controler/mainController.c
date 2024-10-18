@@ -44,7 +44,7 @@ void print_all_Data(MainController* data){
 void destroyData(MainController* data){
     destroyTableArtist(data->artistsController);
     destroyMusicTable(data->musicsController);
-    destroyUsersTable(data->usersController);
+    destroyUsersData(data->usersController);
     free(data->usersController);
     free(data->musicsController);
     free(data->artistsController);
@@ -53,4 +53,9 @@ void destroyData(MainController* data){
 
 UsersData* getUserController(MainController* data){
     return data->usersController;
+}
+
+MusicData* getMusicController (MainController* data){
+    return data->musicsController;
+
 }

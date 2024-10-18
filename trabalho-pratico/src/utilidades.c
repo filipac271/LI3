@@ -11,12 +11,6 @@
 
 #define TOKEN_SIZE 8
 
-struct ageUsers
-{
-    char** likedSongs;
-    int numberSongs;
-};
-
 
 // Função para remover aspas de uma string
 char* remove_quotes(const char* str) {
@@ -346,33 +340,7 @@ char** divideArtists(char* music_artist) {
 }
 
 
-// Adiciona as cancoes à idade certa
-Age* addLikedSongs( Age* songsByAge, int idade,char** newSongs,int newSongCount)  {
-   
-    
-    if (songsByAge[idade].numberSongs == 0) {
-       
-    songsByAge[idade].likedSongs=(char**)malloc(newSongCount * sizeof(char*));
-       for (int j = 0; j < newSongCount; j++) {
-            songsByAge[idade].likedSongs[j] = strdup(newSongs[j]);  // Copy the song strings
-        }
-        songsByAge[idade].numberSongs = newSongCount;
-    } else {
-        // Quando já há cancoes
-        int oldSongCount = songsByAge[idade].numberSongs;
-        int totalSongs = oldSongCount + newSongCount;
-          
-        songsByAge[idade].likedSongs = (char**)realloc(songsByAge[idade].likedSongs, totalSongs * sizeof(char*));
 
-        for (int j = 0; j < newSongCount; j++) {
-            songsByAge[idade].likedSongs[oldSongCount + j] = strdup(newSongs[j]);
-        }
-        songsByAge[idade].numberSongs = totalSongs; // Update the song count
-    }
-   // free(newSongs);
-  return songsByAge;
-    
-}
 
 //dividir a string das liked_songs_id num arrays de stings (cada string um id)
 char** likedSongs(char* songs, int numberS)

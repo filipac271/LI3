@@ -11,5 +11,5 @@ MainController* mainFeed(FILE** dataset);
 void destroyData(MainController* data);
 void print_all_Data(MainController* data);
 UsersData* getUserController(MainController* data);
-
+MusicData* getMusicController (MainController* data);
 #endif

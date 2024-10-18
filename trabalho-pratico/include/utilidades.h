@@ -3,11 +3,12 @@
 
 #include<stdlib.h>
 #include<stdio.h>
+#include"Entitys/users.h"
 
-typedef struct ageUsers Age;
 
-Age* addLikedSongs( Age* songsByAge, int idade,char** newSongs,int newSongCount) ;
-char** likedSongs(char* songs, int numberS);
+
+
+
 
 int calcular_idade(const char* data_nascimento_str);
 char* remove_quotes(const char* str);
