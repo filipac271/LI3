@@ -1,5 +1,5 @@
-#ifndef MAINPARSER_H
-#define MAINPARSER_H
+#ifndef FEEDER_H
+#define FEEDER_H
 
 #include <stdio.h>  
 #include <stdlib.h>
@@ -7,8 +7,9 @@
 #include <glib.h>
 
 #include "parser/userParser.h"
+#include "controler/mainController.h"
 
-GHashTable** parser(FILE** ficheiros, Age* songsByAge);
+MainController* feeder(FILE** ficheiros);
 
 
 #endif

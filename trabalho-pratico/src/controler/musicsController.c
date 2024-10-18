@@ -1,5 +1,10 @@
 #include "controler/musicsController.h"
-#include "main/mainParser.h"
+#include "controler/artistsController.h"
+#include "controler/mainController.h"
+#include "utilidades.h"
+#include "validacao/validaMusic.h"
+#include "main/feeder.h"
+#include "Entitys/musics.h"
 
 #include <glib.h>
 #include <stdio.h>
@@ -11,105 +16,106 @@
 
 
 
-struct music{
-  char *music_id;
-  char *music_title;
-  char **music_artist_id;
-  char *music_duration;
-  char *music_genre;
-  char *music_year;
-  char *music_lyrics;
-  int num_artistId;
+
+struct musicData {
+  GHashTable* musicsTable;
 };
 
 
-// Função para contar o número de membros
-int contar_elementos(char *str) {
-    int count = 0;
-    char *p = str;
-    while (*p) {
-        if (*p == ',') count++;
-        p++;
+
+
+MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
+
+ MusicData* MData = malloc(sizeof(MusicData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
+    
+    char *filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/musics_errors.csv");
+    FILE *errosFileMusics = fopen(filename, "w");
+    free(filename);
+    
+    char* line = NULL;  // Inicializado como NULL para getline alocar memória
+    size_t len = 0;
+    char* tokens[8];
+    
+    MData->musicsTable = iniciar_hash_musica();
+    
+    // Ignorar a primeira linha
+    getline(&line, &len, ficheiro);
+    fprintf(errosFileMusics,"%s",line);
+    
+    while (1) {
+
+        // Pega a próxima linha
+        if (pegaLinha(ficheiro, &len, &line) == NULL){
+           break; 
+        } 
+           // Remove a nova linha no final, se existir
+    if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
+        line[strlen(line) - 1] = '\0';
     }
-    return count + 1;
-}
 
-MusicData* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, char* music_lyrics, int num_artists){
-  MusicData* n_music = malloc(sizeof(struct music));
-    if (n_music == NULL) {
-        fprintf(stderr, "Memory allocation failed for new music\n");
-        exit(1);
-    }
-      //printf("%d\n", num_artists);
+        
+        // Atualizar o lineOutput em cada iteração
+        char lineOutput[2048];
+        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
+        lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+        
+        parser(line, tokens);
+
+        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+        char *music_id = remove_quotes(tokens[0]);
+        char *music_title = remove_quotes(tokens[1]);
+        char *music_artists = remove_quotes(tokens[2]);
+        char *music_duration = remove_quotes(tokens[3]);
+        char *music_genre = remove_quotes(tokens[4]);
+        char *music_year = remove_quotes(tokens[5]);
+        char *music_lyrics = remove_quotes(tokens[6]);
+
+        int num_artistId = contar_elementos(music_artists);
+
+        char** music_artist_id = divideArtists(music_artists);
 
 
-  n_music->music_id = strdup(music_id);
-  n_music->music_title = strdup(music_title);
+        int isValid = validaMusic(music_duration,music_artist_id,getArtistsTable(artistsData),num_artistId);
+        
+        if(isValid){
+            Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
+
+            // Inserir os dados na hash table
+        inserir_musica_na_htable(MData->musicsTable,nova_musica,music_id);
+        
+        //printf("Número de artistas após: %d\n", num_artistId);
+        }else{
+            fprintf(errosFileMusics,"%s\n",lineOutput);
+        }
 
 
-  //printf("%d\n", num_artists);
-  n_music->music_artist_id = malloc((num_artists+1)* sizeof(char*));
+        free(music_artist_id);
 
-    for(int i = 0; i < num_artists; i++){
-      n_music->music_artist_id[i] = strdup(music_artist_id[i]);
+        // Libera as strings alocadas com remove_quotes
+        freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
     }
     
-  n_music->num_artistId = num_artists;
-  n_music->music_duration = strdup(music_duration);
-  n_music->music_genre = strdup(music_genre);
-  n_music->music_year = strdup(music_year);
-  n_music->music_lyrics = strdup(music_lyrics);
-
-  if (!n_music->music_id || !n_music->music_title || !n_music->music_artist_id || !n_music->music_duration || !n_music->music_genre || !n_music->music_lyrics) {
-        printf("Memory allocation failed for one or more fields in new_music\n");
-        free_musica(n_music);
-        exit(1);
-    }
-
-  return n_music;
-
+    // Libera a memória alocada por getline
+    free(line);
+    
+    fclose(errosFileMusics);
+    return MData;
 }
 
-//alterada
-void free_musica(MusicData* musica) {
-    if (musica) {
 
-        free(musica->music_id);
-        free(musica->music_title);
 
-        int i;
-
-        for(i = 0;i < musica->num_artistId; i++){
-            free(musica->music_artist_id[i]);
-        }
-        free(musica->music_artist_id);
-
-        free(musica->music_duration);
-        free(musica->music_genre);
-        free(musica->music_year);
-        free(musica->music_lyrics);
-
-        free(musica);
-    }
+void destroyMusicTable(MusicData* data){
+  g_hash_table_destroy(data->musicsTable);
+  printf("Tabela das musicas destruida\n");
 }
 
-//alterada
-void print_musicas(MusicData * musica){
-  if(musica){
-    printf("ID_MUSIC: %s\n", musica->music_id);
-    printf("MUSIC_TITLE: %s\n", musica->music_title);
 
-    printf("MUSIC_ARTIST:\n");
-    for(int i = 0; i < musica->num_artistId; i++){
-      printf("%s\n", musica->music_artist_id[i]);
-    }
 
-    printf("MUSIC_DURATION: %s\n", musica->music_duration);
-    printf("MUSIC_GENRE: %s\n", musica->music_genre);
-    printf("MUSIC_YEAR: %s\n", musica->music_year);
-    printf("MUSIC_LYRICS: %s\n", musica->music_lyrics);
-  }else{printf("N existe esta musica\n");}
-}
+
+
+
+
 
 
 GHashTable* iniciar_hash_musica(){
@@ -126,8 +132,7 @@ GHashTable* iniciar_hash_musica(){
 
 
 //
-void inserir_musica_na_htable(GHashTable* musica, char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, char* music_lyrics, int num_artist_id){
-  MusicData* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artist_id);
+void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica,char* music_id){
 
   g_hash_table_insert(musica, strdup(music_id), nova_musica);
   //ver se depois é preciso adicionar prints
@@ -137,7 +142,7 @@ void inserir_musica_na_htable(GHashTable* musica, char* music_id, char* music_ti
 
 //Nao mexer a partir daqui!
 
-MusicData* lookup_musica(GHashTable* musica, char* music_id){
+Music* lookup_musica(GHashTable* musica, char* music_id){
   return g_hash_table_lookup(musica, music_id);
 }
 
@@ -145,67 +150,27 @@ MusicData* lookup_musica(GHashTable* musica, char* music_id){
 // Função callback para imprimir a hash table
 void print_music_entry (gpointer key, gpointer value, gpointer user_data) {
     char* id = (char*)key;
-    MusicData* music = (MusicData*)value;
+    Music* music = (Music*)value;
 
     print_musicas(music);
 }
 
 // Função para imprimir toda a hash table
-void print_all_musics(GHashTable* musica) {
+void print_all_musics(MusicData* musica) {
     printf("----- Hash Table de Musicas -----\n");
     sleep(3);
-    g_hash_table_foreach(musica, print_music_entry, NULL);
+    g_hash_table_foreach(musica->musicsTable, print_music_entry, NULL);
     sleep(3);
     printf("----- Fim da Hash Table -----\n");
 }
 
 
-
-
-
-
-
-//Getters
-
-char* get_music_id (MusicData* music){
-  return music->music_id;
-}
-
-char* get_music_title (MusicData* music){
-  return music->music_title;
-}
-
-char** get_music_artist_id (MusicData* music){
-  return music->music_artist_id;
-}
-
-char* get_music_duration (MusicData* music){
-  return music->music_duration;
+GHashTable* getMusicsTable(MusicData* data){
+  return data->musicsTable;
 }
 
 
-int duration_to_seconds(char* music_duration) {
-    int hours, minutes, seconds;
 
-    sscanf(music_duration, "%d:%d:%d", &hours, &minutes, &seconds);
 
-    return hours * 3600 + minutes * 60 + seconds;
-}
 
-//getter que dá a duraçao em segundos
-int get_music_duration_seconds (MusicData* musica){
-  return (duration_to_seconds(get_music_duration(musica)));
-}
 
-char* get_music_genre (MusicData* music){
-  return music->music_genre;
-}
-
-char* get_music_year (MusicData* music){
-  return music->music_year;
-}
-
-char* get_music_lyrics (MusicData* music){
-  return music->music_lyrics;
-
-}
