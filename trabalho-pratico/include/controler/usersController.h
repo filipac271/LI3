@@ -1,31 +1,26 @@
 #ifndef USERSCONTROLLER_H
 #define USERSCONTROLLER_H
 #include <glib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "Entitys/users.h"
+#include "controler/musicsController.h"
 
-typedef struct users User;
+
+typedef struct usersData UsersData;
 
 
-
-User* newUser (char* username_, char* email_, char* first_name, char* last_name, char * birth_Date, char* pais, char* subscricao, char** liked_Songs_id,int songsN);
-void freeUser (User* user);
-
+UsersData* usersFeed(FILE* ficheiro, MusicData* musicData);
 
 GHashTable* createTable();
-void printUser(User* user);
-void insertUser(GHashTable* table, User* user);
-void print_all_users(GHashTable* userTable);
+void insertUser(GHashTable* table, User* user,char* id);
+void print_all_users(UsersData* data);
 void print_user_entry (gpointer key, gpointer value, gpointer user_data);
 User* fetchUser(GHashTable* table, char* username);
+void destroyUsersTable(UsersData* data);
 
 
-char* getUserEmail(User* user);
-char* getUserNome(User* user);
-char* getUserApelido(User* user);
-char* getUserBirthDate(User* user);
-char* getUserCountry(User* user);
-char* getUserSubscryptionType(User* user);
-char** getUserLikedSongs(User* user);
-int getUserNumberLikedSongs(User* user);
+GHashTable* getUserTable(UsersData* data);
 
 
 #endif

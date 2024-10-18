@@ -6,11 +6,11 @@
 #include <unistd.h>
 
 int validaArtista (char* grupo, char* type){
-   // printf("%s\n%s\n",type,grupo);
-   // sleep(2);
 
     if(strcmp(type,"individual") == 0){
-        if(!(strcmp(grupo,"\"[]\"") == 0)) return 0;
+        if(!(strcmp(grupo,"\"[]\"") == 0)){
+            return 0;
+        } 
     }
 
 

@@ -6,9 +6,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-#include "parser/userParser.h" 
+#include "controler/usersController.h"
+#include "controler/mainController.h"
+#include "utilidades.h" 
 
-void queries (GHashTable** tables, FILE* querieFile, Age* userByAge);
+void queries (MainController* data, FILE* querieFile);
 
 
 

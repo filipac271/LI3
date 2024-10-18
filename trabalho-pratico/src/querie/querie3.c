@@ -1,10 +1,14 @@
 #include "../../include/controler/usersController.h"
-#include "../../include/controler//musicsController.h"
-#include "parser/userParser.h"
+#include "../../include/controler/musicsController.h"
+#include "controler/usersController.h"
+#include "utilidades.h"
+#include "Entitys/musics.h"
+#include "Entitys/users.h"
 #include "querie/querie3.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <glib.h>
 #include <unistd.h> 
 
@@ -27,17 +31,18 @@ struct ageUsers
 
 void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
 {
+    
   
    struct querie3 array[15];
-  array[0].numMusicas=-1;
+   array[0].numMusicas=-1;
+
 
     for(int i=min;i<max+1 ;i++)
     {
       for(int j=0;j<usersByAge[i].numberSongs;j++)
-      { 
-      
-     
-         MusicData* song= lookup_musica(music,usersByAge[i].likedSongs[j]);
+      {     
+         Music* song= lookup_musica(music,usersByAge[i].likedSongs[j]);
+        
          char* genero=get_music_genre(song);
          int inserido=0;
          int a;
@@ -48,6 +53,8 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
             {
                array[a].numMusicas++;
                inserido=1;
+               //printf("%s\n",array[a].genero);
+
               
             }
            
@@ -58,13 +65,13 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
             array[a].genero=genero;
             array[a].numMusicas=1;
             array[a+1].numMusicas=-1;
-            
+            //printf("%s\n",array[a].genero);
+
          }
 
       }
    
    }
-
 
 if(array[0].numMusicas!=-1)
 {
@@ -93,8 +100,7 @@ if(array[0].numMusicas!=-1)
 
 if(array[0].numMusicas==-1)
 {
-  int fd = fileno(output_file);  // Get the file descriptor
-        ftruncate(fd, 0);
+  fprintf(output_file,"\n");
      
 }
    for(int i=0;array[i].numMusicas!=-1;i++)
