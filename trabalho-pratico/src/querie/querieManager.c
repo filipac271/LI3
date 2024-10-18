@@ -1,8 +1,9 @@
 #include "querie/querieManager.h"
 #include "controler/usersController.h"
+#include "controler/mainController.h"
 #include "querie/querie1.h"
 #include  "querie/querie3.h"
-#include "parser/userParser.h"
+#include "utilidades.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +17,7 @@ struct ageUsers
     int numberSongs;
 };
 
-void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
+void queries (MainController* data, FILE* querieFile){
   if (querieFile == NULL) {
     printf("Erro ao abrir o arquivo!\n");
     return;
@@ -35,12 +36,15 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
     if (line[strlen(line) - 1] == '\n') {
       line[strlen(line) - 1] = '\0';
     }
-
+        UsersData* UserController = getUserController(data);
+        GHashTable* table = getUserTable(UserController);
     switch (line[0]) {
       case '1':
         // Verifica se a linha tem pelo menos 3 caracteres
         if (strlen(line) >= 2) {
-          querie1(tables[2], line + 2, i);
+
+          querie1(table, line + 2, i);  
+
         }
         break;
 
@@ -53,7 +57,7 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
         sscanf(line+1, "%d %d", &min, &max);
        //  printf("%d %d\n",min,max);
                 
-        querie3(i,tables[1],min,max,userByAge);
+        //querie3(i,tables[1],min,max,userByAge);
         break;
 
       default:
@@ -62,7 +66,7 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
   }
 
 
-
+/*
   for(int i=0; i<130;i++)
    {
       if(userByAge[i].likedSongs==NULL)
@@ -80,8 +84,7 @@ void queries (GHashTable** tables, FILE* querieFile, Age* userByAge){
          
       }
    }
-
-
+*/
 
   // Libera a memória alocada por getline
   free(line);

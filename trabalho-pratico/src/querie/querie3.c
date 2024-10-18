@@ -1,6 +1,9 @@
 #include "../../include/controler/usersController.h"
 #include "../../include/controler/musicsController.h"
-#include "parser/userParser.h"
+#include "controler/usersController.h"
+#include "utilidades.h"
+#include "Entitys/musics.h"
+#include "Entitys/users.h"
 #include "querie/querie3.h"
 
 #include <stdio.h>
@@ -38,7 +41,7 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
     {
       for(int j=0;j<usersByAge[i].numberSongs;j++)
       {     
-         MusicData* song= lookup_musica(music,usersByAge[i].likedSongs[j]);
+         Music* song= lookup_musica(music,usersByAge[i].likedSongs[j]);
         
          char* genero=get_music_genre(song);
          int inserido=0;
