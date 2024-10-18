@@ -18,12 +18,11 @@ struct querie3
    int numMusicas;
 };
 
-struct ageUsers
+struct usersByAge
 {
     char** likedSongs;
     int numberSongs;
 };
-
 
 
 
@@ -36,12 +35,14 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
    struct querie3 array[15];
    array[0].numMusicas=-1;
 
-
+   char** likedSongs;
     for(int i=min;i<max+1 ;i++)
     {
-      for(int j=0;j<usersByAge[i].numberSongs;j++)
+      likedSongs=getUBALikedSongs(usersByAge,i);
+      for(int j=0;j<getUBANumberSongs(usersByAge,i);j++)
       {     
-         Music* song= lookup_musica(music,usersByAge[i].likedSongs[j]);
+         
+         Music* song= lookup_musica(music,likedSongs[j]);
         
          char* genero=get_music_genre(song);
          int inserido=0;

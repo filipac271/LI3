@@ -20,6 +20,13 @@ struct users
 };
 
 
+struct usersByAge
+{
+    char** likedSongs;
+    int numberSongs;
+};
+
+
 //Dá print de um user
 void printUser(User* user) {
     if (user) {
@@ -38,6 +45,14 @@ void printUser(User* user) {
         printf("\n");
     }
     else printf("N tenho nada para printar\n");
+}
+
+ Age* createUsersAge()
+{
+  
+    Age * usersAge=malloc(130* sizeof(Age));
+     memset(usersAge, 0, 130 * sizeof(Age));
+    return usersAge;
 }
 
 
@@ -67,6 +82,34 @@ User* newUser (char* username_, char* email_, char* first_name, char* last_name,
 }
 
 
+Age* newAge(Age* usersByAge, int idade,int newSongCount, char** newSongs)
+{
+ 
+     usersByAge[idade].likedSongs=(char**)malloc(newSongCount * sizeof(char*));
+       for (int j = 0; j < newSongCount; j++) { 
+
+            usersByAge[idade].likedSongs[j] = strdup(newSongs[j]);  // Copy the song strings
+        }
+        usersByAge[idade].numberSongs = newSongCount;
+        return usersByAge;
+       
+}
+
+Age* newSongsAge (Age* usersByAge, int idade,int newSongCount, char** newSongs)
+{
+      int oldSongCount = usersByAge[idade].numberSongs;
+        int totalSongs = oldSongCount + newSongCount;
+          
+        usersByAge[idade].likedSongs = (char**)realloc(usersByAge[idade].likedSongs, totalSongs * sizeof(char*));
+
+        for (int j = 0; j < newSongCount; j++) {
+            usersByAge[idade].likedSongs[oldSongCount + j] = strdup(newSongs[j]);
+        }
+        usersByAge[idade].numberSongs = totalSongs; // Update the song count
+        return usersByAge;
+     
+}
+
 
 void freeUser(User* user) {
     
@@ -92,7 +135,27 @@ void freeUser(User* user) {
     free(user); 
 }
    
+void freeUsersByAge(Age* usersByAge){
+      for(int i=0; i<130;i++)
+   {
+      if(usersByAge[i].likedSongs==NULL)
+      {
+        continue; 
+      } 
+      else{
+        
+      for (int j = 0; j < usersByAge[i].numberSongs ; j++)
+      {
+        free(usersByAge[i].likedSongs[j]);
+      }
+       free(usersByAge[i].likedSongs);
 
+         
+      }
+   }
+     free(usersByAge);
+
+}
 
 
 
@@ -136,7 +199,13 @@ void freeUser(User* user) {
     return user->number_liked_songs;
 }
 
+int getUBANumberSongs(Age *userAge,int idade){
+    return userAge[idade].numberSongs;
+}
 
+char** getUBALikedSongs(Age *userAge,int idade){
+    return userAge[idade].likedSongs;
+}
 
 
 

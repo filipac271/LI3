@@ -37,13 +37,17 @@ void queries (MainController* data, FILE* querieFile){
       line[strlen(line) - 1] = '\0';
     }
         UsersData* UserController = getUserController(data);
-        GHashTable* table = getUserTable(UserController);
+        GHashTable* Utable = getUserTable(UserController);
+        Age* usersAge= getUsersByAge(UserController);
+        MusicData* MusicController = getMusicController(data);
+        GHashTable* Mtable=getMusicsTable(MusicController);
+
     switch (line[0]) {
       case '1':
         // Verifica se a linha tem pelo menos 3 caracteres
         if (strlen(line) >= 2) {
 
-          querie1(table, line + 2, i);  
+          querie1(Utable, line + 2, i);  
 
         }
         break;
@@ -55,9 +59,7 @@ void queries (MainController* data, FILE* querieFile){
       case '3':
          
         sscanf(line+1, "%d %d", &min, &max);
-       //  printf("%d %d\n",min,max);
-                
-        //querie3(i,tables[1],min,max,userByAge);
+        querie3(i,Mtable,min,max,usersAge);
         break;
 
       default:
@@ -66,25 +68,7 @@ void queries (MainController* data, FILE* querieFile){
   }
 
 
-/*
-  for(int i=0; i<130;i++)
-   {
-      if(userByAge[i].likedSongs==NULL)
-      {
-        continue; 
-      } 
-      else{
-        
-      for (int j = 0; j < userByAge[i].numberSongs ; j++)
-      {
-        free(userByAge[i].likedSongs[j]);
-      }
-       free(userByAge[i].likedSongs);
 
-         
-      }
-   }
-*/
 
   // Libera a memória alocada por getline
   free(line);

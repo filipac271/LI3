@@ -13,10 +13,10 @@
 
 
 
-
 struct usersData
 {
     GHashTable* usersTable;
+    Age* usersByAge;
 };
 
 
@@ -36,7 +36,8 @@ UsersData* usersFeed(FILE* ficheiro, MusicData* musicData){
     char* tokens[8];
     
     UData->usersTable = createTable();
-    
+   
+    UData->usersByAge=createUsersAge();
     // Ignorar a primeira linha
     getline(&line, &len, ficheiro);
     fprintf(errosFileUsers,"%s",line);
@@ -86,11 +87,10 @@ UsersData* usersFeed(FILE* ficheiro, MusicData* musicData){
         int isValid = validaUser(email,birth_date,subscription_type,getMusicsTable(musicData),liked_songs_id,numberSongs);
 
         if(isValid){
-        /*
+        
         int idade= calcular_idade(birth_date);
-        songsByAge= addLikedSongs(songsByAge,idade,liked_songs_id,numberSongs);
-        */
-          
+        UData->usersByAge= insertLikedSongs(UData->usersByAge,idade,liked_songs_id,numberSongs);
+      
 
         // Inserir os dados na hash table
 
@@ -119,7 +119,7 @@ UsersData* usersFeed(FILE* ficheiro, MusicData* musicData){
 
 
 
- 
+
 
 // Criar uma nova hash table
 GHashTable* createTable() {
@@ -132,6 +132,7 @@ GHashTable* createTable() {
     }
     return usersTable;
 }
+
 
 //Inseir user na Hash Table
 void insertUser(GHashTable* table, User* user,char* id)
@@ -163,12 +164,34 @@ void print_all_users(UsersData* data) {
     printf("----- Fim da Hash Table -----\n");
 }
 
-void destroyUsersTable(UsersData* data){
+void destroyUsersData(UsersData* data){
     g_hash_table_destroy(data->usersTable);
+    freeUsersByAge(data->usersByAge);
     printf("Tabela dos users destruida\n");
 }
 
 
+
 GHashTable* getUserTable(UsersData* data){
     return data->usersTable;
+}
+Age* getUsersByAge(UsersData* data){
+    return data->usersByAge;
+}
+
+
+// Adiciona as cancoes à idade certa
+Age* insertLikedSongs( Age* usersByAge, int idade,char** newSongs,int newSongCount)  {
+ 
+   
+    if (getUBANumberSongs(usersByAge,idade) == 0) {
+       usersByAge=newAge(usersByAge,idade,newSongCount,newSongs);
+    
+    } else {
+        // Quando já há cancoes
+      usersByAge= newSongsAge(usersByAge,idade,newSongCount,newSongs);
+    }
+   // free(newSongs);
+  return usersByAge;
+    
 }
