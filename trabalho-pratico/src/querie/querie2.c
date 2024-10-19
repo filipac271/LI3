@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <glib.h>
 
-
+/*
 // void insert_or_sum(GHashTable table, charkey, float valor_novo) {
 //     // Tentar buscar o tuplo existente
 //     Tuplo tuplo_existente = g_hash_table_lookup(table, key);
@@ -138,3 +138,4 @@ void finalizar_hashtable_nova(GHashTable* original, GHashTable* new_hashtable_qu
 
 
 
+*/

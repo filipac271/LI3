@@ -1,9 +1,10 @@
-#include "main/mainParser.h"
+#include "main/feeder.h"
 #include "parser/parsermusica.h"
 #include "parser/userParser.h"
 #include "controler/artistsController.h"
 #include "controler/usersController.h"
 #include "controler/musicsController.h"
+#include "controler/mainController.h"
 #include "querie/querieManager.h"
 
 #include <stdio.h>
@@ -16,7 +17,11 @@
 
 #define NUM_FILES 3
 
-
+struct ageUsers
+{
+    char** likedSongs;
+    int numberSongs;
+};
 
 
 void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* queriesFile) {
@@ -24,7 +29,7 @@ void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* q
     // Aloca memória para armazenar os ponteiros para os ficheiros
     FILE** ficheiros = malloc(numFiles * sizeof(FILE*));
     FILE* queriesInput;
-    GHashTable** tablesHashed;
+
 
     if (ficheiros == NULL) {
         printf("Erro de alocação de memória\n");
@@ -39,6 +44,7 @@ void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* q
         char filePath[1024];
         snprintf(filePath, sizeof(filePath), "%s/%s", pastaPrincipal, fileNames[i]);
 
+        
         // Abre o ficheiro no modo de leitura
         ficheiros[i] = fopen(filePath, "r");
 
@@ -51,14 +57,14 @@ void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* q
 
     
 
-    tablesHashed = parser(ficheiros);
+    MainController* data = feeder(ficheiros);
+    print_all_Data(data);
 
-    queries(tablesHashed,queriesInput);
+
+
+    queries(data,queriesInput);
     
-    //print_all_artists(tablesHashed[0]);
-    //print_all_musics(tablesHashed[1]);
-    //print_all_users(tablesHashed[2]);
-
+    destroyData(data);
 
 
     // Fechar os ficheiros depois de os usar (exemplo)
@@ -69,12 +75,7 @@ void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* q
     }
     fclose(queriesInput);
 
-    //Destruir as hash tables 0- artistas  1- musicas  2- utilizadores
-    g_hash_table_destroy(tablesHashed[0]);
-    g_hash_table_destroy(tablesHashed[1]);
-    g_hash_table_destroy(tablesHashed[2]);
 
-    free(tablesHashed);
 
     // Liberta a memória alocada
     free(ficheiros);
