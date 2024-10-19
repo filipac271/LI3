@@ -1,4 +1,8 @@
+#include "Entitys/artists.h"
 #include "controler/artistsController.h"
+#include "controler/mainController.h"
+#include "validacao/validaArtista.h"
+#include "utilidades.h"
 
 #include <glib.h>
 #include <stdio.h>
@@ -6,88 +10,94 @@
 #include <string.h>
 #include <unistd.h>
 
-
-struct artists
-{
-    char* id; //A0000xxx
-    char* name;
-    char* descriçao;
-    float ganho_por_stream;
-    char** grupo;
-    char* country;
-    char* type;
-    int numMembrosGrupo;
+struct artistsData{
+    GHashTable* artistsTable;
 };
 
-// Função para imprimir os dados de um artista
-void print_artist(ArtistsData* artist) {
-    if (artist) {
-        printf("ID: %s\n", artist->id);
-        printf("Name: %s\n", artist->name);
-        printf("Description: %s\n", artist->descriçao);
-        printf("Ganho por Stream: %.2f\n", artist->ganho_por_stream);
-        printf("Grupo:\n");
-        
-        if(artist->numMembrosGrupo > 0){
-          for (int i = 0; i < artist->numMembrosGrupo; i++) {
+ArtistsData* artistFeed(FILE* ficheiro) {
+    ArtistsData* AData = malloc(sizeof(ArtistsData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
+    
+    char *filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/artists_errors.csv");
+    FILE *errosFileArtists = fopen(filename, "w");
+    free(filename);
+    
+    char* line = NULL;  // Inicializado como NULL para getline alocar memória
+    size_t len = 0;
+    char* tokens[8];
+    
+    AData->artistsTable = init_artists_table();
+    
+    // Ignorar a primeira linha
+    getline(&line, &len, ficheiro);
+    fprintf(errosFileArtists,"%s",line);
+    
+    while (1) {
 
-                printf("%s\n", artist->grupo[i]);
+        // Pega a próxima linha
+        if (pegaLinha(ficheiro, &len, &line) == NULL){
+           break; 
+        } 
+           // Remove a nova linha no final, se existir
+    if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
+        line[strlen(line) - 1] = '\0';
+    }
+
+        
+        // Atualizar o lineOutput em cada iteração
+        char lineOutput[2048];
+        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
+        lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+        
+        parser(line, tokens);
+
+        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+        char* id = remove_quotes(tokens[0]);
+        char* name = remove_quotes(tokens[1]);
+        char* description = remove_quotes(tokens[2]);
+        char* ganhos = remove_quotes(tokens[3]);
+        float clean_ganhos = atof(ganhos);
+        char* grupo = tokens[4];
+        char* country = remove_quotes(tokens[5]);
+        char* type = remove_quotes(tokens[6]);
+        
+        int isValid = validaArtista(grupo, type);
+        
+        if (isValid) {
+            int numMembros = 1;
+            if (strcmp(grupo, "\"[]\"") == 0) {
+                numMembros = 0;
+            } else {
+                // Conta o número de membros do grupo
+                for (int i = 2; grupo[i] != '\0'; i++) {
+                    if (grupo[i] == ',') numMembros++;
+                }
+            }
             
-        }  
-        }else printf("SOLO SINGER");
-        
-        
-        printf("\n");
-        
-        printf("Country: %s\n", artist->country);
-        printf("Type: %s\n", artist->type);
-        printf("Numero de Membros: %d\n",artist->numMembrosGrupo);
-        printf("\n");
-    }
-    else printf("N tenho nada para printar\n");
-}
+            char** grupos_id = divideGroup(grupo, numMembros);    
 
-// Função para criar um novo artista
-ArtistsData* create_artist(char* id, const char* name, char* description, float ganho, char** grupo, char* country, char* type,int numMembros) {
-    ArtistsData* new_artist = malloc(sizeof(struct artists));
-    new_artist->id = strdup(id);
-    new_artist->name = strdup(name);
-    new_artist->descriçao = strdup(description);
-    new_artist->ganho_por_stream = ganho;
-    new_artist->grupo = malloc(numMembros * sizeof(char*)); 
+            Artist* newArtist = create_artist(id, name, description, clean_ganhos, grupos_id, country, type, numMembros);
+            
+            // Insere os dados na hash table
+            insert_artist_into_table(AData->artistsTable, newArtist, id);
 
 
-    for (int i = 0; i < numMembros; i++) {
-         new_artist->grupo[i] = strdup(grupo[i]);  // Duplica cada string
+            free(grupos_id);
 
-    }
-
-
-    new_artist->country = strdup(country);
-    new_artist->type = strdup(type);
-    new_artist->numMembrosGrupo=numMembros;
-
-
-    return new_artist;
-}
-
-// Função para liberar memória dos artistas
-void free_artist(ArtistsData* artist) {
-    if (artist) {
-        free(artist->id);
-        free(artist->name);
-        free(artist->descriçao);
-        free(artist->country);
-        int i;
-        for ( i = 0; i < artist->numMembrosGrupo; i++)
-        {
-         free(artist->grupo[i]);
+        } else {
+            fprintf(errosFileArtists, "%s\n", lineOutput);
         }
-        free(artist->grupo);
-        free(artist->type);
-        free(artist);
+        // Libera as strings alocadas com remove_quotes
+        freeCleanerArtist(id, name, description, ganhos, country, type);
     }
+    
+    // Libera a memória alocada por getline
+    free(line);
+    
+    fclose(errosFileArtists);
+    return AData;
 }
+
 
 // Função para inicializar a hash table
 GHashTable* init_artists_table() {
@@ -104,11 +114,16 @@ GHashTable* init_artists_table() {
 
     return artists_table;
 }
+
+void destroyTableArtist(ArtistsData* ArtistData){
+    g_hash_table_destroy(ArtistData->artistsTable);
+    printf("Destrui artistaData\n");
+}
 // Função para inserir um artista na hash table
-void insert_artist_into_table(GHashTable* artists_table, ArtistsData* new_artist,char* id) {
+void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,char* id) {
 
     // Criar um novo artista
-    //ArtistsData* new_artist = create_artist(id, name, description, ganho, grupo, country, type,numMembros);
+    //Artist* new_artist = create_artist(id, name, description, ganho, grupo, country, type,numMembros);
     
     // Inserir na hash table usando o id como chave
     g_hash_table_insert(artists_table, strdup(id), new_artist);
@@ -119,25 +134,36 @@ void insert_artist_into_table(GHashTable* artists_table, ArtistsData* new_artist
 }
 
 // Função para procurar um artista pelo ID
-ArtistsData* lookup_artist(GHashTable* artists_table, char* id) {
+Artist* lookup_artist(GHashTable* artists_table, char* id) {
     return g_hash_table_lookup(artists_table, id);
 }
 
 
 
-// Função callback para imprimir a hash table
+
+
 void print_artist_entry (gpointer key, gpointer value, gpointer user_data) {
+    if (key == NULL || value == NULL) {
+        printf( "Chave ou valor nulo encontrado.\n");
+        sleep(2);
+        return;
+    }
+
     char* id = (char*)key;
-    ArtistsData* artist = (ArtistsData*)value;
+    Artist* artist = (Artist*)value;
 
     print_artist(artist);
 }
 
 // Função para imprimir toda a hash table
-void print_all_artists(GHashTable* artists_table) {
+void print_all_artists(ArtistsData* data) {
     printf("----- Hash Table de Artistas -----\n");
     sleep(3);
-    g_hash_table_foreach(artists_table, print_artist_entry, NULL);
+    g_hash_table_foreach(data->artistsTable, print_artist_entry, NULL);
     sleep(3);
     printf("----- Fim da Hash Table -----\n");
+}
+
+GHashTable* getArtistsTable (ArtistsData* data){
+    return data->artistsTable;
 }

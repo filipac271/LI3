@@ -1,5 +1,9 @@
 #include "controler/usersController.h"
+#include "controler/musicsController.h"
 #include "validacao/validaUser.h"
+#include "utilidades.h"
+#include "Entitys/users.h"
+
 
 #include <glib.h>
 #include <stdio.h>
@@ -7,91 +11,114 @@
 #include <string.h>
 #include <unistd.h>
 
-struct users
-{
-    char* username;
-    char* email;
-    char* nome;
-    char* apelido;
-    char* birth_date;
-    char* country;
-    char* subscription_type;
-    char** liked_songs_id;
-    int number_liked_songs;
 
+
+struct usersData
+{
+    GHashTable* usersTable;
+    Age* usersByAge;
 };
 
-//Dá print de um user
-void printUser(User* user) {
-    if (user) {
-        printf("User: %s\n", user->username);
-        printf("mail: %s\n", user->email);
-        printf("Name: %s\n", user->nome);
-        printf("Last name: %s\n", user->apelido);
-        printf("Data aniversario: %s\n", user->birth_date);
-        printf("pais: %s\n", user->country);
-        printf("SUBS: %s\n", user->subscription_type);
-        printf("cancoes :\n");
-        for(int i=0; i<user->number_liked_songs;i++)
-        {
-        printf("%s  ",user->liked_songs_id[i]);
-        }
-        printf("\n");
-    }
-    else printf("N tenho nada para printar\n");
-}
 
 
-// Cria um novo user 
-User* newUser (char* username_, char* email_, char* first_name, char* last_name, char * birth_Date, char* pais, char* subscricao, char** liked_Songs_id,int songsN)
-{
-    User* user= malloc(sizeof(User));
+
+UsersData* usersFeed(FILE* ficheiro, MusicData* musicData){
+
+ UsersData* UData = malloc(sizeof(UsersData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
     
-    user->username=strdup(username_);
-    user->email=strdup(email_);
-    user->nome=strdup(first_name);
-    user->apelido=strdup(last_name);
-    user->birth_date=strdup(birth_Date);
-    user->country=strdup(pais);
-    user->subscription_type=strdup(subscricao); 
-  
-    user->liked_songs_id = malloc((songsN+1) * sizeof(char*));  // Aloca memória para o array de ponteiros
-    for (int i = 0; i < songsN; i++) {
-      user->liked_songs_id[i] = strdup(liked_Songs_id[i]);  // Duplica cada string  
-    }
-
-  
-    user->number_liked_songs= songsN;
+    char *filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/users_errors.csv");
+    FILE *errosFileUsers = fopen(filename, "w");
+    free(filename);
     
-    return user;
+    char* line = NULL;  // Inicializado como NULL para getline alocar memória
+    size_t len = 0;
+    char* tokens[8];
+    
+    UData->usersTable = createTable();
    
-}
-
-
-void freeUser(User* user) {
+    UData->usersByAge=createUsersAge();
+    // Ignorar a primeira linha
+    getline(&line, &len, ficheiro);
+    fprintf(errosFileUsers,"%s",line);
     
-     if (user == NULL)
-    {    
-         return;
+    while (1) {
+
+        // Pega a próxima linha
+        if (pegaLinha(ficheiro, &len, &line) == NULL){
+           break; 
+        } 
+           // Remove a nova linha no final, se existir
+    if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
+        line[strlen(line) - 1] = '\0';
     }
-  
-    free(user->username); 
-    free(user->email);
-    free(user->nome);
-    free(user->apelido);
-    free(user->birth_date);
-    free(user->country); 
-    free(user->subscription_type);
+
+        
+        // Atualizar o lineOutput em cada iteração
+        char lineOutput[2048];
+        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
+        lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+        int numberSongs=1;
+        
+        parser(line, tokens);
+
+        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+        char* username = remove_quotes(tokens[0]);
+        char* email= remove_quotes(tokens[1]);
+        char* nome = remove_quotes(tokens[2]);
+        char* apelido = remove_quotes(tokens[3]); 
+        char* birth_date = remove_quotes(tokens[4]);
+        char* country = remove_quotes(tokens[5]);
+        char* subscription_type= remove_quotes(tokens[6]);
+        char* songs=tokens[7];
+
+
+        // Conta o numero de liked songs do user
+        for (int i = 2; songs[i]!='\0'; i++){    
+            if (songs[i] == ',') numberSongs++;
+        }
+
+       char** liked_songs_id =likedSongs(songs,numberSongs);
  
-    int i;
-    for( i=0;i<user->number_liked_songs;i++)
-       {  
-         free(user->liked_songs_id[i]);  
-       }
+
+ 
+     
+
+        int isValid = validaUser(email,birth_date,subscription_type,getMusicsTable(musicData),liked_songs_id,numberSongs);
+
+        if(isValid){
+        
+        int idade= calcular_idade(birth_date);
+        UData->usersByAge= insertLikedSongs(UData->usersByAge,idade,liked_songs_id,numberSongs);
+      
+
+        // Inserir os dados na hash table
+
+        User* user= newUser(username, email ,nome , apelido,birth_date, country,subscription_type,liked_songs_id,numberSongs);
+         insertUser(UData->usersTable,user,username); 
+       
+  
+        }else{
+            fprintf(errosFileUsers,"%s\n",lineOutput);
+          
+        }
+
+      
+        free(liked_songs_id); 
+        freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
+  
+    }
     
-    free(user->liked_songs_id);
-    free(user); 
+    // Libera a memória alocada por getline
+    free(line);
+    
+    fclose(errosFileUsers);
+    return UData;
 }
+
+
+
+
 
 
 // Criar uma nova hash table
@@ -106,17 +133,18 @@ GHashTable* createTable() {
     return usersTable;
 }
 
+
 //Inseir user na Hash Table
-void insertUser(GHashTable* table, User* user)
+void insertUser(GHashTable* table, User* user,char* id)
 {
-       g_hash_table_insert(table, strdup(user->username), user);
+       g_hash_table_insert(table, strdup(id), user);
 
       // printUser(user);
 }
 
 // Procurar (ou "Dar fetch")  um user na hash Table
 User* fetchUser(GHashTable* table, char* username) {
-    return (User*) g_hash_table_lookup(table, username);
+    return  g_hash_table_lookup(table, username);
 }
 
 
@@ -129,51 +157,41 @@ void print_user_entry (gpointer key, gpointer value, gpointer user_data) {
 }
 
 // Função para imprimir toda a hash table
-void print_all_users(GHashTable* userTable) {
+void print_all_users(UsersData* data) {
     printf("----- Hash Table de Users -----\n");
     sleep(3);
-    g_hash_table_foreach(userTable, print_user_entry, NULL);
+    g_hash_table_foreach(data->usersTable, print_user_entry, NULL);
     printf("----- Fim da Hash Table -----\n");
 }
 
-
-
-// Retorna a data de nascimento
- char* getUserBirthDate(User* user) {
-    return user->birth_date;
+void destroyUsersData(UsersData* data){
+    g_hash_table_destroy(data->usersTable);
+    freeUsersByAge(data->usersByAge);
+    printf("Tabela dos users destruida\n");
 }
 
-// Retorna o email
- char* getUserEmail(User* user) {
-    return user->email;
+
+
+GHashTable* getUserTable(UsersData* data){
+    return data->usersTable;
+}
+Age* getUsersByAge(UsersData* data){
+    return data->usersByAge;
 }
 
-// Retorna o nome
- char* getUserNome(User* user) {
-    return user->nome;
-}
 
-// Retorna o apelido
- char* getUserApelido(User* user) {
-    return user->apelido;
-}
-
-// Retorna o país
- char* getUserCountry(User* user) {
-    return user->country;
-}
-
-// Retorna o SubscryptionType
- char* getUserSubscryptionType(User* user) {
-    return user->subscription_type;
-}
-
-// Retorna o liked_songs
- char** getUserLikedSongs(User* user) {
-    return user->liked_songs_id;
-}
-
-// Retorna o número de liked_songs
- int getUserNumberLikedSongs(User* user) {
-    return user->number_liked_songs;
+// Adiciona as cancoes à idade certa
+Age* insertLikedSongs( Age* usersByAge, int idade,char** newSongs,int newSongCount)  {
+ 
+   
+    if (getUBANumberSongs(usersByAge,idade) == 0) {
+       usersByAge=newAge(usersByAge,idade,newSongCount,newSongs);
+    
+    } else {
+        // Quando já há cancoes
+      usersByAge= newSongsAge(usersByAge,idade,newSongCount,newSongs);
+    }
+   // free(newSongs);
+  return usersByAge;
+    
 }

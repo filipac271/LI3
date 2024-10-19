@@ -5,3 +5,4 @@
 //typedef struct querie2 Output2;
 
 #endif
+

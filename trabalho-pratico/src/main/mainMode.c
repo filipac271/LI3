@@ -1,9 +1,10 @@
-#include "main/mainParser.h"
+#include "main/feeder.h"
 #include "parser/parsermusica.h"
 #include "parser/userParser.h"
 #include "controler/artistsController.h"
 #include "controler/usersController.h"
 #include "controler/musicsController.h"
+#include "controler/mainController.h"
 #include "querie/querieManager.h"
 
 #include <stdio.h>
@@ -16,15 +17,19 @@
 
 #define NUM_FILES 3
 
+struct ageUsers
+{
+    char** likedSongs;
+    int numberSongs;
+};
 
 
-
-void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int numFiles, char* queriesFile) {
+void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* queriesFile) {
 
     // Aloca memória para armazenar os ponteiros para os ficheiros
     FILE** ficheiros = malloc(numFiles * sizeof(FILE*));
     FILE* queriesInput;
-    GHashTable** tablesHashed;
+
 
     if (ficheiros == NULL) {
         printf("Erro de alocação de memória\n");
@@ -37,8 +42,9 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
         // Constrói o caminho completo: pastaPrincipal/subpasta/nomeFicheiro
         // O snprintf junta os argumentos para criar uma diretoria que armazena em filePath
         char filePath[1024];
-        snprintf(filePath, sizeof(filePath), "%s/%s/%s", pastaPrincipal, subpasta, fileNames[i]);
+        snprintf(filePath, sizeof(filePath), "%s/%s", pastaPrincipal, fileNames[i]);
 
+        
         // Abre o ficheiro no modo de leitura
         ficheiros[i] = fopen(filePath, "r");
 
@@ -51,14 +57,14 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
 
     
 
-    tablesHashed = parser(ficheiros);
+    MainController* data = feeder(ficheiros);
+    print_all_Data(data);
 
-    queries(tablesHashed,queriesInput);
+
+
+    queries(data,queriesInput);
     
-    //print_all_artists(tablesHashed[0]);
-    //print_all_musics(tablesHashed[1]);
-    //print_all_users(tablesHashed[2]);
-
+    destroyData(data);
 
 
     // Fechar os ficheiros depois de os usar (exemplo)
@@ -69,12 +75,7 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
     }
     fclose(queriesInput);
 
-    //Destruir as hash tables 0- artistas  1- musicas  2- utilizadores
-    g_hash_table_destroy(tablesHashed[0]);
-    g_hash_table_destroy(tablesHashed[1]);
-    g_hash_table_destroy(tablesHashed[2]);
 
-    free(tablesHashed);
 
     // Liberta a memória alocada
     free(ficheiros);
@@ -83,9 +84,7 @@ void lerFicheiros(char* pastaPrincipal, char* subpasta, char* fileNames[], int n
 int principal(char** argv) {
 
     char* pastaPrincipal = argv[1];  // Recebe a pasta principal como argumento
-    char* subpastaSemErros = "sem_erros";    // Define a subpasta a ser usada 
-    char* subpastaComErros = "com_erros";    // Define a subpasta a ser usada 
-
+    
     char* queriesFile = argv[2];
 
 
@@ -93,7 +92,7 @@ int principal(char** argv) {
     char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
 
     // Chama a função para ler os ficheiros
-    lerFicheiros(pastaPrincipal, subpastaSemErros, fileNames, NUM_FILES,queriesFile);
+    lerFicheiros(pastaPrincipal, fileNames, NUM_FILES,queriesFile);
 
     return 0;
 }
