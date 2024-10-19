@@ -7,8 +7,6 @@
 #include <glib.h>
 #include <unistd.h> 
 
-
-
 // Função para calcular a idade
 int calcular_idade(const char* data_nascimento_str) {
     // Data atual

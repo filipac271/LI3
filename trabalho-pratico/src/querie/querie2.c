@@ -118,24 +118,4 @@
 
 
 
-
-// void finalizar_hashtable_nova(GHashTable* original, GHashTable* new_hashtable_query2) {
-//       // Criar a nova hash table (onde as chaves são music_artist_id e os valores são durações acumuladas)
-//     GHashTable *new_hash_table = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_querie2);
-
-//     // Percorrer a hash table original e transferir os campos desejados somando as durações
-//     g_hash_table_foreach(original, insert_or_sum, new_hash_table);
-
-// }
-
-// // struct querie2{
-// //   char *artist_id; //array 
-// //   char *artist_type; //string
-// //   int discography; //int em segundos
-// //   char *artist_country; //???????? //string
-// // };
-
-
-
-
 */

@@ -55,7 +55,6 @@ MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
     }
       //printf("%d\n", num_artists);
 
-
         
         // Atualizar o lineOutput em cada iteração
         char lineOutput[2048];
