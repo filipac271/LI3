@@ -11,11 +11,7 @@
 #include <unistd.h>
 #include <glib.h>
 
-struct ageUsers
-{
-    char** likedSongs;
-    int numberSongs;
-};
+
 
 void queries (MainController* data, FILE* querieFile){
   if (querieFile == NULL) {
