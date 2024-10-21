@@ -5,6 +5,6 @@
 
 
 
-int validaMusic(char* duracao,char** artistsId,GHashTable* artistsTable,int numArtistsId);
+int validaMusic(char* duracao,char** artistsId,GHashTable* artistsTable,int numArtistsId,char* music_artist);
 
 #endif
