@@ -17,6 +17,49 @@ struct music{
   int num_artistId;
 };
 
+struct discography_info{
+  char *artist_id; //array
+  int discography; 
+  char* artist_country
+};
+
+
+//Nota: quando o artist id for um array fazer um for para apenas ter um unico artista em todos e tal
+Info_M* new_dinfo (char* artist_id, int s_discography, char* artist_country){
+  Info_M* n_dinfo = malloc(sizeof(Info_M));
+    if(n_dinfo == NULL){
+      fprintf(stderr, "Memory allocation failed for new dinfo\n");
+      exit(1);
+    }
+
+    n_dinfo->artist_id = strdup(artist_id);
+    n_dinfo->discography  = s_discography; //acho que isto deve funcionar, mas iremos descobrir
+    n_dinfo->artist_country = strdup(artist_country);
+
+    return n_dinfo;
+}
+
+
+void free_dinfo (Info_M* dinfo){
+  if(dinfo){
+    free(dinfo->artist_id);
+    free(dinfo->artist_country);
+
+    free(dinfo);
+  }
+}
+
+void print_dinfo(Info_M* dinfo){
+  if(dinfo){
+    printf("ARTIST_ID: %s\n", dinfo->artist_id);
+    printf("DISCOGRAPHY: %d \n", dinfo->discography);
+    printf("ARTIST_COUNTRY: %s\n", dinfo->artist_country);
+  } else{
+    printf("Nao existe Dinfo!\n");
+  }
+}
+
+
 
 Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, char* music_lyrics, int num_artists){
   Music* n_music = malloc(sizeof(Music));
@@ -92,7 +135,10 @@ void print_musicas(Music * musica){
     printf("MUSIC_GENRE: %s\n", musica->music_genre);
     printf("MUSIC_YEAR: %s\n", musica->music_year);
     printf("MUSIC_LYRICS: %s\n", musica->music_lyrics);
-  }else{printf("N existe esta musica\n");}
+
+  } else{
+    printf("N existe esta musica\n");
+  }
 }
 
 
@@ -144,4 +190,28 @@ char* get_music_year (Music* music){
 char* get_music_lyrics (Music* music){
   return music->music_lyrics;
 
+}
+
+
+
+//GETTER E SETTERS DINFO
+int get_dinfo_discography (Info_M* dinfo){
+  return dinfo->discography;
+}
+
+void set_dinfo_discography (Info_M* dinfo, int new_discography){
+  dinfo->discography = new_discography;
+}
+
+//tentative de setter que ja junta a discografia
+void set_dinfo_new_discography (Info_M* dinfo, int new_discography){
+  dinfo->discography += new_discography;
+}
+
+char* get_dinfo_country (Info_M* dinfo){
+  return dinfo->artist_country;
+}
+
+char* get_dinfo_id (Info_M* dinfo){
+  return dinfo->artist_id;
 }
