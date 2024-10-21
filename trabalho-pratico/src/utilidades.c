@@ -375,3 +375,45 @@ liked_songs_id[numberS] = NULL;
 
     return liked_songs_id;
 }
+
+
+
+
+//Nao tenho bem a certeza se é suposto estas funçoes estarem aqui, mas vou coloca-las aqui e depois vejo
+
+//Funcoes auxiliares para somar as horas e voltar a coloca-las num char*
+// Função para converter em segundos
+
+char* secondsToTimeString(int total_seconds) {
+    int hours = total_seconds / 3600;
+    int minutes = (total_seconds % 3600) / 60;
+    int seconds = total_seconds % 60;
+
+    // Alocar memória para a string no formato hh:mm:ss (8 caracteres + '\0')
+    char* timeString = malloc(9 * sizeof(char));
+
+    // Verificar se a memória foi alocada
+    if (timeString == NULL) {
+        return NULL; // Retornar NULL em caso de falha
+    }
+
+    // Formatar a string no formato hh:mm:ss
+    sprintf(timeString, "%02d:%02d:%02d", hours, minutes, seconds);
+
+    return timeString;
+}
+
+
+int timeStringToSeconds(char* timeString) {
+    int hours, minutes, seconds;
+
+    // Fazer o parsing da string no formato hh:mm:ss
+    if (sscanf(timeString, "%02d:%02d:%02d", &hours, &minutes, &seconds) != 3) {
+        return -1; // Retorna -1 em caso de erro no formato da string
+    }
+
+    // Converter horas, minutos e segundos para o total de segundos
+    int total_seconds = (hours * 3600) + (minutes * 60) + seconds;
+
+    return total_seconds;
+}
