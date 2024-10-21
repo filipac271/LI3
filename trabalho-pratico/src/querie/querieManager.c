@@ -66,9 +66,6 @@ void queries (MainController* data, FILE* querieFile) {
                     strcpy(country, "");  // Define `country` como string vazia
                 }
 
-                // Debug para verificar o valor capturado de `country`
-                printf("COUNTRY DA QUERY: '%s'\n", country);
-
                 // Executa a query 2
                 querie2(DInfotable, ATable, n, i, country);
                 break;

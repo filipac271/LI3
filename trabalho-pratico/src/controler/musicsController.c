@@ -84,7 +84,7 @@ MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
 
 
 
-        int isValid = validaMusic(music_duration,music_artist_id,getArtistsTable(artistsData),num_artistId);
+        int isValid = validaMusic(music_duration,music_artist_id,getArtistsTable(artistsData),num_artistId,tokens[2]);
         
         if(isValid){
             Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
