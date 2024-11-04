@@ -22,7 +22,7 @@ void print_music_entry (gpointer key, gpointer value, gpointer user_data);
 void print_all_musics(MusicData* musica);
 
 void destroyMusicTable(MusicData* data);
-GHashTable* getMusicsTable(MusicData* data);
 
+GHashTable* getMusicsTable(MusicData* data);
 
 #endif

@@ -143,8 +143,8 @@ void insertUser(GHashTable* table, User* user,char* id)
 }
 
 // Procurar (ou "Dar fetch")  um user na hash Table
-User* fetchUser(GHashTable* table, char* username) {
-    return  g_hash_table_lookup(table, username);
+User* fetchUser(UsersData* controlador, char* username) {
+    return  g_hash_table_lookup(controlador->usersTable, username);
 }
 
 

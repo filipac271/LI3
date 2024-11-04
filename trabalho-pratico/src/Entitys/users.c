@@ -161,27 +161,27 @@ void freeUsersByAge(Age* usersByAge){
 
 // Retorna a data de nascimento
  char* getUserBirthDate(User* user) {
-    return user->birth_date;
+    return strdup(user->birth_date);
 }
 
 // Retorna o email
  char* getUserEmail(User* user) {
-    return user->email;
+    return strdup(user->email);
 }
 
 // Retorna o nome
  char* getUserNome(User* user) {
-    return user->nome;
+    return strdup(user->nome);
 }
 
 // Retorna o apelido
  char* getUserApelido(User* user) {
-    return user->apelido;
+    return strdup(user->apelido);
 }
 
 // Retorna o país
  char* getUserCountry(User* user) {
-    return user->country;
+    return strdup(user->country);
 }
 
 // Retorna o SubscryptionType

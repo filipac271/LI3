@@ -99,6 +99,13 @@ ArtistsData* artistFeed(FILE* ficheiro) {
 }
 
 
+
+void inserir_discography_into_artist (GHashTable* artist_Table, int discography, char* artist_id){
+    Artist * artista_atual = g_hash_table_lookup(artist_Table, artist_id);
+
+    setArtistDiscography(artista_atual, discography);
+}
+
 // Função para inicializar a hash table
 GHashTable* init_artists_table() {
     // Criar a hash table que mapeia strings (ID) para structs de artistas

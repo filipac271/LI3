@@ -1,6 +1,9 @@
-#include "controler/musicsController.h"
-#include "controler/artistsController.h"
-#include "querie/querie1.h"
+#include "../../include/controler/usersController.h"
+#include "../../include/controler/musicsController.h"
+#include "controler/usersController.h"
+#include "utilidades.h"
+#include "Entitys/musics.h"
+#include "Entitys/artists.h"
 #include "querie/querie2.h"
 
 
@@ -8,114 +11,122 @@
 #include <stdlib.h>
 #include <glib.h>
 
-/*
-// void insert_or_sum(GHashTable table, charkey, float valor_novo) {
-//     // Tentar buscar o tuplo existente
-//     Tuplo tuplo_existente = g_hash_table_lookup(table, key);
+guint get_garray_length(GArray *array) {
+    if (array == NULL) {
+        return 0; // Retorna 0 se o GArray for NULL
+    }
+    return array->len; // Retorna o tamanho do GArray
+}
 
-// //     if (tuplo_existente != NULL) {
-// //         // Se o tuplo já existir, somar o valor ao valor existente
-// //         tuplo_existente->valor += valor_novo;
-// //         // A tabela vai manter o tuplo existente, pois a referência é a mesma
-// //     } else {
-// //         // Se não existir, criar um novo tuplo e inserir na hash table
-// //         Tuplonovo_tuplo = malloc(sizeof(Tuplo));
-// //         novo_tuplo->nome = strdup(key);  // Copiar a string da chave
-// //         novo_tuplo->valor = valor_novo;
+char* seconds_to_hhmmss(int total_seconds) {
+    // Aloca memória para a string de saída
+    //para tirar os warnigns é mudar o 9 para 16 mas ocupa mais memoria
+    char *time_string = malloc(9); // hh:mm:ss + \0 = 9 caracteres
+    if (time_string == NULL) {
+        return NULL; // Verifica se a alocação foi bem-sucedida
+    }
 
-// //         // Inserir o novo tuplo na hash table (substitui se já existir)
-// //         g_hash_table_replace(table, novo_tuplo->nome, novo_tuplo);
-// //     }
-// // }
+    // Calcula horas, minutos e segundos
+    int hours = total_seconds / 3600;
+    int minutes = (total_seconds % 3600) / 60;
+    int seconds = total_seconds % 60;
 
-// // Output
-// // name 1;type 1;discography duration 1;country 1
+    // Formata a string no formato hh:mm:ss
+    //mudar aqui tambem para 16 caso se queira tirar os warning
+    snprintf(time_string, 9, "%02d:%02d:%02d", hours, minutes, seconds);
 
-// struct querie2{
-//   char *artist_id; //array
-//   char *artist_type; //string
-//   int discography; //int em segundos
-//   char *artist_country; //???????? //string
-// };
+    return time_string;
+}
 
-// void free_querie2 (Output2* q2){
-//   if(q2){
-//     free(q2->artist_id);
-//     free(q2->artist_type);
-//     free(q2->artist_country);
+//REVER ESTA FUNCAO
+// Função de comparação para ordenar pela discografia em ordem decrescente
+gint compare_discography(gconstpointer a, gconstpointer b) {
 
-//     free(q2);
-//   }
-// }
+    Artist *artist_a = *(Artist **)a;
+    Artist *artist_b = *(Artist **)b;
+
+    int disc_a = getArtistDiscography(artist_a);
+    int disc_b = getArtistDiscography(artist_b);
 
 
-// //a ideia seria ir criando as coisas e pondo na hash table e ao emsmo tempo ir criando um array com os tempos, os tempos seriam a key da hash table
-// // entao eu fazia uma funlao que procurasse o maior elemento do array, e dava à key a hash tbale para procurar o artista ()
-// //NAO ESQUECER RESOLUÇAO DE CONFITOS COM OS EMPATES!!!!! (pensar depois)
+    // Compara pela discografia (ordem decrescente)
+    return (disc_b - disc_a);
+}
 
-// //maybe mudar a estrutura da musica para a duration passar a segundos????
-
-
-// int duration_to_seconds(const char *duration_str) {
-//     int hours, minutes, seconds;
-
-//     sscanf(duration_str, "%d:%d:%d", &hours, &minutes, &seconds);
-
-//     return hours * 3600 + minutes * 60 + seconds;
-// }
-
-
-// //Funçao que pega apenas no primeiro artista caso o artista nao seja individual
-// char* extrair_artista(char* artistId_completo){
-
-//   char* artistId_unico[9];
-//   int j;
-
-//   for (int i = 0; artistId_completo[i] != '\0'; i++) {
-//         if (isalnum(artistId_completo[i])) {
-//             artistId_unico[j++] = artistId_completo[i];
-//         } else if (j > 0 && !isalnum(artistId_completo[i])) {
-//         artistId_unico[j] = '\0';           
-//         break;
-//         }
-//     }
-
-// }
-
-// ArtistsData* get_struct_from_hashtable(GHashTable *hash_table, char* artist_id) {
-//     // Usando g_hash_table_lookup para procurar a estrutura pela chave
-//    ArtistsData *data = (ArtistsData*) g_hash_table_lookup(hash_table, artist_id);
+// Função para filtrar a hash table e ordenar o array pela discografia
+GArray* filter_and_sort_hash_table_by_discography(GHashTable *Artist_Table, char *country) {
+    GArray *filtered_array = g_array_new(FALSE, FALSE, sizeof(struct Artists*));
     
-//     return data; // Retorna o ponteiro para a estrutura, ou NULL se não encontrada
-// }
+    // Itera sobre a hash table e aplica o filtro apenas se 'country' não for NULL
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init(&iter, Artist_Table);
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        struct Artist* artist_to_filter = (struct Artist*) value;
+
+        // Se 'country' não for NULL, aplica a filtragem pelo país
+        if (country == NULL || strcmp(country, "") == 0 || strcmp(getArtistCountry(artist_to_filter), country) == 0) {
+            // Se country for NULL, ou se o país do artista corresponder ao fornecido, adiciona ao array
+            g_array_append_val(filtered_array, artist_to_filter);
+        } 
+    }
+
+    // Ordena o array pela discografia em ordem decrescente
+    g_array_sort(filtered_array, (GCompareFunc)compare_discography);
+
+    return filtered_array;
+}
 
 
-// // Função que será chamada para cada elemento da tabela de hash original
-// void insert_or_sum(gpointer key, gpointer value, gpointer user_data) {
-// // A nova tabela hash que está sendo preenchida, passada como 'user_data'
-//     GHashTable* new_hashtable_query2 = (GHashTable*)user_data;
 
-//     // O value que é um pointer para a struct original
-//     MusicData* original = (MusicData*)value;
 
-//     char *artist_id = get_music_artist_id(original);
-//     int duration_seconds = get_music_duration_seconds(original); 
+
+
+
+void querie2(GHashTable* Artist_Original, int n, int i, char* country){
+  //printf("COUNTRY DO INICIO DA FUNCAO QUERIE2: %s\n", country);
+  
+
+  GArray* q2 = filter_and_sort_hash_table_by_discography(Artist_Original, country);
+
+  guint length = get_garray_length(q2);
+
+char *filename = malloc(sizeof(char) * 256);
+  sprintf(filename, "resultados/command%d_output.txt",i+1);
+  FILE *output_file = fopen(filename, "w");
+
+  // name 1;type 1;discography duration 1;country 1
+    int j = 0;
+    if(n == 0){
+      fprintf(output_file,"\n");
+    }else{
+    while(j < n && j < length && country != ""){
     
-    
-//     // Verificar se o artista já existe na nova hash table
-//     int *existing_duration = (int *)g_hash_table_lookup(new_hashtable_query2, artist_id);
-    
-//     if (existing_duration) {
-//         // Se já existir, somar a duração atual à existente
-//         *existing_duration += duration_seconds;
-//     } else {
-//         // Caso contrário, adicionar o artista com a nova duração
-//         int *new_duration = malloc(sizeof(int));
-//         *new_duration = duration_seconds;
-//         g_hash_table_insert(new_hashtable_query2, artist_id, new_duration);
-//     }
-// }
+    struct Artist *artist_atual = g_array_index(q2, struct  Artist*, j);
+
+  
+   // char* id_atual = getArtistId(artist_atual);
 
 
+   // Artist *original = g_hash_table_lookup(Artist_Original, id_atual);
+    char* time = seconds_to_hhmmss(getArtistDiscography(artist_atual));
 
-*/
+
+      // name 1;type 1;discography duration 1;country 1
+
+      fprintf(output_file,"%s;%s;%s;%s\n",getArtistName(artist_atual), getArtistType(artist_atual), time, getArtistCountry(artist_atual));
+
+      free(time);
+      j++;
+  }
+    }
+
+
+    g_array_free(q2, TRUE);
+
+free(filename);
+fclose(output_file);
+
+}
+

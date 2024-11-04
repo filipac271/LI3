@@ -35,7 +35,7 @@ MainController* mainFeed(FILE** dataset){
 
 
 void print_all_Data(MainController* data){
-    //print_all_artists(data->artistsController);
+   // print_all_artists(data->artistsController);
     //print_all_musics(data->musicsController);
     //print_all_users(data->usersController);
 }
@@ -58,4 +58,8 @@ UsersData* getUserController(MainController* data){
 MusicData* getMusicController (MainController* data){
     return data->musicsController;
 
+}
+
+ArtistsData* getartistController (MainController* data){
+    return data->artistsController;
 }

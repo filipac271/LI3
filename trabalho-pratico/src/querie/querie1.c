@@ -30,28 +30,53 @@ int calcular_idade(const char* data_nascimento_str) {
     return idade;
 }
 
-void querie1(GHashTable* usersTable, char* id,int i){
+void querie1(UsersData* userController, char* id,int i){
 char *filename = malloc(sizeof(char) * 256);
   sprintf(filename, "resultados/command%d_output.txt",i+1);
 
 
 
  
-User* utilizador = fetchUser(usersTable,id);
+User* utilizador = fetchUser(userController,id);
  FILE *output_file = fopen(filename, "w");
+
+
+char* userBirthDate ;
+char* userEmail;
+char* userNome;
+char* userApelido;
+char* userCountry;
+
+
 if (utilizador != NULL)
 { 
+      userBirthDate = getUserBirthDate(utilizador);
+      userEmail =getUserEmail(utilizador);
+      userNome =getUserNome(utilizador);
+      userApelido =getUserApelido(utilizador);
+      userCountry =getUserCountry(utilizador);
 
-      int idade = calcular_idade( getUserBirthDate(utilizador));
-      fprintf(output_file,"%s;%s;%s;%d;%s\n",getUserEmail(utilizador),  getUserNome(utilizador),  getUserApelido(utilizador), idade, getUserCountry(utilizador)); 
+
+      int idade = calcular_idade(userBirthDate);
+      fprintf(output_file,"%s;%s;%s;%d;%s\n",userEmail,userNome,userApelido, idade,userCountry ); 
+
+      free(userBirthDate);
+      free(userEmail);
+      free(userNome);
+      free(userApelido);
+      free(userCountry);
+            printf("ENTROU\n");
+
 }
 if(utilizador==NULL)
 {
   fprintf(output_file,"\n");
 }
 
-  free(filename);
-  fclose(output_file);
+
+
+free(filename);
+fclose(output_file);
 
 
 

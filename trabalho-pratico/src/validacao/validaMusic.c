@@ -6,11 +6,17 @@
 
 #include "utilidades.h"
 
-int validaMusic(char* duracao, char** artistsId, GHashTable* artistsTable,int numArtistsId) {
+int validaMusic(char* duracao, char** artistsId, GHashTable* artistsTable,int numArtistsId,char* music_artist) {
     int d;
     int pertence = 1;  // Assumir que todos os artistas pertencem
+    int tembarra = 1;
 
     d = validaDuraçao(duracao);
+    int tamanho = strlen(music_artist);   
+    if (music_artist[1] != '[' || music_artist[tamanho-2] != ']'){tembarra = 0;    }
+
+
+
 
     for (int i = 0; i < numArtistsId; i++) {
     if (artistsId[i] == NULL) {
@@ -29,5 +35,5 @@ int validaMusic(char* duracao, char** artistsId, GHashTable* artistsTable,int nu
 }
 
 
-    return (d & pertence);  // Combinação bitwise dos resultados de duração e artistas
+    return (d & pertence & tembarra);  // Combinação bitwise dos resultados de duração e artistas
 }
