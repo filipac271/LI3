@@ -12,11 +12,7 @@
 #include <unistd.h>
 #include <glib.h>
 
-struct ageUsers
-{
-    char** likedSongs;
-    int numberSongs;
-};
+
 
 
 
@@ -43,7 +39,6 @@ void queries (MainController* data, FILE* querieFile) {
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
-        GHashTable* Utable = getUserTable(UserController);
         Age* usersAge = getUsersByAge(UserController);
         MusicData* MusicController = getMusicController(data);
         GHashTable* Mtable = getMusicsTable(MusicController);
@@ -53,7 +48,7 @@ void queries (MainController* data, FILE* querieFile) {
         switch (line[0]) {
             case '1':
                 if (strlen(line) >= 2) {
-                    querie1(Utable, line + 2, i);
+                    querie1(UserController, line + 2, i);
                 }
                 break;
 
@@ -69,8 +64,6 @@ void queries (MainController* data, FILE* querieFile) {
                     strcpy(country, "");  // Define `country` como string vazia
                 }
 
-                // Debug para verificar o valor capturado de `country`
-               // printf("COUNTRY DA QUERY: '%s'\n", country);
 
                 // Executa a query 2
                 querie2(ATable, n, i, country);

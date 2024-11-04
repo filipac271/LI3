@@ -18,13 +18,6 @@ struct querie3
    int numMusicas;
 };
 
-struct usersByAge
-{
-    char** likedSongs;
-    int numberSongs;
-};
-
-
 
 
 
@@ -54,7 +47,7 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
             {
                array[a].numMusicas++;
                inserido=1;
-               //printf("%s\n",array[a].genero);
+             
 
               
             }
@@ -73,6 +66,7 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
       }
    
    }
+
 
 if(array[0].numMusicas!=-1)
 {
