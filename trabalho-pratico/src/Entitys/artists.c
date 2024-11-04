@@ -14,6 +14,7 @@ struct artists
     char* country;
     char* type;
     int numMembrosGrupo;
+    int total_discography;
 };
 
 
@@ -36,6 +37,7 @@ Artist* create_artist(char* id, const char* name, char* description, float ganho
     new_artist->country = strdup(country);
     new_artist->type = strdup(type);
     new_artist->numMembrosGrupo=numMembros;
+    new_artist->total_discography = 0;
 
 
     return new_artist;
@@ -80,6 +82,7 @@ void print_artist(Artist* artist) {
         printf("Country: %s\n", artist->country);
         printf("Type: %s\n", artist->type);
         printf("Numero de Membros: %d\n", artist->numMembrosGrupo);
+        printf("Total DURATION: %d", artist->total_discography);
         printf("\n");
     } else {
         printf("N tenho nada para printar\n");
@@ -117,4 +120,14 @@ char* getArtistType(Artist* artista){
 
 int getArtistNumMembros(Artist* artista){
     return artista->numMembrosGrupo;
+}
+
+
+//Adicionado ao .h
+int getArtistDiscography(Artist* artista){
+    return artista->total_discography;
+}
+
+void setArtistDiscography(Artist* artista, int discography){
+    artista->total_discography += discography;
 }
