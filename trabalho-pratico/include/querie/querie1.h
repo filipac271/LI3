@@ -1,7 +1,8 @@
 #ifndef QUERIE1_H
 #define QUERIE1_H
 #include <glib.h>
+#include "controler/usersController.h"
 
 
-void querie1(GHashTable* usersTable, char* id,int i);
+void querie1(UsersData* userController, char* id,int i);
 #endif
