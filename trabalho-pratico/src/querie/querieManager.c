@@ -43,7 +43,6 @@ void queries (MainController* data, FILE* querieFile) {
         Age* usersAge = getUsersByAge(UserController);
         MusicData* MusicController = getMusicController(data);
         GHashTable* Mtable = getMusicsTable(MusicController);
-        GHashTable* DInfotable = getDinfoTable(MusicController);
         ArtistsData* ArtistContoller = getartistController(data);
         GHashTable* ATable = getArtistsTable(ArtistContoller);
 
@@ -66,8 +65,9 @@ void queries (MainController* data, FILE* querieFile) {
                     strcpy(country, "");  // Define `country` como string vazia
                 }
 
+
                 // Executa a query 2
-                querie2(DInfotable, ATable, n, i, country);
+                querie2(ATable, n, i, country);
                 break;
 
             case '3':

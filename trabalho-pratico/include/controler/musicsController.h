@@ -25,20 +25,4 @@ void destroyMusicTable(MusicData* data);
 
 GHashTable* getMusicsTable(MusicData* data);
 
-
-GHashTable* iniciar_hash_info();
-
-void inserir_dinfo_into_htable(GHashTable* dinfo, int new_discography, char* artist_id, GHashTable* Artist_Original);
-
-void print_dinfo_entry (gpointer key, gpointer value, gpointer user_data);
-
-
-void print_all_Dinfos(MusicData* musica);
-
-void destroyDinfoTable(MusicData* data);
-
-
-GHashTable* getDinfoTable(MusicData* data);
-
-
 #endif

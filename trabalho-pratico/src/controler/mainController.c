@@ -35,7 +35,7 @@ MainController* mainFeed(FILE** dataset){
 
 
 void print_all_Data(MainController* data){
-    //print_all_artists(data->artistsController);
+   // print_all_artists(data->artistsController);
     //print_all_musics(data->musicsController);
     //print_all_users(data->usersController);
 }
@@ -44,7 +44,6 @@ void print_all_Data(MainController* data){
 void destroyData(MainController* data){
     destroyTableArtist(data->artistsController);
     destroyMusicTable(data->musicsController);
-    destroyDinfoTable(data->musicsController);
     destroyUsersData(data->usersController);
     free(data->usersController);
     free(data->musicsController);
