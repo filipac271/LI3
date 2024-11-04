@@ -9,7 +9,7 @@
 #include "parser/userParser.h"
 #include "controler/mainController.h"
 
-MainController* feeder(FILE** ficheiros);
+MainController* feeder(char* diretoria);
 
 
 #endif

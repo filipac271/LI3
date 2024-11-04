@@ -10,7 +10,7 @@ typedef struct artistsData ArtistsData;
 void insert_artist_into_table(GHashTable* artists_table,Artist* newArtist, char* id);
 void inserir_discography_into_artist (GHashTable* artist_Table, int discography, char* artist_id);
 
-ArtistsData* artistFeed(FILE* ficheiro);
+ArtistsData* artistFeed(char* diretoria);
 
 
 GHashTable* init_artists_table();
