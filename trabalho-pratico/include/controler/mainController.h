@@ -6,7 +6,7 @@
 typedef struct mainController MainController;
 
 
-MainController* mainFeed(FILE** dataset);
+MainController* mainFeed(char* diretoria);
 
 void destroyData(MainController* data);
 void print_all_Data(MainController* data);

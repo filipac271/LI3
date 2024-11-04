@@ -19,13 +19,13 @@ struct mainController
 };
 
 
-MainController* mainFeed(FILE** dataset){
+MainController* mainFeed(char* diretoria){
     MainController* mainData = malloc(sizeof(MainController));
 
 
-    mainData->artistsController =  artistFeed(dataset[0]);
-    mainData->musicsController = musicsFeed(dataset[1],mainData->artistsController);
-    mainData->usersController = usersFeed(dataset[2],mainData->musicsController);
+    mainData->artistsController =  artistFeed(diretoria);
+    mainData->musicsController = musicsFeed(diretoria,mainData->artistsController);
+    mainData->usersController = usersFeed(diretoria,mainData->musicsController);
 
 
 

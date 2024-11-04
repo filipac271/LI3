@@ -10,7 +10,7 @@
 typedef struct usersData UsersData;
 
 
-UsersData* usersFeed(FILE* ficheiro, MusicData* musicData);
+UsersData* usersFeed(char* diretoria, MusicData* musicData);
 
 GHashTable* createTable();
 void insertUser(GHashTable* table, User* user,char* id);

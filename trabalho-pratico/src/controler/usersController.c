@@ -3,6 +3,8 @@
 #include "validacao/validaUser.h"
 #include "utilidades.h"
 #include "Entitys/users.h"
+#include "IOManager.h"
+
 
 
 #include <glib.h>
@@ -22,10 +24,11 @@ struct usersData
 
 
 
-UsersData* usersFeed(FILE* ficheiro, MusicData* musicData){
+UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
  UsersData* UData = malloc(sizeof(UsersData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-    
+    FILE* ficheiro = abrirFILE(diretoria,"users.csv");
+
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/users_errors.csv");
     FILE *errosFileUsers = fopen(filename, "w");
@@ -111,7 +114,7 @@ UsersData* usersFeed(FILE* ficheiro, MusicData* musicData){
     
     // Libera a memória alocada por getline
     free(line);
-    
+    fclose(ficheiro);
     fclose(errosFileUsers);
     return UData;
 }

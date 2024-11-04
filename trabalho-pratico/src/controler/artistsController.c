@@ -3,6 +3,7 @@
 #include "controler/mainController.h"
 #include "validacao/validaArtista.h"
 #include "utilidades.h"
+#include "IOManager.h"
 
 #include <glib.h>
 #include <stdio.h>
@@ -14,13 +15,13 @@ struct artistsData{
     GHashTable* artistsTable;
 };
 
-ArtistsData* artistFeed(FILE* ficheiro) {
+ArtistsData* artistFeed(char* diretoria) {
+
     ArtistsData* AData = malloc(sizeof(ArtistsData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-    
-    char *filename = malloc(sizeof(char) * 256);
-    sprintf(filename, "resultados/artists_errors.csv");
-    FILE *errosFileArtists = fopen(filename, "w");
-    free(filename);
+    FILE* ficheiro = abrirFILE(diretoria,"artists.csv");
+
+    FILE *errosFileArtists = abrirFILE_ERROS("resultados/artists_errors.csv");
+   
     
     char* line = NULL;  // Inicializado como NULL para getline alocar memória
     size_t len = 0;
@@ -29,7 +30,7 @@ ArtistsData* artistFeed(FILE* ficheiro) {
     AData->artistsTable = init_artists_table();
     
     // Ignorar a primeira linha
-    getline(&line, &len, ficheiro);
+    pegaLinha(ficheiro,&len,&line);
     fprintf(errosFileArtists,"%s",line);
     
     while (1) {
@@ -93,8 +94,8 @@ ArtistsData* artistFeed(FILE* ficheiro) {
     
     // Libera a memória alocada por getline
     free(line);
-    
-    fclose(errosFileArtists);
+    fecharFILE (ficheiro);
+    fecharFILE(errosFileArtists);
     return AData;
 }
 

@@ -67,7 +67,6 @@ if (utilizador != NULL)
       free(userNome);
       free(userApelido);
       free(userCountry);
-            printf("ENTROU\n");
 
 }
 if(utilizador==NULL)
