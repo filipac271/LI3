@@ -39,7 +39,6 @@ void queries (MainController* data, FILE* querieFile) {
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
-        GHashTable* Utable = getUserTable(UserController);
         Age* usersAge = getUsersByAge(UserController);
         MusicData* MusicController = getMusicController(data);
         GHashTable* Mtable = getMusicsTable(MusicController);
@@ -49,7 +48,7 @@ void queries (MainController* data, FILE* querieFile) {
         switch (line[0]) {
             case '1':
                 if (strlen(line) >= 2) {
-                    querie1(Utable, line + 2, i);
+                    querie1(UserController, line + 2, i);
                 }
                 break;
 
