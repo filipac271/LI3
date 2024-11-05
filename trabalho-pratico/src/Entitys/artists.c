@@ -95,7 +95,7 @@ char* getArtistId(Artist* artista){
 }
 
 char* getArtistName(Artist* artista){
-    return artista->name;
+    return strdup(artista->name);
 }
 
 char* getArtistDescriçao(Artist* artista){
@@ -111,11 +111,11 @@ char** getArtistGrupo(Artist* artista){
 }
 
 char* getArtistCountry(Artist* artista){
-    return artista->country;
+    return  strdup(artista->country);
 }
 
 char* getArtistType(Artist* artista){
-    return artista->type;
+    return strdup(artista->type);
 }
 
 int getArtistNumMembros(Artist* artista){

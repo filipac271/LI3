@@ -21,7 +21,7 @@ struct querie3
 
 
 
-void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
+void querie3(int num, MusicData* musicController, int min , int max, Age* usersByAge)
 {
     
   
@@ -35,7 +35,7 @@ void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge)
       for(int j=0;j<getUBANumberSongs(usersByAge,i);j++)
       {     
          
-         Music* song= lookup_musica(music,likedSongs[j]);
+         Music* song= lookup_musica(musicController,likedSongs[j]);
         
          char* genero=get_music_genre(song);
          int inserido=0;

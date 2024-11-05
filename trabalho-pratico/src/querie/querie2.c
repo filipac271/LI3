@@ -48,31 +48,23 @@ gint compare_discography(gconstpointer a, gconstpointer b) {
     int disc_a = getArtistDiscography(artist_a);
     int disc_b = getArtistDiscography(artist_b);
 
+    int r = disc_b - disc_a;
+
+
 
     // Compara pela discografia (ordem decrescente)
-    return (disc_b - disc_a);
+    return (r);
 }
 
 // Função para filtrar a hash table e ordenar o array pela discografia
-GArray* filter_and_sort_hash_table_by_discography(GHashTable *Artist_Table, char *country) {
-    GArray *filtered_array = g_array_new(FALSE, FALSE, sizeof(Artist*));
-    
-    // Itera sobre a hash table e aplica o filtro apenas se 'country' não for NULL
-    GHashTableIter iter;
-    gpointer key, value;
+GArray* filter_and_sort_hash_table_by_discography(ArtistsData* controller, char *country) {
+    // Cria o array no módulo de processamento
+    GArray *filtered_array = g_array_new(FALSE, FALSE, sizeof(struct Artist*));
 
-    g_hash_table_iter_init(&iter, Artist_Table);
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        Artist* artist_to_filter = (Artist*) value;
+    // Preenche o array no módulo de hash table
+    fill_filtered_artists(controller, filtered_array, country);
 
-        // Se 'country' não for NULL, aplica a filtragem pelo país
-        if (country == NULL || strcmp(country, "") == 0 || strcmp(getArtistCountry(artist_to_filter), country) == 0) {
-            // Se country for NULL, ou se o país do artista corresponder ao fornecido, adiciona ao array
-            g_array_append_val(filtered_array, artist_to_filter);
-        } 
-    }
-
-    // Ordena o array pela discografia em ordem decrescente
+    // Ordena o array após preenchê-lo
     g_array_sort(filtered_array, (GCompareFunc)compare_discography);
 
     return filtered_array;
@@ -84,11 +76,11 @@ GArray* filter_and_sort_hash_table_by_discography(GHashTable *Artist_Table, char
 
 
 
-void querie2(GHashTable* Artist_Original, int n, int i, char* country){
+void querie2(ArtistsData* ArtistController, int n, int i, char* country){
   //printf("COUNTRY DO INICIO DA FUNCAO QUERIE2: %s\n", country);
   
 
-  GArray* q2 = filter_and_sort_hash_table_by_discography(Artist_Original, country);
+  GArray* q2 = filter_and_sort_hash_table_by_discography(ArtistController, country);
 
   guint length = get_garray_length(q2);
 
@@ -103,20 +95,24 @@ char *filename = malloc(sizeof(char) * 256);
     }else{
     while(j < n && j < (int)length){
     
-    Artist *artist_atual = g_array_index(q2, Artist*, j);
+     Artist *artist_atual = g_array_index(q2, struct  Artist*, j);
 
   
    // char* id_atual = getArtistId(artist_atual);
 
-
+    int discography = getArtistDiscography(artist_atual);
    // Artist *original = g_hash_table_lookup(Artist_Original, id_atual);
-    char* time = seconds_to_hhmmss(getArtistDiscography(artist_atual));
+    char* time = seconds_to_hhmmss(discography);
 
 
       // name 1;type 1;discography duration 1;country 1
-
-      fprintf(output_file,"%s;%s;%s;%s\n",getArtistName(artist_atual), getArtistType(artist_atual), time, getArtistCountry(artist_atual));
-
+      char* nome = getArtistName(artist_atual);
+      char* tipo = getArtistType(artist_atual);
+      char* pais = getArtistCountry(artist_atual);
+      fprintf(output_file,"%s;%s;%s;%s\n",nome,tipo, time, pais);
+      free(nome);
+      free(tipo);      
+      free(pais);
       free(time);
       j++;
   }

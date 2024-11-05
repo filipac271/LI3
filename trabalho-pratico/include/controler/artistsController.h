@@ -8,7 +8,7 @@
 typedef struct artistsData ArtistsData;
 
 void insert_artist_into_table(GHashTable* artists_table,Artist* newArtist, char* id);
-void inserir_discography_into_artist (GHashTable* artist_Table, int discography, char* artist_id);
+void inserir_discography_into_artist (ArtistsData* controller, int discography, char* artist_id);
 
 ArtistsData* artistFeed(char* diretoria);
 
@@ -17,15 +17,14 @@ GHashTable* init_artists_table();
 
 Artist* create_artist(char* id, const char* name, char* description, float ganho, char** grupo, char* country, char* type,int numMembros);
 
-Artist* lookup_artist(GHashTable* artists_table, char* id);
+Artist* lookup_artist(ArtistsData* controller, char* id);
 
 void print_artist_entry (gpointer key, gpointer value, gpointer user_data);
 void print_all_artists(ArtistsData* data);
 void destroyTableArtist(ArtistsData* ArtistData);
 
 
-GHashTable* getArtistsTable (ArtistsData* data);
 
-
+void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country);
 
 #endif
