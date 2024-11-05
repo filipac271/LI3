@@ -201,18 +201,9 @@ void freeUsersByAge(Age* usersByAge){
 
 int getUBANumberSongs(Age *userAge,int idade){
     return (userAge[idade].numberSongs);
-}
 
-// char** getUBALikedSongs(Age *userAge, int idade) {
-//     int numSongs = userAge[idade].numberSongs;
-//     char **likedSongsCopy = malloc(numSongs * sizeof(char*));
-//     for (int i = 0; i < numSongs; i++) {
-//         likedSongsCopy[i] = strdup(userAge[idade].likedSongs[i]);
-//     }
-
-//     return likedSongsCopy;
-// }
 
 char** getUBALikedSongs(Age *userAge, int idade){
     return userAge[idade].likedSongs;
 }
+
