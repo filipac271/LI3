@@ -281,7 +281,8 @@ void print_all_Dinfos(MusicData* musica) {
 GHashTable* getDinfoTable(MusicData* data){
   return data->discographyIndo;
 }
+
+
+
+
 */
-
-
-
