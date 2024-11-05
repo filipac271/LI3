@@ -9,11 +9,11 @@
 
 
 
-MainController* feeder(FILE** ficheiros) {
+MainController* feeder(char* diretoria) {
 
     
 
-MainController* data = mainFeed(ficheiros);
+MainController* data = mainFeed(diretoria);
 
 
 return data;

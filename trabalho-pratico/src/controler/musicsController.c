@@ -5,6 +5,8 @@
 #include "validacao/validaMusic.h"
 #include "main/feeder.h"
 #include "Entitys/musics.h"
+#include "IOManager.h"
+
 
 #include <glib.h>
 #include <stdio.h>
@@ -25,9 +27,11 @@ struct musicData {
 
 
 
-MusicData* musicsFeed(FILE* ficheiro, ArtistsData* artistsData){
+MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
  MusicData* MData = malloc(sizeof(MusicData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
+    FILE* ficheiro = abrirFILE(diretoria,"musics.csv");
+
     
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/musics_errors.csv");
@@ -124,7 +128,7 @@ MusicData* musicsFeed(FILE* ficheiro, ArtistsData* artistsData){
     
     // Libera a memória alocada por getline
     free(line);
-    
+    fclose(ficheiro);
     fclose(errosFileMusics);
     return MData;
 }

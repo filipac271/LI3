@@ -21,7 +21,7 @@ guint get_garray_length(GArray *array) {
 char* seconds_to_hhmmss(int total_seconds) {
     // Aloca memória para a string de saída
     //para tirar os warnigns é mudar o 9 para 16 mas ocupa mais memoria
-    char *time_string = malloc(9); // hh:mm:ss + \0 = 9 caracteres
+    char *time_string = malloc(16); // hh:mm:ss + \0 = 9 caracteres
     if (time_string == NULL) {
         return NULL; // Verifica se a alocação foi bem-sucedida
     }
@@ -33,7 +33,7 @@ char* seconds_to_hhmmss(int total_seconds) {
 
     // Formata a string no formato hh:mm:ss
     //mudar aqui tambem para 16 caso se queira tirar os warning
-    snprintf(time_string, 9, "%02d:%02d:%02d", hours, minutes, seconds);
+    snprintf(time_string, 16, "%02d:%02d:%02d", hours, minutes, seconds);
 
     return time_string;
 }
@@ -55,7 +55,7 @@ gint compare_discography(gconstpointer a, gconstpointer b) {
 
 // Função para filtrar a hash table e ordenar o array pela discografia
 GArray* filter_and_sort_hash_table_by_discography(GHashTable *Artist_Table, char *country) {
-    GArray *filtered_array = g_array_new(FALSE, FALSE, sizeof(struct Artists*));
+    GArray *filtered_array = g_array_new(FALSE, FALSE, sizeof(Artist*));
     
     // Itera sobre a hash table e aplica o filtro apenas se 'country' não for NULL
     GHashTableIter iter;
@@ -63,7 +63,7 @@ GArray* filter_and_sort_hash_table_by_discography(GHashTable *Artist_Table, char
 
     g_hash_table_iter_init(&iter, Artist_Table);
     while (g_hash_table_iter_next(&iter, &key, &value)) {
-        struct Artist* artist_to_filter = (struct Artist*) value;
+        Artist* artist_to_filter = (Artist*) value;
 
         // Se 'country' não for NULL, aplica a filtragem pelo país
         if (country == NULL || strcmp(country, "") == 0 || strcmp(getArtistCountry(artist_to_filter), country) == 0) {
@@ -101,9 +101,9 @@ char *filename = malloc(sizeof(char) * 256);
     if(n == 0){
       fprintf(output_file,"\n");
     }else{
-    while(j < n && j < length && country != ""){
+    while(j < n && j < (int)length){
     
-    struct Artist *artist_atual = g_array_index(q2, struct  Artist*, j);
+    Artist *artist_atual = g_array_index(q2, Artist*, j);
 
   
    // char* id_atual = getArtistId(artist_atual);

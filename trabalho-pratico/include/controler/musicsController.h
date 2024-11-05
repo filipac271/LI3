@@ -9,7 +9,7 @@ typedef struct musicData MusicData;
 
 
 
-MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData);
+MusicData* musicsFeed(char* diretoria,ArtistsData* artistsData);
 
 GHashTable* iniciar_hash_musica();
 

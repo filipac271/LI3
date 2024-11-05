@@ -24,7 +24,9 @@
     "artists.h": "c",
     "typeinfo": "c",
     "musics.h": "c",
-    "users.h": "c"
+    "users.h": "c",
+    "inputmanager.h": "c",
+    "iomanager.h": "c"
   }
 }
 
