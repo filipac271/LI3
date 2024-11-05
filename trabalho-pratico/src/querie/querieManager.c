@@ -19,7 +19,7 @@
 int queries (MainController* data, FILE* querieFile) {
     if (querieFile == NULL) {
         printf("Erro ao abrir o arquivo!\n");
-        return;
+        return -1;
     }
 
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
@@ -27,7 +27,7 @@ int queries (MainController* data, FILE* querieFile) {
     int min, max;
     int n;
     char country[256] = "";  // String para armazenar o país, inicializada como string vazia
-    int i;
+    int i = 0;
     for (i = 0; getline(&line, &len, querieFile) != -1; i++) {
         // Verifica se a linha tem pelo menos 1 caractere
         if (strlen(line) == 0) continue;
