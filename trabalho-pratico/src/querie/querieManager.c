@@ -41,9 +41,7 @@ void queries (MainController* data, FILE* querieFile) {
         UsersData* UserController = getUserController(data);
         Age* usersAge = getUsersByAge(UserController);
         MusicData* MusicController = getMusicController(data);
-        GHashTable* Mtable = getMusicsTable(MusicController);
         ArtistsData* ArtistContoller = getartistController(data);
-        GHashTable* ATable = getArtistsTable(ArtistContoller);
 
         switch (line[0]) {
             case '1':
@@ -66,12 +64,12 @@ void queries (MainController* data, FILE* querieFile) {
 
 
                 // Executa a query 2
-                querie2(ATable, n, i, country);
+                querie2(ArtistContoller, n, i, country);
                 break;
 
             case '3':
                 sscanf(line + 1, "%d %d", &min, &max);
-                querie3(i, Mtable, min, max, usersAge);
+                querie3(i, MusicController, min, max, usersAge);
                 break;
 
             default:

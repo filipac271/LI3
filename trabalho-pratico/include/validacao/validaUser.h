@@ -3,8 +3,9 @@
 
 
 #include <glib.h>
+#include"controler/musicsController.h"
 
-int validaUser(char* email, char* date, char* type,GHashTable* musicsTable,char** likedSongs,int numSongs);
+int validaUser(char* email, char* date, char* type,MusicData* musicsController,char** likedSongs,int numSongs);
 
 
 

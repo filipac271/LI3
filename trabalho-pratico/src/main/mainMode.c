@@ -36,7 +36,7 @@ int principal(char** argv) {
 
 
     // Lista de nomes de ficheiros na subpasta
-    char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
+    //char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
 
 
     MainController* data = feeder(pastaPrincipal);

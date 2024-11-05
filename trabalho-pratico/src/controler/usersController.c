@@ -87,7 +87,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
  
      
 
-        int isValid = validaUser(email,birth_date,subscription_type,getMusicsTable(musicData),liked_songs_id,numberSongs);
+        int isValid = validaUser(email,birth_date,subscription_type,musicData,liked_songs_id,numberSongs);
 
         if(isValid){
         
@@ -174,10 +174,10 @@ void destroyUsersData(UsersData* data){
 }
 
 
-
+/*
 GHashTable* getUserTable(UsersData* data){
     return data->usersTable;
-}
+}*/
 Age* getUsersByAge(UsersData* data){
     return data->usersByAge;
 }

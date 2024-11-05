@@ -52,15 +52,15 @@ ArtistsData* artistFeed(char* diretoria) {
         
         parser(line, tokens);
 
-        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
-        char* id = remove_quotes(tokens[0]);
-        char* name = remove_quotes(tokens[1]);
-        char* description = remove_quotes(tokens[2]);
-        char* ganhos = remove_quotes(tokens[3]);
-        float clean_ganhos = atof(ganhos);
-        char* grupo = tokens[4];
-        char* country = remove_quotes(tokens[5]);
-        char* type = remove_quotes(tokens[6]);
+                                                        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+                                                        char* id = remove_quotes(tokens[0]);
+                                                        char* name = remove_quotes(tokens[1]);
+                                                        char* description = remove_quotes(tokens[2]);
+                                                        char* ganhos = remove_quotes(tokens[3]);
+                                                        float clean_ganhos = atof(ganhos);
+                                                        char* grupo = tokens[4];
+                                                        char* country = remove_quotes(tokens[5]);
+                                                        char* type = remove_quotes(tokens[6]);
         
         int isValid = validaArtista(grupo, type);
         
@@ -101,8 +101,8 @@ ArtistsData* artistFeed(char* diretoria) {
 
 
 
-void inserir_discography_into_artist (GHashTable* artist_Table, int discography, char* artist_id){
-    Artist * artista_atual = g_hash_table_lookup(artist_Table, artist_id);
+void inserir_discography_into_artist (ArtistsData* controller, int discography, char* artist_id){
+    Artist * artista_atual = g_hash_table_lookup(controller->artistsTable, artist_id);
 
     setArtistDiscography(artista_atual, discography);
 }
@@ -142,8 +142,8 @@ void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,char
 }
 
 // Função para procurar um artista pelo ID
-Artist* lookup_artist(GHashTable* artists_table, char* id) {
-    return g_hash_table_lookup(artists_table, id);
+Artist* lookup_artist(ArtistsData* controller, char* id) {
+    return g_hash_table_lookup(controller->artistsTable, id);
 }
 
 
@@ -171,7 +171,23 @@ void print_all_artists(ArtistsData* data) {
     sleep(3);
     printf("----- Fim da Hash Table -----\n");
 }
-
+/*
 GHashTable* getArtistsTable (ArtistsData* data){
     return data->artistsTable;
+}*/
+
+
+void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country) {
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init(&iter, controller->artistsTable);
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        Artist* artist_to_filter = value;
+        char* pais = getArtistCountry(artist_to_filter);
+        if (country == NULL || strcmp(country, "") == 0 || strcmp(pais, country) == 0) {
+            g_array_append_val(array, artist_to_filter);
+        }
+        free(pais);
+    }
 }

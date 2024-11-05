@@ -1,5 +1,6 @@
 #include "validacao/validaUser.h"
 #include "utilidades.h"
+#include "controler/musicsController.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +10,7 @@
 #include <unistd.h>
 
 
-int validaUser(char* email, char* date, char* type,GHashTable* musicsTable,char** likedSongs,int numSongs){
+int validaUser(char* email, char* date, char* type,MusicData* musicsController,char** likedSongs,int numSongs){
     int t = 1;
     int d = 1;
     int e = 1;
@@ -30,8 +31,8 @@ int validaUser(char* email, char* date, char* type,GHashTable* musicsTable,char*
     }
 
 
-
-    if (g_hash_table_lookup(musicsTable, likedSongs[i]) == NULL) {
+        
+    if (lookup_musica(musicsController,likedSongs[i]) == NULL) {
         //printf("Artista %s não encontrado na hash table\n", artistsId[i]);
         existMusic = 0;
         
