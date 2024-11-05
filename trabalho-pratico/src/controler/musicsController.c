@@ -191,10 +191,10 @@ void print_all_musics(MusicData* musica) {
 GHashTable* getMusicsTable(MusicData* data){
   return data->musicsTable;
 }
-*/
 
 
-/*
+
+
 //COISAS DE DINFO E CENAS DO .H PARA SABER QUE JA TIREI DALI
 
 .h
@@ -281,9 +281,7 @@ void print_all_Dinfos(MusicData* musica) {
 GHashTable* getDinfoTable(MusicData* data){
   return data->discographyIndo;
 }
-
-
-
 */
+
 
 

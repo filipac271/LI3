@@ -69,7 +69,7 @@ void queries (MainController* data, FILE* querieFile) {
 
             case '3':
                 sscanf(line + 1, "%d %d", &min, &max);
-                querie3(i, MusicController, min, max, usersAge);
+                querie3(i, MusicController, min, max, UserController);
                 break;
 
             default:

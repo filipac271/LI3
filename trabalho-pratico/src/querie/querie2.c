@@ -20,7 +20,7 @@ guint get_garray_length(GArray *array) {
 
 char* seconds_to_hhmmss(int total_seconds) {
     // Aloca memória para a string de saída
-    //para tirar os warnigns é mudar o 9 para 16 mas ocupa mais memoria
+//para tirar os warnigns é mudar o 9 para 16 mas ocupa mais memoria
     char *time_string = malloc(16); // hh:mm:ss + \0 = 9 caracteres
     if (time_string == NULL) {
         return NULL; // Verifica se a alocação foi bem-sucedida
@@ -32,7 +32,7 @@ char* seconds_to_hhmmss(int total_seconds) {
     int seconds = total_seconds % 60;
 
     // Formata a string no formato hh:mm:ss
-    //mudar aqui tambem para 16 caso se queira tirar os warning
+//mudar aqui tambem para 16 caso se queira tirar os warning
     snprintf(time_string, 16, "%02d:%02d:%02d", hours, minutes, seconds);
 
     return time_string;
@@ -91,17 +91,17 @@ char *filename = malloc(sizeof(char) * 256);
   // name 1;type 1;discography duration 1;country 1
     int j = 0;
     if(n == 0){
-      fprintf(output_file,"\n");
+    fprintf(output_file,"\n");
     }else{
     while(j < n && j < (int)length){
     
      Artist *artist_atual = g_array_index(q2, struct  Artist*, j);
 
-  
+
    // char* id_atual = getArtistId(artist_atual);
 
     int discography = getArtistDiscography(artist_atual);
-   // Artist *original = g_hash_table_lookup(Artist_Original, id_atual);
+// Artist *original = g_hash_table_lookup(Artist_Original, id_atual);
     char* time = seconds_to_hhmmss(discography);
 
 

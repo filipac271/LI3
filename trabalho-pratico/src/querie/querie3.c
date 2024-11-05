@@ -21,7 +21,7 @@ struct querie3
 
 
 
-void querie3(int num, MusicData* musicController, int min , int max, Age* usersByAge)
+void querie3(int num,MusicData* musicController, int min , int max, UsersData* userController)
 {
     
   
@@ -31,8 +31,8 @@ void querie3(int num, MusicData* musicController, int min , int max, Age* usersB
    char** likedSongs;
     for(int i=min;i<max+1 ;i++)
     {
-      likedSongs=getUBALikedSongs(usersByAge,i);
-      for(int j=0;j<getUBANumberSongs(usersByAge,i);j++)
+      likedSongs=getUBASongs(userController,i); ////////////////
+      for(int j=0;j<getUBANSongs(userController,i);j++)   //////////////////////////
       {     
          
          Music* song= lookup_musica(musicController,likedSongs[j]);

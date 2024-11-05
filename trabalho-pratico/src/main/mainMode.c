@@ -18,12 +18,6 @@
 
 #define NUM_FILES 3
 
-struct ageUsers
-{
-    char** likedSongs;
-    int numberSongs;
-};
-
 
 
 int principal(char** argv) {
