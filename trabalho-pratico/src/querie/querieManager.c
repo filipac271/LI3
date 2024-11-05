@@ -16,7 +16,7 @@
 
 
 
-void queries (MainController* data, FILE* querieFile) {
+int queries (MainController* data, FILE* querieFile) {
     if (querieFile == NULL) {
         printf("Erro ao abrir o arquivo!\n");
         return;
@@ -27,8 +27,8 @@ void queries (MainController* data, FILE* querieFile) {
     int min, max;
     int n;
     char country[256] = "";  // String para armazenar o país, inicializada como string vazia
-
-    for (int i = 0; getline(&line, &len, querieFile) != -1; i++) {
+    int i;
+    for (i = 0; getline(&line, &len, querieFile) != -1; i++) {
         // Verifica se a linha tem pelo menos 1 caractere
         if (strlen(line) == 0) continue;
 
@@ -79,5 +79,7 @@ void queries (MainController* data, FILE* querieFile) {
 
     // Libera a memória alocada por getline
     free(line);
+
+    return i;
 }
 
