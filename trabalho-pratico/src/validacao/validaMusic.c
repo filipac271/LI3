@@ -5,8 +5,9 @@
 #include <glib.h>
 
 #include "utilidades.h"
+#include "controler/artistsController.h"
 
-int validaMusic(char* duracao, char** artistsId, GHashTable* artistsTable,int numArtistsId,char* music_artist) {
+int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,int numArtistsId,char* music_artist) {
     int d;
     int pertence = 1;  // Assumir que todos os artistas pertencem
     int tembarra = 1;
@@ -25,9 +26,9 @@ int validaMusic(char* duracao, char** artistsId, GHashTable* artistsTable,int nu
         break;
     }
 
+    
 
-
-    if (g_hash_table_lookup(artistsTable, artistsId[i]) == NULL) {
+    if (lookup_artist(artistsController,artistsId[i]) == NULL) {
         //printf("Artista %s não encontrado na hash table\n", artistsId[i]);
         pertence = 0;
         break;

@@ -88,7 +88,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
 
 
-        int isValid = validaMusic(music_duration,music_artist_id,getArtistsTable(artistsData),num_artistId,tokens[2]);
+        int isValid = validaMusic(music_duration,music_artist_id,artistsData,num_artistId,tokens[2]);
       
         if(isValid){
             Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
@@ -100,12 +100,12 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
               while(i < num_artistId){
                 
-                inserir_discography_into_artist((getArtistsTable(artistsData)),discography, music_artist_id[i]);
+                inserir_discography_into_artist(artistsData,discography, music_artist_id[i]);
                 i++;
 
               }
             } else{
-                inserir_discography_into_artist((getArtistsTable(artistsData)),discography, music_artist_id[0]);
+                inserir_discography_into_artist(artistsData,discography, music_artist_id[0]);
               }
 
             // Inserir os dados na hash table
@@ -164,8 +164,9 @@ void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica,char* music
 
 //Nao mexer a partir daqui!
 
-Music* lookup_musica(GHashTable* musica, char* music_id){
-  return g_hash_table_lookup(musica, music_id);
+Music* lookup_musica(MusicData* controller, char* music_id){
+
+  return g_hash_table_lookup(controller->musicsTable, music_id);
 }
 
 
@@ -186,11 +187,11 @@ void print_all_musics(MusicData* musica) {
     printf("----- Fim da Hash Table -----\n");
 }
 
-
+/*
 GHashTable* getMusicsTable(MusicData* data){
   return data->musicsTable;
 }
-
+*/
 
 
 /*
