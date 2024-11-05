@@ -36,7 +36,6 @@ void querie3(int num,MusicData* musicController, int min , int max, UsersData* u
       {     
          
          Music* song= lookup_musica(musicController,likedSongs[j]);
-        
          char* genero=get_music_genre(song);
          int inserido=0;
          int a;
@@ -53,6 +52,7 @@ void querie3(int num,MusicData* musicController, int min , int max, UsersData* u
             }
            
          }
+         
          //insere o genero se nao estiver no array
          if(!inserido)
          {
