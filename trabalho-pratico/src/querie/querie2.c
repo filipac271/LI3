@@ -20,6 +20,7 @@ guint get_garray_length(GArray *array) {
 
 char* seconds_to_hhmmss(int total_seconds) {
     // Aloca memória para a string de saída
+    //para tirar os warnigns é mudar o 9 para 16 mas ocupa mais memoria
     char *time_string = malloc(9); // hh:mm:ss + \0 = 9 caracteres
     if (time_string == NULL) {
         return NULL; // Verifica se a alocação foi bem-sucedida
@@ -31,64 +32,39 @@ char* seconds_to_hhmmss(int total_seconds) {
     int seconds = total_seconds % 60;
 
     // Formata a string no formato hh:mm:ss
+    //mudar aqui tambem para 16 caso se queira tirar os warning
     snprintf(time_string, 9, "%02d:%02d:%02d", hours, minutes, seconds);
 
     return time_string;
 }
 
-
-
-
-
-//funcao auxiliar apenass para confirmar que esta tudo okay
-void print_info_array(GArray *array) {
-    // Itera sobre o array de artistas
-    for (guint i = 0; i < array->len; i++) {
-        // Obtém o ponteiro para cada estrutura Info_M no array
-        struct Info_M *artist = g_array_index(array, struct Info_M *, i);
-        
-        // Usa os getters para acessar e imprimir cada campo
-        printf("Artist ID: %s\n", get_dinfo_id(artist));
-        printf("Discography: %d\n", get_dinfo_discography(artist));
-        printf("Artist Country: %s\n", get_dinfo_country(artist));
-        printf("---------------------------\n");
-    }
-}
-
-
+//REVER ESTA FUNCAO
 // Função de comparação para ordenar pela discografia em ordem decrescente
 gint compare_discography(gconstpointer a, gconstpointer b) {
-    const struct Info_M *artist_a = *(const struct query2 **)a;
-    const struct Info_M *artist_b = *(const struct query2 **)b;
 
-    int disc_a = get_dinfo_discography(artist_a);
-    int disc_b = get_dinfo_discography(artist_b);
+    Artist *artist_a = *(Artist **)a;
+    Artist *artist_b = *(Artist **)b;
+
+    int disc_a = getArtistDiscography(artist_a);
+    int disc_b = getArtistDiscography(artist_b);
+
+    int r = disc_b - disc_a;
+
 
 
     // Compara pela discografia (ordem decrescente)
-    return (disc_b - disc_a);
+    return (r);
 }
 
 // Função para filtrar a hash table e ordenar o array pela discografia
-GArray* filter_and_sort_hash_table_by_discography(GHashTable *D_Info_original, char *country) {
-    GArray *filtered_array = g_array_new(FALSE, FALSE, sizeof(struct Info_M*));
-    
-    // Itera sobre a hash table e aplica o filtro apenas se 'country' não for NULL
-    GHashTableIter iter;
-    gpointer key, value;
+GArray* filter_and_sort_hash_table_by_discography(ArtistsData* controller, char *country) {
+    // Cria o array no módulo de processamento
+    GArray *filtered_array = g_array_new(FALSE, FALSE, sizeof(struct Artist*));
 
-    g_hash_table_iter_init(&iter, D_Info_original);
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        struct Info_M* dinfo_to_filter = (struct Info_M*) value;
+    // Preenche o array no módulo de hash table
+    fill_filtered_artists(controller, filtered_array, country);
 
-        // Se 'country' não for NULL, aplica a filtragem pelo país
-        if (country == NULL || strcmp(country, "") == 0 || strcmp(get_dinfo_country(dinfo_to_filter), country) == 0) {
-            // Se country for NULL, ou se o país do artista corresponder ao fornecido, adiciona ao array
-            g_array_append_val(filtered_array, dinfo_to_filter);
-        }
-    }
-
-    // Ordena o array pela discografia em ordem decrescente
+    // Ordena o array após preenchê-lo
     g_array_sort(filtered_array, (GCompareFunc)compare_discography);
 
     return filtered_array;
@@ -96,60 +72,47 @@ GArray* filter_and_sort_hash_table_by_discography(GHashTable *D_Info_original, c
 
 
 
-void querie2(GHashTable* dinfo_Original, GHashTable* Artist_Original, int n, int i, char* country){
+
+
+
+
+void querie2(ArtistsData* ArtistController, int n, int i, char* country){
   //printf("COUNTRY DO INICIO DA FUNCAO QUERIE2: %s\n", country);
   
 
-  GArray* q2 = filter_and_sort_hash_table_by_discography(dinfo_Original, country);
-  if(country == " "){
-    print_info_array(q2);
-  }
+  GArray* q2 = filter_and_sort_hash_table_by_discography(ArtistController, country);
 
   guint length = get_garray_length(q2);
-
- // printf("NAO SEI SE ISTO IMPRIME  %d\n", length);
-  if(length == 0){
-    print_info_array(q2);
-  }
 
 char *filename = malloc(sizeof(char) * 256);
   sprintf(filename, "resultados/command%d_output.txt",i+1);
   FILE *output_file = fopen(filename, "w");
 
-
-  //printf("COUNTRY: %s\n",country);
-
-    //printf("TENTATIVA DE DESCOBRIR ERRO DOS SEM COUNTRY: %d\n", n);
   // name 1;type 1;discography duration 1;country 1
     int j = 0;
     if(n == 0){
       fprintf(output_file,"\n");
     }else{
     while(j < n && j < length && country != ""){
-     // printf("COntinuo sem ideias %d\n", n);
     
-    struct Info_M *artist_atual = g_array_index(q2, struct Info_M *, j);
+     Artist *artist_atual = g_array_index(q2, struct  Artist*, j);
 
-    //printf("CHEGOU AQUI \n");
-
-    //printf("O ID DO ARTISTA ATUAL %s\n", get_dinfo_id(artist_atual));
-
-   // printf("Nem ideia %d\n", j);
   
-    char* id_atual = get_dinfo_id(artist_atual);
+   // char* id_atual = getArtistId(artist_atual);
 
-    //printf("O ID DO ARTISTA ATUAL2 %s\n", id_atual);
-
-    //printf("PAROU AQUI ????\n");
-
-    Artist *original = g_hash_table_lookup(Artist_Original, id_atual);
-    char* time = seconds_to_hhmmss(get_dinfo_discography(artist_atual));
+    int discography = getArtistDiscography(artist_atual);
+   // Artist *original = g_hash_table_lookup(Artist_Original, id_atual);
+    char* time = seconds_to_hhmmss(discography);
 
 
       // name 1;type 1;discography duration 1;country 1
-
-      fprintf(output_file,"%s;%s;%s;%s\n",getArtistName(original), getArtistType(original), time, getArtistCountry(original));
-
+      char* nome = getArtistName(artist_atual);
+      char* tipo = getArtistType(artist_atual);
+      char* pais = getArtistCountry(artist_atual);
+      fprintf(output_file,"%s;%s;%s;%s\n",nome,tipo, time, pais);
+      free(nome);
+      free(tipo);      
+      free(pais);
       free(time);
       j++;
   }
@@ -158,8 +121,8 @@ char *filename = malloc(sizeof(char) * 256);
 
     g_array_free(q2, TRUE);
 
-//certamente faltam dar mais frees
 free(filename);
 fclose(output_file);
 
 }
+

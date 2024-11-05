@@ -19,13 +19,13 @@ struct mainController
 };
 
 
-MainController* mainFeed(FILE** dataset){
+MainController* mainFeed(char* diretoria){
     MainController* mainData = malloc(sizeof(MainController));
 
 
-    mainData->artistsController =  artistFeed(dataset[0]);
-    mainData->musicsController = musicsFeed(dataset[1],mainData->artistsController);
-    mainData->usersController = usersFeed(dataset[2],mainData->musicsController);
+    mainData->artistsController =  artistFeed(diretoria);
+    mainData->musicsController = musicsFeed(diretoria,mainData->artistsController);
+    mainData->usersController = usersFeed(diretoria,mainData->musicsController);
 
 
 
@@ -35,7 +35,7 @@ MainController* mainFeed(FILE** dataset){
 
 
 void print_all_Data(MainController* data){
-    //print_all_artists(data->artistsController);
+   // print_all_artists(data->artistsController);
     //print_all_musics(data->musicsController);
     //print_all_users(data->usersController);
 }
@@ -44,7 +44,6 @@ void print_all_Data(MainController* data){
 void destroyData(MainController* data){
     destroyTableArtist(data->artistsController);
     destroyMusicTable(data->musicsController);
-    destroyDinfoTable(data->musicsController);
     destroyUsersData(data->usersController);
     free(data->usersController);
     free(data->musicsController);

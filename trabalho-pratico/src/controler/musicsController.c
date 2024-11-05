@@ -5,6 +5,8 @@
 #include "validacao/validaMusic.h"
 #include "main/feeder.h"
 #include "Entitys/musics.h"
+#include "IOManager.h"
+
 
 #include <glib.h>
 #include <stdio.h>
@@ -19,15 +21,17 @@
 
 struct musicData {
   GHashTable* musicsTable;
-  GHashTable* discographyIndo
+ // GHashTable* discographyIndo
 };
 
 
 
 
-MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
+MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
  MusicData* MData = malloc(sizeof(MusicData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
+    FILE* ficheiro = abrirFILE(diretoria,"musics.csv");
+
     
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/musics_errors.csv");
@@ -40,7 +44,7 @@ MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
     
     MData->musicsTable = iniciar_hash_musica();
     //DINFO
-    MData->discographyIndo = iniciar_hash_info();
+//    MData->discographyIndo = iniciar_hash_info();
     
     // Ignorar a primeira linha
     getline(&line, &len, ficheiro);
@@ -56,6 +60,7 @@ MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
     if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
         line[strlen(line) - 1] = '\0';
     }
+      //printf("%d\n", num_artists);
 
         
         // Atualizar o lineOutput em cada iteração
@@ -84,12 +89,10 @@ MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
 
 
 
-        int isValid = validaMusic(music_duration,music_artist_id,getArtistsTable(artistsData),num_artistId,tokens[2]);
-        
+        int isValid = validaMusic(music_duration,music_artist_id,artistsData,num_artistId,tokens[2]);
+      
         if(isValid){
             Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
-
-            //FAZER AQUI O CICLO FOR PARA DINFO
 
             if(num_artistId > 1){
              // printf("ENTROU! \n");
@@ -97,19 +100,13 @@ MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
               //printf("VALOR DO i: %d\n", i);
 
               while(i < num_artistId){
-                //printf("VALOR DO i: %d\n", i);
-                //printf("NUMERO DE ARTISTAS: %d\n", num_artistId);
-
-               //printf("ARTISTA %d: %s\n",i, music_artist_id[i]);
-
-                inserir_dinfo_into_htable(MData->discographyIndo, discography, music_artist_id[i],(getArtistsTable(artistsData)));
+                
+                inserir_discography_into_artist(artistsData,discography, music_artist_id[i]);
                 i++;
-                //printf("ARTISTA %d: %s\n",i, music_artist_id[i]);
 
               }
             } else{
-             // printf("ARTISTA 0: %s\n", music_artist_id[0]);
-                inserir_dinfo_into_htable(MData->discographyIndo, discography, music_artist_id[0],(getArtistsTable(artistsData)));
+                inserir_discography_into_artist(artistsData,discography, music_artist_id[0]);
               }
 
             // Inserir os dados na hash table
@@ -123,9 +120,6 @@ MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
 
         free(music_artist_id);
 
-        //VER SE É PRECISO DAR ALGUM FREE!!!
-
-
         // Libera as strings alocadas com remove_quotes
         freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
     }
@@ -134,11 +128,10 @@ MusicData* musicsFeed(FILE* ficheiro,ArtistsData* artistsData){
     
     // Libera a memória alocada por getline
     free(line);
-    
+    fclose(ficheiro);
     fclose(errosFileMusics);
     return MData;
 }
-
 
 
 void destroyMusicTable(MusicData* data){
@@ -147,27 +140,93 @@ void destroyMusicTable(MusicData* data){
 }
 
 
-void destroyDinfoTable(MusicData* data){
-  g_hash_table_destroy(data->discographyIndo);
-  printf("Tabela Dinfo destruida\n");
-}
+GHashTable* iniciar_hash_musica(){
+  GHashTable* hash_musica = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_musica);
 
-
-GHashTable* iniciar_hash_info(){
-  GHashTable* hash_dinfo = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_dinfo);
-  if(hash_dinfo == NULL){
-    printf("Erro: Hash table DIinfo não foi criada.\n");
+  if(hash_musica == NULL){
+    printf("Erro: Hash table musica não foi criada.\n");
     exit(1);
   } else {
-    printf("Hash table Dinfo criada com sucesso.\n");
+    printf("Hash table musica criada com sucesso.\n");
   }
-  return(hash_dinfo);
-
+  return(hash_musica);
 }
 
 
+//
+void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica,char* music_id){
+
+  g_hash_table_insert(musica, strdup(music_id), nova_musica);
+  //ver se depois é preciso adicionar prints
+    
+
+}
+
+//Nao mexer a partir daqui!
+
+Music* lookup_musica(MusicData* controller, char* music_id){
+
+  return g_hash_table_lookup(controller->musicsTable, music_id);
+}
 
 
+// Função callback para imprimir a hash table
+void print_music_entry (gpointer key, gpointer value, gpointer user_data) {
+    char* id = (char*)key;
+    Music* music = (Music*)value;
+
+    print_musicas(music);
+}
+
+// Função para imprimir toda a hash table
+void print_all_musics(MusicData* musica) {
+    printf("----- Hash Table de Musicas -----\n");
+    sleep(3);
+    g_hash_table_foreach(musica->musicsTable, print_music_entry, NULL);
+    sleep(3);
+    printf("----- Fim da Hash Table -----\n");
+}
+
+/*
+GHashTable* getMusicsTable(MusicData* data){
+  return data->musicsTable;
+}
+*/
+
+
+/*
+//COISAS DE DINFO E CENAS DO .H PARA SABER QUE JA TIREI DALI
+
+.h
+//void destroyDinfoTable(MusicData* data);
+//GHashTable* iniciar_hash_info();
+void inserir_dinfo_into_htable(GHashTable* dinfo, int new_discography, char* artist_id, GHashTable* Artist_Original);
+void print_dinfo_entry (gpointer key, gpointer value, gpointer user_data);
+void print_all_Dinfos(MusicData* musica);
+GHashTable* getDinfoTable(MusicData* data);
+
+
+
+
+
+.c
+// void destroyDinfoTable(MusicData* data){
+//   g_hash_table_destroy(data->discographyIndo);
+//   printf("Tabela Dinfo destruida\n");
+// }
+
+
+// GHashTable* iniciar_hash_info(){
+//   GHashTable* hash_dinfo = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_dinfo);
+//   if(hash_dinfo == NULL){
+//     printf("Erro: Hash table DIinfo não foi criada.\n");
+//     exit(1);
+//   } else {
+//     printf("Hash table Dinfo criada com sucesso.\n");
+//   }
+//   return(hash_dinfo);
+
+// }
 
 
 void inserir_dinfo_into_htable(GHashTable* dinfo, int new_discography, char* artist_id, GHashTable* Artist_Original){
@@ -202,55 +261,6 @@ void inserir_dinfo_into_htable(GHashTable* dinfo, int new_discography, char* art
 
 
 
-GHashTable* iniciar_hash_musica(){
-  GHashTable* hash_musica = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_musica);
-
-  if(hash_musica == NULL){
-    printf("Erro: Hash table musica não foi criada.\n");
-    exit(1);
-  } else {
-    printf("Hash table musica criada com sucesso.\n");
-  }
-  return(hash_musica);
-}
-
-
-//
-void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica,char* music_id){
-
-  g_hash_table_insert(musica, strdup(music_id), nova_musica);
-  //ver se depois é preciso adicionar prints
-    
-
-}
-
-//Nao mexer a partir daqui!
-
-Music* lookup_musica(GHashTable* musica, char* music_id){
-  return g_hash_table_lookup(musica, music_id);
-}
-
-
-// Função callback para imprimir a hash table
-void print_music_entry (gpointer key, gpointer value, gpointer user_data) {
-    char* id = (char*)key;
-    Music* music = (Music*)value;
-
-    print_musicas(music);
-}
-
-// Função para imprimir toda a hash table
-void print_all_musics(MusicData* musica) {
-    printf("----- Hash Table de Musicas -----\n");
-    sleep(3);
-    g_hash_table_foreach(musica->musicsTable, print_music_entry, NULL);
-    sleep(3);
-    printf("----- Fim da Hash Table -----\n");
-}
-
-
-
-
 
 void print_dinfo_entry (gpointer key, gpointer value, gpointer user_data) {
     char* id = (char*)key;
@@ -268,22 +278,10 @@ void print_all_Dinfos(MusicData* musica) {
 }
 
 
-GHashTable* getMusicsTable(MusicData* data){
-  return data->musicsTable;
-}
-
 GHashTable* getDinfoTable(MusicData* data){
   return data->discographyIndo;
 }
 
-
-char * getMusica(MusicData* musicController,char* song)
-{
-  GHashTable* musica= getMusicsTable(musicController);
-  char* musica=lookup_musica(musica,song);
-  return strdup(musica);
-  
-}
 
 
 

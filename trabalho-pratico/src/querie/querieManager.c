@@ -39,18 +39,14 @@ void queries (MainController* data, FILE* querieFile) {
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
-        GHashTable* Utable = getUserTable(UserController);
         Age* usersAge = getUsersByAge(UserController);
         MusicData* MusicController = getMusicController(data);
-        GHashTable* Mtable = getMusicsTable(MusicController);
-        GHashTable* DInfotable = getDinfoTable(MusicController);
         ArtistsData* ArtistContoller = getartistController(data);
-        GHashTable* ATable = getArtistsTable(ArtistContoller);
 
         switch (line[0]) {
             case '1':
                 if (strlen(line) >= 2) {
-                    querie1(Utable, line + 2, i);
+                    querie1(UserController, line + 2, i);
                 }
                 break;
 
@@ -66,8 +62,9 @@ void queries (MainController* data, FILE* querieFile) {
                     strcpy(country, "");  // Define `country` como string vazia
                 }
 
+
                 // Executa a query 2
-                querie2(DInfotable, ATable, n, i, country);
+                querie2(ArtistContoller, n, i, country);
                 break;
 
             case '3':

@@ -3,7 +3,7 @@
 #include <glib.h>
 #include "controler/usersController.h"
 #include "utilidades.h"
-
+#include "controler/musicsController.h"
 
 typedef struct generoMusica Genero;
 

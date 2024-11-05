@@ -3,6 +3,7 @@
 #include "controler/mainController.h"
 #include "validacao/validaArtista.h"
 #include "utilidades.h"
+#include "IOManager.h"
 
 #include <glib.h>
 #include <stdio.h>
@@ -14,13 +15,13 @@ struct artistsData{
     GHashTable* artistsTable;
 };
 
-ArtistsData* artistFeed(FILE* ficheiro) {
+ArtistsData* artistFeed(char* diretoria) {
+
     ArtistsData* AData = malloc(sizeof(ArtistsData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-    
-    char *filename = malloc(sizeof(char) * 256);
-    sprintf(filename, "resultados/artists_errors.csv");
-    FILE *errosFileArtists = fopen(filename, "w");
-    free(filename);
+    FILE* ficheiro = abrirFILE(diretoria,"artists.csv");
+
+    FILE *errosFileArtists = abrirFILE_ERROS("resultados/artists_errors.csv");
+   
     
     char* line = NULL;  // Inicializado como NULL para getline alocar memória
     size_t len = 0;
@@ -29,7 +30,7 @@ ArtistsData* artistFeed(FILE* ficheiro) {
     AData->artistsTable = init_artists_table();
     
     // Ignorar a primeira linha
-    getline(&line, &len, ficheiro);
+    pegaLinha(ficheiro,&len,&line);
     fprintf(errosFileArtists,"%s",line);
     
     while (1) {
@@ -51,15 +52,15 @@ ArtistsData* artistFeed(FILE* ficheiro) {
         
         parser(line, tokens);
 
-        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
-        char* id = remove_quotes(tokens[0]);
-        char* name = remove_quotes(tokens[1]);
-        char* description = remove_quotes(tokens[2]);
-        char* ganhos = remove_quotes(tokens[3]);
-        float clean_ganhos = atof(ganhos);
-        char* grupo = tokens[4];
-        char* country = remove_quotes(tokens[5]);
-        char* type = remove_quotes(tokens[6]);
+                                                        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+                                                        char* id = remove_quotes(tokens[0]);
+                                                        char* name = remove_quotes(tokens[1]);
+                                                        char* description = remove_quotes(tokens[2]);
+                                                        char* ganhos = remove_quotes(tokens[3]);
+                                                        float clean_ganhos = atof(ganhos);
+                                                        char* grupo = tokens[4];
+                                                        char* country = remove_quotes(tokens[5]);
+                                                        char* type = remove_quotes(tokens[6]);
         
         int isValid = validaArtista(grupo, type);
         
@@ -93,11 +94,18 @@ ArtistsData* artistFeed(FILE* ficheiro) {
     
     // Libera a memória alocada por getline
     free(line);
-    
-    fclose(errosFileArtists);
+    fecharFILE (ficheiro);
+    fecharFILE(errosFileArtists);
     return AData;
 }
 
+
+
+void inserir_discography_into_artist (ArtistsData* controller, int discography, char* artist_id){
+    Artist * artista_atual = g_hash_table_lookup(controller->artistsTable, artist_id);
+
+    setArtistDiscography(artista_atual, discography);
+}
 
 // Função para inicializar a hash table
 GHashTable* init_artists_table() {
@@ -134,8 +142,8 @@ void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,char
 }
 
 // Função para procurar um artista pelo ID
-Artist* lookup_artist(GHashTable* artists_table, char* id) {
-    return g_hash_table_lookup(artists_table, id);
+Artist* lookup_artist(ArtistsData* controller, char* id) {
+    return g_hash_table_lookup(controller->artistsTable, id);
 }
 
 
@@ -163,7 +171,23 @@ void print_all_artists(ArtistsData* data) {
     sleep(3);
     printf("----- Fim da Hash Table -----\n");
 }
-
+/*
 GHashTable* getArtistsTable (ArtistsData* data){
     return data->artistsTable;
+}*/
+
+
+void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country) {
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init(&iter, controller->artistsTable);
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        Artist* artist_to_filter = value;
+        char* pais = getArtistCountry(artist_to_filter);
+        if (country == NULL || strcmp(country, "") == 0 || strcmp(pais, country) == 0) {
+            g_array_append_val(array, artist_to_filter);
+        }
+        free(pais);
+    }
 }

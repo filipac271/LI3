@@ -35,7 +35,7 @@ void querie3(int num,MusicData* musicController, int min , int max, UsersData* u
       for(int j=0;j<getUBANSongs(userController,i);j++)   //////////////////////////
       {     
          
-         Music* song= getMusica(musicController,likedSongs[j]); /////////////////////////////////
+         Music* song= lookup_musica(musicController,likedSongs[j]);
         
          char* genero=get_music_genre(song);
          int inserido=0;

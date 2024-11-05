@@ -6,6 +6,5 @@
 #include <glib.h>
 
 
-GHashTable* parser_artists(FILE *file);
 
 #endif
