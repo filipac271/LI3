@@ -40,5 +40,6 @@ void destroyDinfoTable(MusicData* data);
 
 GHashTable* getDinfoTable(MusicData* data);
 
+char * getMusica(MusicData* musicController,char* song);
 
 #endif

@@ -17,12 +17,6 @@
 
 #define NUM_FILES 3
 
-struct ageUsers
-{
-    char** likedSongs;
-    int numberSongs;
-};
-
 
 void lerFicheiros(char* pastaPrincipal, char* fileNames[], int numFiles, char* queriesFile) {
 

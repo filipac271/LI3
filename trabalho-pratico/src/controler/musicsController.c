@@ -277,7 +277,13 @@ GHashTable* getDinfoTable(MusicData* data){
 }
 
 
-
+char * getMusica(MusicData* musicController,char* song)
+{
+  GHashTable* musica= getMusicsTable(musicController);
+  char* musica=lookup_musica(musica,song);
+  return strdup(musica);
+  
+}
 
 
 

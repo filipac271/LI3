@@ -4,9 +4,10 @@
 #include "controler/usersController.h"
 #include "utilidades.h"
 
+
 typedef struct generoMusica Genero;
 
 
-void querie3(int num,GHashTable* music, int min , int max, Age* usersByAge);
+void querie3(int num,MusicData* musicController, int min , int max, UsersData* userController);
 
 #endif
