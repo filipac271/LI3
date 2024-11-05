@@ -21,5 +21,7 @@ void destroyUsersData(UsersData* data);
 Age* getUsersByAge(UsersData* data);
 Age* insertLikedSongs( Age* usersByAge, int idade,char** newSongs,int newSongCount);
 
+char** getUBASongs(UsersData * userController,int idade);
+int getUBANSongs(UsersData* userController, int idade);
 
 #endif

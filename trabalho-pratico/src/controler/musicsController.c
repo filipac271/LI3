@@ -284,6 +284,4 @@ GHashTable* getDinfoTable(MusicData* data){
 
 
 
-*/
-
 

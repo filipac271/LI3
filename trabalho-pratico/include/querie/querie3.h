@@ -8,6 +8,6 @@
 typedef struct generoMusica Genero;
 
 
-void querie3(int num,MusicData* musicController, int min , int max, Age* usersByAge);
+void querie3(int num,MusicData* musicController, int min , int max, UsersData* userController);
 
 #endif
