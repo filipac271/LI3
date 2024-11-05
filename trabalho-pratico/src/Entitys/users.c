@@ -201,7 +201,7 @@ void freeUsersByAge(Age* usersByAge){
 
 int getUBANumberSongs(Age *userAge,int idade){
     return (userAge[idade].numberSongs);
-
+}
 
 char** getUBALikedSongs(Age *userAge, int idade){
     return userAge[idade].likedSongs;
