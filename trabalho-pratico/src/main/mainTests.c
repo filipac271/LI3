@@ -6,12 +6,14 @@
 #include "querie/querieManager.h"
 #include "IOManager.h"
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <glib.h>
+
 
 
 
@@ -34,6 +36,7 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
         linha1[strcspn(linha1, "\n")] = '\0';
         linha2[strcspn(linha2, "\n")] = '\0';
 
+
         if (strcmp(linha1, linha2) == 0) {
             (*ocorrenciasCorretas)++;  // Incrementa ocorrências corretas
         } else {
@@ -44,6 +47,7 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
         }
         linhaNumero++;
     }
+
 
     // Verifica se ambos os arquivos terminaram ao mesmo tempo
     if (fgets(linha1, sizeof(linha1), f1) || fgets(linha2, sizeof(linha2), f2)) {
@@ -61,6 +65,7 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
 // Função principal para realizar os testes
 int teste(char **argv) {
     printf("Entrada nos testes\n");
+
 
     char *pastaPrincipal = argv[1];       // Recebe a pasta principal como argumento
     char *queriesFile = argv[2];          // Arquivo de queries
