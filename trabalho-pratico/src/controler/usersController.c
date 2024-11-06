@@ -201,11 +201,10 @@ Age* insertLikedSongs( Age* usersByAge, int idade,char** newSongs,int newSongCou
 
 char** getUBASongs(UsersData * userController,int idade) {
     Age* usersByAge= getUsersByAge(userController);
-<<<<<<< HEAD
-    char** songs= getUBALikedSongs(usersByAge,idade) ;
-=======
+
     char** songs= getUBALikedSongs(usersByAge,idade);
->>>>>>> main
+
+
     return songs;
 }
 
@@ -214,9 +213,7 @@ int getUBANSongs(UsersData* userController, int idade)
       Age* usersByAge= getUsersByAge(userController);
       int Nsongs=getUBANumberSongs(usersByAge,idade);
       
-<<<<<<< HEAD
-
-=======
     return Nsongs;
->>>>>>> main
+
+
 }
