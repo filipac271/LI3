@@ -10,7 +10,7 @@
 #include "controler/mainController.h"
 #include "utilidades.h" 
 
-void queries (MainController* data, FILE* querieFile);
+int queries (MainController* data, FILE* querieFile);
 
 
 

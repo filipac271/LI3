@@ -35,7 +35,8 @@ void querie3(int num, int min , int max, UsersData* userController)
      
       for(int j=0;j<getUBANGeneros(userController,i);j++)  
       {     
-       
+
+     
          int inserido=0;
          int a;
          char* genero = getUBAGenero(userController,i,j);   
@@ -53,6 +54,7 @@ void querie3(int num, int min , int max, UsersData* userController)
             }
            
          }
+         
          //insere o genero se nao estiver no array
          if(!inserido)
          {
