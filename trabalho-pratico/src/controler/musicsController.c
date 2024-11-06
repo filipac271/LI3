@@ -30,7 +30,7 @@ struct musicData {
 MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
  MusicData* MData = malloc(sizeof(MusicData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-    FILE* ficheiro = abrirFILE(diretoria,"musics.csv");
+    //FILE* ficheiro = abrirFILE(diretoria,"musics.csv");
 
     
     char *filename = malloc(sizeof(char) * 256);
@@ -38,37 +38,45 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
     FILE *errosFileMusics = fopen(filename, "w");
     free(filename);
     
-    char* line = NULL;  // Inicializado como NULL para getline alocar memória
-    size_t len = 0;
-    char* tokens[8];
+    // char* line = NULL;  // Inicializado como NULL para getline alocar memória
+    // size_t len = 0;
+    // char* tokens[8];
     
     MData->musicsTable = iniciar_hash_musica();
     //DINFO
 //    MData->discographyIndo = iniciar_hash_info();
     
     // Ignorar a primeira linha
-    getline(&line, &len, ficheiro);
+   char * line= pegaLinha(diretoria,"musics.csv");
     fprintf(errosFileMusics,"%s",line);
-    
+    Parser* parserE= newParser(diretoria,"musics.csv");
     while (1) {
 
         // Pega a próxima linha
-        if (pegaLinha(ficheiro, &len, &line) == NULL){
-          break; 
-        } 
-           // Remove a nova linha no final, se existir
-    if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
-        line[strlen(line) - 1] = '\0';
-    }
+    //     if (pegaLinha(ficheiro, &len, &line) == NULL){
+    //       break; 
+    //     } 
+    //        // Remove a nova linha no final, se existir
+    // if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
+    //     line[strlen(line) - 1] = '\0';
+    // }
       //printf("%d\n", num_artists);
 
-        
+
+       
+        parserE= parser(parserE); 
+            if (getTokens(parserE)==NULL) 
+     {
+          freeParser(parserE); break;
+     }
+
+  
+      char** tokens= getTokens(parserE);
         // Atualizar o lineOutput em cada iteração
         char lineOutput[2048];
         strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
         lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
         
-        parser(line, tokens);
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
         char *music_id = remove_quotes(tokens[0]);
@@ -122,13 +130,15 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
         // Libera as strings alocadas com remove_quotes
         freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
+    
     }
-
+   
+ printf("FIM DE CICLO\n");
    // print_all_Dinfos(MData);
     
     // Libera a memória alocada por getline
     free(line);
-    fclose(ficheiro);
+ 
     fclose(errosFileMusics);
     return MData;
 }

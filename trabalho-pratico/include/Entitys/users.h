@@ -22,13 +22,14 @@ char** getUserLikedSongs(User* user);
 int getUserNumberLikedSongs(User* user);
 
 
-Age* newAge(Age* usersByAge, int idade,int newSongCount, char** newSongs);
-Age* newSongsAge (Age* usersByAge, int idade,int newSongCount, char** newSongs);
+
 Age* createUsersAge();
 
+int getUBANumberSongs(Age *userAge,int idade, int i);
+char* getGenero(Age *userAge,int idade,int i);
+int getNGeneros(Age* userAge,int idade);
+Age *insertGenero(Age* usersByAge, int idade, char* genero );
 
-char** getUBALikedSongs(Age *userAge,int idade);
-int getUBANumberSongs(Age *userAge,int idade);
 void freeUsersByAge(Age* usersByAge);
 #endif
 
