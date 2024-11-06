@@ -73,7 +73,6 @@ int teste(char **argv) {
     printf("Entrada nos testes\n");
 
     struct timespec start, end;
-    double elapsed;
 
     float timeQ1 = 0;
     float timeQ2 = 0;
@@ -110,7 +109,6 @@ int teste(char **argv) {
         // Recupera controladores
         UsersData* UserController = getUserController(data);
         Age* usersAge = getUsersByAge(UserController);
-        MusicData* MusicController = getMusicController(data);
         ArtistsData* ArtistContoller = getartistController(data);
 
         switch (line[0]) {
@@ -120,10 +118,10 @@ int teste(char **argv) {
                     clock_gettime(CLOCK_REALTIME, &start);
 
                     querie1(UserController, line + 2, i);
-                    q1++;
                     
                     clock_gettime(CLOCK_REALTIME, &end);
                     timeQ1 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
+                    q1++;
                 }
                 break;
 
@@ -151,7 +149,7 @@ int teste(char **argv) {
                 sscanf(line + 1, "%d %d", &min, &max);
                 clock_gettime(CLOCK_REALTIME, &start);
 
-                querie3(i, MusicController, min, max, UserController);
+                querie3(i, min, max, UserController);
                 clock_gettime(CLOCK_REALTIME, &end);
                 timeQ3 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
                 q3++;
@@ -198,7 +196,9 @@ int teste(char **argv) {
     printf("Tempo da querie 1: %.6f ms\n",timeQ1/q1 * 1e3 );
     printf("Tempo da querie 2: %.6f ms\n",timeQ2/q2 * 1e3 );
     printf("Tempo da querie 3: %.6f ms\n",timeQ3/q3 * 1e3 );
-
+    printf("Foram executadas %d queries 1\n",q1);
+    printf("Foram executadas %d queries 2\n",q2);
+    printf("Foram executadas %d queries 3\n",q3);
 
     destroyData(data);
     fecharFILE(queriesInput);

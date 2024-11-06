@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "IOManager.h"
 
 struct parser{
     FILE* file;
-    // long lastPosition;
+    char* line;
     char** tokens;
 };
 
@@ -65,28 +66,23 @@ void fecharFILE (FILE* ficheiro){
 
 Parser* parser(Parser* parserE) {
     size_t len=0;
-//   FILE* file= abrirFILE(diretoria,subdiretoria); // guardar file no estado
-//   fseek(file, parserE->lastPosition, SEEK_SET);
+    char* line = NULL;
 
-
-    char* lineCopy;
-
-   if( getline(&lineCopy,&len  ,parserE->file)==-1 ) 
+   if( getline(&line,&len,parserE->file)==-1 ) 
    {
-    free(lineCopy);
-     parserE->tokens[0]=NULL;
+    free(line);
+    parserE->tokens[0]=NULL;
     return parserE;
    }
+
   
-    //   parserE->lastPosition = ftell(file);
-//      strcpy(linha,lineCopy);
-//       printf("%s\n",lineCopy);
-//    printf("%s\n",linha);
     // Remove a nova linha no final, se existir
-    if (lineCopy[0] != '\0' && lineCopy[strlen(lineCopy) - 1] == '\n') {
-        lineCopy[strlen(lineCopy) - 1] = '\0';
+    if (line[strlen(line) - 1] == '\n') {
+            line[strlen(line) - 1] = '\0';
     }
 
+    char* lineCopy = line;
+   
     int i = 0;
     // parserE->linha=lineCopy;
     // Divide a linha em tokens usando strsep
@@ -94,11 +90,11 @@ Parser* parser(Parser* parserE) {
     while (token != NULL && i < 10) {
          // Armazenar o token no array
         parserE->tokens[i++]=token;
-     
         token = strsep(&lineCopy, ";");
     }
    
-  free(lineCopy);
+   parserE->line = line;
+    
   
    return parserE;
 }
@@ -109,6 +105,7 @@ Parser* newParser(char * diretoria,char* subdiretoria)
    Parser* parserE=malloc(sizeof(struct parser));
    parserE->file=file;
    parserE->tokens=malloc(10* sizeof(char *));
+   parserE->line = NULL;
 
   
    return parserE;
@@ -116,25 +113,28 @@ Parser* newParser(char * diretoria,char* subdiretoria)
 
 void freeParser(Parser* parserE)
 {
-     fclose(parserE->file); 
-       free(parserE->tokens);
+    fclose(parserE->file); 
+    free(parserE->tokens);
     free(parserE);
 }
 
-char* pegaLinha(char* diretoria, char* subdiretoria) {
-     size_t len=0;
-    FILE* ficheiro=abrirFILE(diretoria,subdiretoria);
-    char* line; 
-    getline(&line,&len, ficheiro);
- 
-fclose(ficheiro);
+char* pegaLinha(Parser* parserE) {
+    size_t len=0;
+    char* line = NULL; 
+    getline(&line,&len,parserE->file);
     return line;
 }
+
+
 
 char** getTokens(Parser * parserE)
 {
   if (parserE->tokens[0]==NULL) return NULL;
+
     return parserE->tokens;
 }
 
 
+char* getLine (Parser* parserE){
+    return parserE->line;
+}

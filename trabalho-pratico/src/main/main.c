@@ -14,7 +14,7 @@ int main(int argc, char **argv){
     }
 
 
-    // struct rusage r_usage;
-    // getrusage(RUSAGE_SELF,&r_usage);
-    // printf("%ld KB\n",r_usage.ru_maxrss);
+     struct rusage r_usage;
+     getrusage(RUSAGE_SELF,&r_usage);
+     printf("%ld KB\n",r_usage.ru_maxrss);
 }

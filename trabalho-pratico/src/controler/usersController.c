@@ -42,10 +42,12 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
    
     UData->usersByAge=createUsersAge();
     // Ignorar a primeira linha
-    char* line = pegaLinha(diretoria,"users.csv");
+
+    Parser* parserE= newParser(diretoria,"users.csv");
+
+    char* line = pegaLinha(parserE);
     fprintf(errosFileUsers,"%s",line);
-     Parser* parserE= newParser(diretoria,"users.csv");
-    
+    free(line);
     while (1) {
 
 
@@ -53,16 +55,17 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
         
         parserE= parser(parserE); 
-                if (getTokens(parserE)==NULL) 
+
+
+      char** tokens= getTokens(parserE); 
+      if (tokens==NULL) 
      {
           freeParser(parserE); break;
      }
-
-      char** tokens= getTokens(parserE);
         // Atualizar o lineOutput em cada iteração
-        char lineOutput[2048];
-        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
-        lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+        // char lineOutput[2048];
+        // strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
+        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
         int numberSongs=1;
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
         char* username = remove_quotes(tokens[0]);
@@ -104,19 +107,17 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
        
   
         }else{ 
-            fprintf(errosFileUsers,"%s\n",lineOutput);
+            //fprintf(errosFileUsers,"%s\n",lineOutput);
           
         }
 
       
         free(liked_songs_id); 
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
-   
+        free(getLine(parserE));
     
     }
-    printf("FIM DE CICLO\n");
-    // Libera a memória alocada por getline
-    free(line);
+
 
     fclose(errosFileUsers);
     return UData;
@@ -207,6 +208,7 @@ char* getUBAGenero(UsersData * userController,int idade,int i) {
     Age* usersByAge= getUsersByAge(userController);
 
     char* genero= strdup (getGenero(usersByAge,idade,i) );
+
     return genero;
 
 }

@@ -39,7 +39,6 @@ int queries (MainController* data, FILE* querieFile) {
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
-        MusicData* MusicController = getMusicController(data);
         ArtistsData* ArtistContoller = getartistController(data);
 
         switch (line[0]) {

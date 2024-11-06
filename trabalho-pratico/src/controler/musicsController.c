@@ -46,10 +46,13 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
     //DINFO
 //    MData->discographyIndo = iniciar_hash_info();
     
-    // Ignorar a primeira linha
-   char * line= pegaLinha(diretoria,"musics.csv");
-    fprintf(errosFileMusics,"%s",line);
+
     Parser* parserE= newParser(diretoria,"musics.csv");
+
+    // Ignorar a primeira linha
+    char * line= pegaLinha(parserE);
+    fprintf(errosFileMusics,"%s",line);
+    free(line);
     while (1) {
 
         // Pega a próxima linha
@@ -65,17 +68,18 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
        
         parserE= parser(parserE); 
-            if (getTokens(parserE)==NULL) 
-     {
-          freeParser(parserE); break;
-     }
+
 
   
       char** tokens= getTokens(parserE);
+     if (tokens==NULL) 
+     {
+          freeParser(parserE); break;
+     }
         // Atualizar o lineOutput em cada iteração
-        char lineOutput[2048];
-        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
-        lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+        // char lineOutput[2048];
+        // strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
+        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
         
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
@@ -122,7 +126,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         
         //printf("Número de artistas após: %d\n", num_artistId);
         }else{
-            fprintf(errosFileMusics,"%s\n",lineOutput);
+            //fprintf(errosFileMusics,"%s\n",lineOutput);
         }
 
 
@@ -130,14 +134,12 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
         // Libera as strings alocadas com remove_quotes
         freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
-    
+        free(getLine(parserE));
     }
    
- printf("FIM DE CICLO\n");
    // print_all_Dinfos(MData);
     
-    // Libera a memória alocada por getline
-    free(line);
+
  
     fclose(errosFileMusics);
     return MData;

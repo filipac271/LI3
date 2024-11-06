@@ -9,5 +9,4 @@ typedef struct generoMusica Genero;
 
 
 void querie3(int num, int min , int max, UsersData* userController);
-
 #endif

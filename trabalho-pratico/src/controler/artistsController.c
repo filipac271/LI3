@@ -29,31 +29,38 @@ ArtistsData* artistFeed(char* diretoria) {
     
     AData->artistsTable = init_artists_table();
     
-    // Ignorar a primeira linha
-    char* linha= pegaLinha(diretoria,"artists.csv");
-    printf("%s\n",linha);
-    // getline(&linha,&len,ficheiro);
+  
+    Parser* parserE= newParser(diretoria,"artists.csv");
+  // Ignorar a primeira linha
+    char* linha= pegaLinha(parserE);
     fprintf(errosFileArtists,"%s",linha);
-     Parser* parserE= newParser(diretoria,"artists.csv");
-
+    free(linha);
     
     while (1) {
         
         
         parserE= parser(parserE);
-     if (getTokens(parserE)==NULL) 
-     {
-          freeParser(parserE); break;
-     }
+
     
         char** tokens = getTokens(parserE);
-      
-        // Atualizar o lineOutput em cada iteração
-        char lineOutput[2048];
-        strncpy(lineOutput, linha, 2048);  // Copia a linha para o buffer local
-        lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
 
-                                                        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+    //       int k = 0;
+    // while (tokens[k] != NULL) {  // Continua até encontrar NULL
+    //     printf("Token %d: %s\n", k + 1, tokens[k]);
+    //     k++;
+    // }
+
+        if (tokens==NULL) {
+              freeParser(parserE); break;
+         }
+
+
+        // Atualizar o lineOutput em cada iteração
+        // char lineOutput[2048];
+        // strncpy(lineOutput, linha, 2048);  // Copia a linha para o buffer local
+        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+
+                                        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
                                                         char* id = remove_quotes(tokens[0]);
                                                         char* name = remove_quotes(tokens[1]);
                                                         char* description = remove_quotes(tokens[2]);
@@ -88,15 +95,13 @@ ArtistsData* artistFeed(char* diretoria) {
             free(grupos_id);
 
         } else {
-            fprintf(errosFileArtists, "%s\n", lineOutput);
+            //fprintf(errosFileArtists, "%s\n", lineOutput);
         }
         // Libera as strings alocadas com remove_quotes
         freeCleanerArtist(id, name, description, ganhos, country, type);
-   
+        free(getLine(parserE));
     }
-     printf("FIM DE CICLO\n");
     // Libera a memória alocada por getline
-    free(linha);
  
     fecharFILE(errosFileArtists);
    
