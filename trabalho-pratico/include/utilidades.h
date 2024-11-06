@@ -19,8 +19,8 @@ int validaData(char* date);
 int validaEmail (char* email);
 
 int validaDuraçao (char* duracao);
-char* pegaLinha(FILE* ficheiro, size_t* len, char** line);
-void parser(char* linha,char* tokens[]);
+
+
 
 char** divideGroup(char* group, int numMembros);
 char** divideArtists(char* music_artist);

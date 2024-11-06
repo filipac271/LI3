@@ -19,9 +19,10 @@ void print_user_entry (gpointer key, gpointer value, gpointer user_data);
 User* fetchUser(UsersData* controlador, char* username);
 void destroyUsersData(UsersData* data);
 Age* getUsersByAge(UsersData* data);
-Age* insertLikedSongs( Age* usersByAge, int idade,char** newSongs,int newSongCount);
+Age* insertGeneros(Age* usersByAge, int idade,char** Songs,int SongCount, MusicData* musicController);
+char* getUBAGenero(UsersData * userController,int idade,int i);
 
-char** getUBASongs(UsersData * userController,int idade);
-int getUBANSongs(UsersData* userController, int idade);
+int getUBANSongs(UsersData* userController, int idade, int j);
 
+int getUBANGeneros(UsersData * userController,int idade);
 #endif

@@ -39,7 +39,6 @@ void queries (MainController* data, FILE* querieFile) {
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
-        Age* usersAge = getUsersByAge(UserController);
         MusicData* MusicController = getMusicController(data);
         ArtistsData* ArtistContoller = getartistController(data);
 
@@ -69,7 +68,7 @@ void queries (MainController* data, FILE* querieFile) {
 
             case '3':
                 sscanf(line + 1, "%d %d", &min, &max);
-                querie3(i, MusicController, min, max, UserController);
+                querie3(i, min, max, UserController);
                 break;
 
             default:
