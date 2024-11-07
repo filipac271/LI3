@@ -181,6 +181,7 @@ int getUBANumberSongs(Age *userAge,int idade, int i){
 }
 
 
+
 char* getGenero(Age *userAge,int idade,int i){
     char * genero=(userAge[idade].generos[i]);
     
@@ -230,3 +231,5 @@ Age *insertGenero(Age* usersByAge, int idade, char* genero )
 
     return usersByAge;
 }
+
+

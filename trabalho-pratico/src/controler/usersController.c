@@ -203,15 +203,20 @@ Age* insertGeneros(Age* usersByAge, int idade,char** Songs,int SongCount, MusicD
 
 char* getUBAGenero(UsersData * userController,int idade,int i) {
     Age* usersByAge= getUsersByAge(userController);
+
     char* genero= strdup (getGenero(usersByAge,idade,i) );
     return genero;
+
 }
 
 int getUBANSongs(UsersData* userController, int idade, int j)
 {
+
       Age* usersByAge= userController->usersByAge;
       int Nsongs=getUBANumberSongs(usersByAge,idade, j);
       return Nsongs;
+
+
 
 }
 int getUBANGeneros(UsersData * userController,int idade)
