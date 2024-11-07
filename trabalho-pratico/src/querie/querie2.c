@@ -5,7 +5,7 @@
 #include "Entitys/musics.h"
 #include "Entitys/artists.h"
 #include "querie/querie2.h"
-
+#include "IOManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -86,12 +86,13 @@ void querie2(ArtistsData* ArtistController, int n, int i, char* country){
 
 char *filename = malloc(sizeof(char) * 256);
   sprintf(filename, "resultados/command%d_output.txt",i+1);
-  FILE *output_file = fopen(filename, "w");
+  Output* output= iniciaOutput(filename);
+  
 
   // name 1;type 1;discography duration 1;country 1
     int j = 0;
     if(n == 0){
-      fprintf(output_file,"\n");
+      outputNULL(output);
     }else{
     while(j < n && j < length && country != ""){
     
@@ -109,7 +110,7 @@ char *filename = malloc(sizeof(char) * 256);
       char* nome = getArtistName(artist_atual);
       char* tipo = getArtistType(artist_atual);
       char* pais = getArtistCountry(artist_atual);
-      fprintf(output_file,"%s;%s;%s;%s\n",nome,tipo, time, pais);
+      output2(output,nome,tipo,time,pais);
       free(nome);
       free(tipo);      
       free(pais);
@@ -122,7 +123,8 @@ char *filename = malloc(sizeof(char) * 256);
     g_array_free(q2, TRUE);
 
 free(filename);
-fclose(output_file);
+freeOutput(output);
+
 
 }
 

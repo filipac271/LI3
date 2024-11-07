@@ -9,8 +9,9 @@
 #include <glib.h>
 #include <unistd.h>
 
+#include "IOManager.h"
 
-int validaUser(char* email, char* date, char* type,MusicData* musicsController,char** likedSongs,int numSongs){
+int validaUser(char* email, char* date, char* type,MusicData* musicsController,char** likedSongs,int numSongs, Output* Erros, char* linha){
     int t = 1;
     int d = 1;
     int e = 1;
@@ -40,7 +41,11 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
     }
 }
 
-
+if((t & d & e & existMusic)==0)
+{
+    outputErros(Erros,linha);
+    free(linha);
+}
 
 
 

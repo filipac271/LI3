@@ -2,11 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "IOManager.h"
+#include "querie/querie3.h"
 
 struct parser{
     FILE* file;
-    // long lastPosition;
+   char* linha;
     char** tokens;
+};
+
+struct output
+{
+    FILE* file;
 };
 
 
@@ -71,24 +77,21 @@ Parser* parser(Parser* parserE) {
 
     char* lineCopy;
 
-   if( getline(&lineCopy,&len  ,parserE->file)==-1 ) 
+   if( getline(&parserE->linha,&len  ,parserE->file)==-1 ) 
    {
-    free(lineCopy);
+  
      parserE->tokens[0]=NULL;
     return parserE;
    }
   
-    //   parserE->lastPosition = ftell(file);
-//      strcpy(linha,lineCopy);
-//       printf("%s\n",lineCopy);
-//    printf("%s\n",linha);
-    // Remove a nova linha no final, se existir
+     lineCopy=strdup(parserE->linha);/// Para nao ser dividida a linha do parser
+ 
     if (lineCopy[0] != '\0' && lineCopy[strlen(lineCopy) - 1] == '\n') {
         lineCopy[strlen(lineCopy) - 1] = '\0';
     }
 
     int i = 0;
-    // parserE->linha=lineCopy;
+  
     // Divide a linha em tokens usando strsep
     char* token = strsep(&lineCopy, ";");
     while (token != NULL && i < 10) {
@@ -97,8 +100,9 @@ Parser* parser(Parser* parserE) {
      
         token = strsep(&lineCopy, ";");
     }
-   
-  free(lineCopy);
+    
+  //free(lineCopy); // Dá double free
+  
   
    return parserE;
 }
@@ -118,16 +122,17 @@ void freeParser(Parser* parserE)
 {
      fclose(parserE->file); 
        free(parserE->tokens);
+       free(parserE->linha);
     free(parserE);
 }
 
-char* pegaLinha(char* diretoria, char* subdiretoria) {
-     size_t len=0;
-    FILE* ficheiro=abrirFILE(diretoria,subdiretoria);
+char* pegaLinha(Parser* parserE) {
+    FILE* ficheiro= parserE->file;
+    size_t len =0;
     char* line; 
     getline(&line,&len, ficheiro);
  
-fclose(ficheiro);
+
     return line;
 }
 
@@ -136,5 +141,58 @@ char** getTokens(Parser * parserE)
   if (parserE->tokens[0]==NULL) return NULL;
     return parserE->tokens;
 }
+
+char* getLinha( Parser* parserE)
+{
+    return strdup (parserE->linha);
+}
+
+
+
+
+Output* iniciaOutput (char* filename)
+{
+    FILE * output_file=fopen(filename, "w");
+    Output* output3= malloc(sizeof(Output*));
+    output3->file=output_file;
+    return output3;
+}
+
+void freeOutput(Output* output)
+{
+    fclose(output->file);
+    free(output);
+}
+
+void outputNULL(Output* output3)
+{
+    fprintf(output3->file,"\n");
+}
+
+void outputErros(Output* erros,char* linha)
+{
+    fprintf(erros->file,"%s",linha);
+}
+
+void output1(Output* output1, char* userEmail, char* userNome, char* userApelido,int idade, char* userCountry)
+{
+    fprintf(output1->file,"%s;%s;%s;%d;%s\n",userEmail,userNome,userApelido, idade,userCountry ); 
+}
+
+void output2(Output* output2, char* nome, char* tipo, char* time,char* pais)
+{
+     fprintf(output2->file,"%s;%s;%s;%s\n",nome,tipo, time, pais);
+}
+
+
+void output3(Output* output3, char* genero, int num)
+{
+
+   
+        fprintf(output3->file,"%s;%d\n",genero,num);
+
+    
+}
+
 
 

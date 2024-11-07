@@ -5,9 +5,10 @@
 #include "utilidades.h"
 
 
-typedef struct generoMusica Genero;
+typedef struct querie3 Genero;
 
 
 void querie3(int num, int min , int max, UsersData* userController);
+
 
 #endif
