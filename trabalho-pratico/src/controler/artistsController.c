@@ -19,10 +19,10 @@ ArtistsData* artistFeed(char* diretoria) {
 
     ArtistsData* AData = malloc(sizeof(ArtistsData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
   
-      char *filename = malloc(sizeof(char) * 256);
+    char filename[256]; // buffer estático
     sprintf(filename, "resultados/artists_errors.csv");
     Output * Erros= iniciaOutput(filename);
-    free(filename);
+    //free(filename);
 
     
     AData->artistsTable = init_artists_table();
@@ -46,6 +46,7 @@ ArtistsData* artistFeed(char* diretoria) {
 
 
         if (tokens==NULL) {
+            
               freeParser(parserE); break;
          }
 
@@ -60,7 +61,8 @@ ArtistsData* artistFeed(char* diretoria) {
                                                         char* country = remove_quotes(tokens[5]);
                                                         char* type = remove_quotes(tokens[6]);
         
-        char* linhaE=getLinha(parserE);
+        char* linhaE=getLineError(parserE);
+    
        
         int isValid = validaArtista(grupo, type,linhaE, Erros);
         
@@ -91,9 +93,12 @@ ArtistsData* artistFeed(char* diretoria) {
        
         // Libera as strings alocadas com remove_quotes
         freeCleanerArtist(id, name, description, ganhos, country, type);
+        free(linhaE);
         free(getLine(parserE));
     }
     // Libera a memória alocada por getline
+
+            
 
     freeOutput(Erros);
    

@@ -14,7 +14,7 @@ char* pegaLinha(Parser* parserE);
 Parser* newParser(char* diretoria,char* subdiretoria);
 void freeParser(Parser* parserE);
 char** getTokens(Parser * parserE);
-
+char* getLineError( Parser* parserE);
 char* getLine (Parser* parserE);
 
 

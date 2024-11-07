@@ -39,7 +39,7 @@ int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,i
   if((d & pertence & tembarra)==0)
   {
     outputErros(Erros,linha);
-    free(linha);
+    
   }
     return (d & pertence & tembarra);  // Combinação bitwise dos resultados de duração e artistas
 }
