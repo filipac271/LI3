@@ -1,7 +1,7 @@
 #include "../../include/controler/usersController.h"
 #include "querie/querie1.h"
 #include "../../include/controler/artistsController.h"
-
+#include "IOManager.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
@@ -35,10 +35,10 @@ char *filename = malloc(sizeof(char) * 256);
   sprintf(filename, "resultados/command%d_output.txt",i+1);
 
 
-
+Output* output= iniciaOutput(filename);
  
 User* utilizador = fetchUser(userController,id);
- FILE *output_file = fopen(filename, "w");
+ 
 
 
 char* userBirthDate ;
@@ -58,8 +58,8 @@ if (utilizador != NULL)
 
 
       int idade = calcular_idade(userBirthDate);
-      fprintf(output_file,"%s;%s;%s;%d;%s\n",userEmail,userNome,userApelido, idade,userCountry ); 
-
+     
+      output1(output,userEmail,userNome,userApelido,idade, userCountry);
       free(userBirthDate);
       free(userEmail);
       free(userNome);
@@ -69,13 +69,14 @@ if (utilizador != NULL)
 }
 if(utilizador==NULL)
 {
-  fprintf(output_file,"\n");
+ outputNULL(output);
 }
 
 
 
 free(filename);
-fclose(output_file);
+freeOutput(output);
+
 
 
 

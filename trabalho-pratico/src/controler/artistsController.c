@@ -18,39 +18,38 @@ struct artistsData{
 ArtistsData* artistFeed(char* diretoria) {
 
     ArtistsData* AData = malloc(sizeof(ArtistsData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-    FILE* ficheiro = abrirFILE(diretoria,"artists.csv");
+  
+      char *filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/artists_errors.csv");
+    Output * Erros= iniciaOutput(filename);
+    free(filename);
 
-    FILE *errosFileArtists = abrirFILE_ERROS("resultados/artists_errors.csv");
-   
-    
-    char* line = NULL;  // Inicializado como NULL para getline alocar memória
-    size_t len = 0;
-    char* tokens[8];
     
     AData->artistsTable = init_artists_table();
-    
+     Parser* parserE= newParser(diretoria,"artists.csv");
     // Ignorar a primeira linha
-    pegaLinha(ficheiro,&len,&line);
-    fprintf(errosFileArtists,"%s",line);
+
+    char* linha= pegaLinha(parserE);
+    
+   outputErros(Erros,linha);
+    
+
     
     while (1) {
-
-        // Pega a próxima linha
-        if (pegaLinha(ficheiro, &len, &line) == NULL){
-           break; 
-        } 
-           // Remove a nova linha no final, se existir
-    if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
-        line[strlen(line) - 1] = '\0';
-    }
-
         
-        // Atualizar o lineOutput em cada iteração
-        char lineOutput[2048];
-        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
-        lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
         
-        parser(line, tokens);
+        parserE= parser(parserE);
+     if (getTokens(parserE)==NULL) 
+     {
+          freeParser(parserE); break;
+     }
+    
+        char** tokens = getTokens(parserE);
+      
+        // // Atualizar o lineOutput em cada iteração
+        // char lineOutput[2048];
+        // strncpy(lineOutput, get, 2048);  // Copia a linha para o buffer local
+        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
 
                                                         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
                                                         char* id = remove_quotes(tokens[0]);
@@ -62,7 +61,9 @@ ArtistsData* artistFeed(char* diretoria) {
                                                         char* country = remove_quotes(tokens[5]);
                                                         char* type = remove_quotes(tokens[6]);
         
-        int isValid = validaArtista(grupo, type);
+        char* linhaE=getLinha(parserE);
+       
+        int isValid = validaArtista(grupo, type,linhaE, Erros);
         
         if (isValid) {
             int numMembros = 1;
@@ -74,6 +75,7 @@ ArtistsData* artistFeed(char* diretoria) {
                     if (grupo[i] == ',') numMembros++;
                 }
             }
+         
             
             char** grupos_id = divideGroup(grupo, numMembros);    
 
@@ -82,20 +84,21 @@ ArtistsData* artistFeed(char* diretoria) {
             // Insere os dados na hash table
             insert_artist_into_table(AData->artistsTable, newArtist, id);
 
-
+    
             free(grupos_id);
 
-        } else {
-            fprintf(errosFileArtists, "%s\n", lineOutput);
         }
+       
         // Libera as strings alocadas com remove_quotes
         freeCleanerArtist(id, name, description, ganhos, country, type);
+   
     }
-    
+     printf("FIM DE CICLO\n");
     // Libera a memória alocada por getline
-    free(line);
-    fecharFILE (ficheiro);
-    fecharFILE(errosFileArtists);
+    free(linha);
+    freeOutput(Erros);
+   
+   
     return AData;
 }
 

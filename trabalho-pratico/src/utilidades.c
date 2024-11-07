@@ -8,8 +8,7 @@
 #include <ctype.h>
 
 #include "utilidades.h"
-
-#define TOKEN_SIZE 8
+#include "controler/musicsController.h"
 
 
 // Função para remover aspas de uma string
@@ -195,27 +194,9 @@ int validaDuraçao (char* duracao){
 
 
 
-char* pegaLinha(FILE* ficheiro, size_t* len, char** line) {
-    ssize_t linhaParsed = getline(line, len, ficheiro);
-    if (linhaParsed == -1) {
-        // getline retorna -1 em caso de erro ou fim de arquivo
-        return NULL;
-    }
-    return *line;
-}
 
 
-void parser(char* linha, char* tokens[]) {
-    char* lineCopy = linha;
-    int i = 0;
 
-    // Divide a linha em tokens usando strsep
-    char* token = strsep(&lineCopy, ";");
-    while (token != NULL && i < TOKEN_SIZE) {
-        tokens[i++] = token;  // Armazenar o token no array
-        token = strsep(&lineCopy, ";");
-    }
-}
 
 
 char** divideGroup(char* group, int numMembros)
@@ -354,8 +335,10 @@ char** likedSongs(char* songs, int numberS)
 
     //Divide as liked songs 
     while (likedSongs != NULL && i < numberS) {
-        
-        likedSong[i++] = likedSongs;  // Armazenar o token no array 
+      
+
+        likedSong[i++] = likedSongs;  // Armazenar o token no array
+
         likedSongs = strsep(&song_copy, "\'");  
         likedSongs = strsep(&song_copy, "\'"); 
     }

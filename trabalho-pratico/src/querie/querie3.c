@@ -5,6 +5,7 @@
 #include "Entitys/musics.h"
 #include "Entitys/users.h"
 #include "querie/querie3.h"
+#include "IOManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,30 +22,30 @@ struct querie3
 
 
 
-void querie3(int num,MusicData* musicController, int min , int max, UsersData* userController)
+void querie3(int num, int min , int max, UsersData* userController)
 {
     
   
-   struct querie3 array[15];
+   Genero array[15];
    array[0].numMusicas=-1;
 
-   char** likedSongs;
     for(int i=min;i<max+1 ;i++)
     {
-      likedSongs=getUBASongs(userController,i); ////////////////
-      for(int j=0;j<getUBANSongs(userController,i);j++)   //////////////////////////
+     
+      for(int j=0;j<getUBANGeneros(userController,i);j++)  
       {     
-         
-         Music* song= lookup_musica(musicController,likedSongs[j]);
-         char* genero=get_music_genre(song);
+
+     
          int inserido=0;
          int a;
+         char* genero = getUBAGenero(userController,i,j);   
+         int numSongs= getUBANSongs( userController,i,j); 
        //Ver se o genero está presente no array 
          for( a=0;array[a].numMusicas!=-1 && !inserido;a++)
          {
             if(strcmp(array[a].genero,genero)==0)
             {
-               array[a].numMusicas++;
+               array[a].numMusicas+=numSongs ;
                inserido=1;
              
 
@@ -57,12 +58,12 @@ void querie3(int num,MusicData* musicController, int min , int max, UsersData* u
          if(!inserido)
          {
             array[a].genero=genero;
-            array[a].numMusicas=1;
+            array[a].numMusicas=numSongs;
             array[a+1].numMusicas=-1;
             //printf("%s\n",array[a].genero);
 
          }
-
+    
       }
    
    }
@@ -91,26 +92,28 @@ if(array[0].numMusicas!=-1)
 
     char *filename = malloc(sizeof(char) * 256);
   sprintf(filename, "resultados/command%d_output.txt",num+1);
-  FILE *output_file = fopen(filename, "w");
+   Output* output= iniciaOutput(filename);
 
 if(array[0].numMusicas==-1)
 {
-  fprintf(output_file,"\n");
+   
+  outputNULL(output);
      
 }
    for(int i=0;array[i].numMusicas!=-1;i++)
    {
-       fprintf(output_file,"%s;%d\n",array[i].genero,array[i].numMusicas);
+     output3(output, array[i].genero,array[i].numMusicas);
       
    }
   
  
+freeOutput (output);
 
 
-fclose(output_file);
   free(filename);
 
  
    
 }
+
 

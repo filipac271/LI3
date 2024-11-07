@@ -27,44 +27,44 @@ struct usersData
 UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
  UsersData* UData = malloc(sizeof(UsersData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-    FILE* ficheiro = abrirFILE(diretoria,"users.csv");
+   // FILE* ficheiro = abrirFILE(diretoria,"users.csv");
 
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/users_errors.csv");
-    FILE *errosFileUsers = fopen(filename, "w");
+    Output* Erros= iniciaOutput(filename);
     free(filename);
     
-    char* line = NULL;  // Inicializado como NULL para getline alocar memória
-    size_t len = 0;
-    char* tokens[8];
+    // char* line = NULL;  // Inicializado como NULL para getline alocar memória
+    // size_t len = 0;
+    // char* tokens[8];
     
     UData->usersTable = createTable();
    
     UData->usersByAge=createUsersAge();
+    Parser* parserE= newParser(diretoria,"users.csv");
     // Ignorar a primeira linha
-    getline(&line, &len, ficheiro);
-    fprintf(errosFileUsers,"%s",line);
+    char* line = pegaLinha(parserE);
+    outputErros(Erros,line);
+     
     
     while (1) {
 
-        // Pega a próxima linha
-        if (pegaLinha(ficheiro, &len, &line) == NULL){
-           break; 
-        } 
-           // Remove a nova linha no final, se existir
-    if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
-        line[strlen(line) - 1] = '\0';
-    }
+
+      
 
         
+        parserE= parser(parserE); 
+                if (getTokens(parserE)==NULL) 
+     {
+          freeParser(parserE); break;
+     }
+
+      char** tokens= getTokens(parserE);
         // Atualizar o lineOutput em cada iteração
         char lineOutput[2048];
         strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
         lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
         int numberSongs=1;
-        
-        parser(line, tokens);
-
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
         char* username = remove_quotes(tokens[0]);
         char* email= remove_quotes(tokens[1]);
@@ -86,13 +86,16 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
  
      
-
-        int isValid = validaUser(email,birth_date,subscription_type,musicData,liked_songs_id,numberSongs);
+         char* linhaE=getLinha(parserE);
+        int isValid = validaUser(email,birth_date,subscription_type,musicData,liked_songs_id,numberSongs,Erros,linhaE);
 
         if(isValid){
+           
         
         int idade= calcular_idade(birth_date);
-        UData->usersByAge= insertLikedSongs(UData->usersByAge,idade,liked_songs_id,numberSongs);
+     
+        UData->usersByAge= insertGeneros(UData->usersByAge,idade,liked_songs_id,numberSongs, musicData);
+        //insertLikedSongs(UData->usersByAge,idade,liked_songs_id,numberSongs);
       
 
         // Inserir os dados na hash table
@@ -101,21 +104,19 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
          insertUser(UData->usersTable,user,username); 
        
   
-        }else{
-            fprintf(errosFileUsers,"%s\n",lineOutput);
-          
         }
 
       
         free(liked_songs_id); 
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
-  
-    }
+   
     
+    }
+    printf("FIM DE CICLO\n");
     // Libera a memória alocada por getline
     free(line);
-    fclose(ficheiro);
-    fclose(errosFileUsers);
+
+    freeOutput(Erros);
     return UData;
 }
 
@@ -183,35 +184,44 @@ Age* getUsersByAge(UsersData* data){
 }
 
 
-// Adiciona as cancoes à idade certa
-Age* insertLikedSongs( Age* usersByAge, int idade,char** newSongs,int newSongCount)  {
- 
-   
-    if (getUBANumberSongs(usersByAge,idade) == 0) {
-       usersByAge=newAge(usersByAge,idade,newSongCount,newSongs);
-    
-    } else {
-        // Quando já há cancoes
-      usersByAge= newSongsAge(usersByAge,idade,newSongCount,newSongs);
+Age* insertGeneros(Age* usersByAge, int idade,char** Songs,int SongCount, MusicData* musicController)
+{
+
+    for(int i=0;i<SongCount;i++)
+    {
+        Music* song= lookup_musica(musicController,Songs[i]);
+         char* genero=get_music_genre(song);
+         
+        usersByAge= insertGenero(usersByAge,idade,genero);
     }
-   // free(newSongs);
-  return usersByAge;
-    
+     return usersByAge;
+        
+        
 }
 
-char** getUBASongs(UsersData * userController,int idade) {
+
+
+char* getUBAGenero(UsersData * userController,int idade,int i) {
     Age* usersByAge= getUsersByAge(userController);
 
-    char** songs= getUBALikedSongs(usersByAge,idade);
+    char* genero= strdup (getGenero(usersByAge,idade,i) );
+    return genero;
 
-    return songs;
 }
 
-int getUBANSongs(UsersData* userController, int idade)
+int getUBANSongs(UsersData* userController, int idade, int j)
 {
-      Age* usersByAge= getUsersByAge(userController);
-      int Nsongs=getUBANumberSongs(usersByAge,idade);
-      
-    return Nsongs;
 
+      Age* usersByAge= userController->usersByAge;
+      int Nsongs=getUBANumberSongs(usersByAge,idade, j);
+      return Nsongs;
+
+
+
+}
+int getUBANGeneros(UsersData * userController,int idade)
+{
+      Age* usersByAge= userController->usersByAge;
+      int nGeneros= getNGeneros(usersByAge, idade);
+      return nGeneros;
 }
