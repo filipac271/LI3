@@ -95,7 +95,7 @@ char *filename = malloc(sizeof(char) * 256);
     }else{
     while(j < n && j < (int)length){
     
-     Artist *artist_atual = g_array_index(q2, struct  Artist*, j);
+     Artist *artist_atual = g_array_index(q2,Artist*, j);
 
 
    // char* id_atual = getArtistId(artist_atual);

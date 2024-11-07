@@ -157,7 +157,16 @@ User* fetchUser(UsersData* controlador, char* username) {
 
 // Função callback para imprimir a hash table
 void print_user_entry (gpointer key, gpointer value, gpointer user_data) {
-    char* username = (char*)key;
+
+    if (key == NULL || value == NULL) {
+        printf( "Chave ou valor nulo encontrado.\n");
+        sleep(2);
+        return;
+    }
+
+    // Suprime o aviso de variáveis não usadas
+    (void)user_data;
+    //char* username = (char*)key;
     User* user= (User*)value;
 
     printUser(user);

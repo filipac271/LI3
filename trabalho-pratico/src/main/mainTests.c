@@ -108,7 +108,6 @@ int teste(char **argv) {
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
-        Age* usersAge = getUsersByAge(UserController);
         ArtistsData* ArtistContoller = getartistController(data);
 
         switch (line[0]) {
@@ -169,7 +168,7 @@ int teste(char **argv) {
 
 
     int j;
-
+    int passes = 0;
 
     for ( j = 0; j < i; j++) {
         // Nome do arquivo gerado
@@ -186,6 +185,7 @@ int teste(char **argv) {
         int iguais = compararFicheirosPorLinha(resultadoFile, esperadoFile, &ocorrenciasCorretas);
         if (iguais == 1) {
             printf("Test %d: PASS - %d ocorrências corretas\n", j + 1, ocorrenciasCorretas);
+            passes++;
         } else {
             printf("Test %d: FAIL - %d ocorrências corretas\n\n", j + 1, ocorrenciasCorretas);
         }
@@ -193,12 +193,17 @@ int teste(char **argv) {
 
 
 
-    printf("Tempo da querie 1: %.6f ms\n",timeQ1/q1 * 1e3 );
-    printf("Tempo da querie 2: %.6f ms\n",timeQ2/q2 * 1e3 );
-    printf("Tempo da querie 3: %.6f ms\n",timeQ3/q3 * 1e3 );
-    printf("Foram executadas %d queries 1\n",q1);
+
+    printf("\nTempo médio da querie 1: %.6f ms\n",timeQ1/q1 * 1e3 );
+    printf("Tempo médio da querie 2: %.6f ms\n",timeQ2/q2 * 1e3 );
+    printf("Tempo médio da querie 3: %.6f ms\n",timeQ3/q3 * 1e3 );
+    printf("\nA Querie 1 demorou na totalidade: %.6fms\n",timeQ1* 1e3);
+    printf("A Querie 2 demorou na totalidade: %.6fms\n",timeQ2* 1e3);
+    printf("A Querie 3 demorou na totalidade: %.6fms\n",timeQ3* 1e3);
+    printf("\nForam executadas %d queries 1\n",q1);
     printf("Foram executadas %d queries 2\n",q2);
     printf("Foram executadas %d queries 3\n",q3);
+    if(passes == (q1+q2+q3)) printf("\nNão houve erros em nenhuma querie\n\n");
 
     destroyData(data);
     fecharFILE(queriesInput);

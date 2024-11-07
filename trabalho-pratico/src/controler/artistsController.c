@@ -166,7 +166,10 @@ void print_artist_entry (gpointer key, gpointer value, gpointer user_data) {
         return;
     }
 
-    char* id = (char*)key;
+    // Suprime o aviso de variáveis não usadas
+    (void)user_data;
+
+    //char* id = (char*)key;
     Artist* artist = (Artist*)value;
 
     print_artist(artist);

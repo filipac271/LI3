@@ -184,7 +184,17 @@ Music* lookup_musica(MusicData* controller, char* music_id){
 
 // Função callback para imprimir a hash table
 void print_music_entry (gpointer key, gpointer value, gpointer user_data) {
-    char* id = (char*)key;
+
+    if (key == NULL || value == NULL) {
+        printf( "Chave ou valor nulo encontrado.\n");
+        sleep(2);
+        return;
+    }
+
+    // Suprime o aviso de variáveis não usadas
+    (void)user_data;
+
+    //char* id = (char*)key;
     Music* music = (Music*)value;
 
     print_musicas(music);

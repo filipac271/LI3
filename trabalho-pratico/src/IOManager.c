@@ -121,7 +121,10 @@ void freeParser(Parser* parserE)
 char* pegaLinha(Parser* parserE) {
     size_t len=0;
     char* line = NULL; 
-    getline(&line,&len,parserE->file);
+    if(getline(&line,&len,parserE->file) == -1) {
+        free(line);
+        return NULL;
+    }
     return line;
 }
 

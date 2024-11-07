@@ -18,71 +18,81 @@ struct querie3
    int numMusicas;
 };
 
-void querie3(int num, int min , int max, UsersData* userController)
+void querie3(int num, int min, int max, UsersData* userController)
 {
-   struct querie3 array[15];
-   for (int i = 0; i < 15; i++)
-   {
-         array[i].numMusicas = -1;
-   array[i].genero = NULL;
-   }
-   
+    struct querie3 array[15];
+    int validCount = 0;
 
+    for (int i = 0; i < 15; i++) {
+        array[i].numMusicas = -1;
+        array[i].genero = NULL;
+    }
 
+    for (int i = min; i < max + 1; i++) {
+        for (int j = 0; j < getUBANGeneros(userController, i); j++) {
+            int inserido = 0;
+            char* genero = NULL;
+            int numSongs = -1;
+            genero = getUBAGenero(userController, i, j);
+            numSongs = getUBANSongs(userController, i, j);
 
-   for (int i = min; i < max + 1; i++) {
-      for (int j = 0; j < getUBANGeneros(userController, i); j++) {     
-         int inserido = 0;
-         int a;
-         char* genero = getUBAGenero(userController, i, j);   
-         int numSongs = getUBANSongs(userController, i, j); 
-
-         // Verificar se o gênero já está presente no array
-         for (a = 0; array[a].numMusicas != -1 && !inserido; a++) {
-            if (strcmp(array[a].genero, genero) == 0) {
-               array[a].numMusicas += numSongs;
-               inserido = 1;
+            for (int a = 0; a < validCount; a++) {
+                if (array[a].genero != NULL && strcmp(array[a].genero, genero) == 0) {
+                    array[a].numMusicas += numSongs;
+                    inserido = 1;
+                    break;
+                }
             }
-         }
-         
-         // Insere o gênero no array se não estiver presente
-         if (!inserido) {
-            array[a].genero = strdup(genero);
-            array[a].numMusicas = numSongs;
-         }
-         free(genero);  // Liberar o gênero temporário obtido de getUBAGenero
-      }
-   }
 
-   // Organiza o array
-   if (array[0].numMusicas != -1) {
-      for (int i = 1; array[i].numMusicas != -1; i++) {
-         struct querie3 key = array[i];
-         int nm = array[i].numMusicas;
-         char* gnr = array[i].genero;
-         int j = i - 1;
+            if (!inserido) {
+                array[validCount].genero = strdup(genero);
+                if (array[validCount].genero == NULL) {
+                    printf("Erro ao alocar memória para o gênero.\n");
+                    return;
+                }
+                array[validCount].numMusicas = numSongs;
+                validCount++;
+            }
 
-         while (j >= 0 && (array[j].numMusicas < nm || (array[j].numMusicas == nm && strcmp(gnr, array[j].genero) < 0))) {
-            array[j + 1] = array[j];
-            j = j - 1;
-         }
-         array[j + 1] = key;
-      }
-   }
+            free(genero);
+        }
+    }
 
-   char *filename = malloc(sizeof(char) * 256);
-   sprintf(filename, "resultados/command%d_output.txt", num + 1);
-   FILE *output_file = fopen(filename, "w");
+    // Ordenação
+    if (validCount > 0) {
+        for (int i = 1; i < validCount; i++) {
+            struct querie3 key = array[i];
+            int nm = array[i].numMusicas;
+            char* gnr = array[i].genero;
+            int j = i - 1;
 
-   if (array[0].numMusicas == -1) {
-      fprintf(output_file, "\n");
-   } else {
-      for (int i = 0; array[i].numMusicas != -1; i++) {
-         fprintf(output_file, "%s;%d\n", array[i].genero, array[i].numMusicas);
-         free(array[i].genero);  // Liberar cada string de gênero após escrever no arquivo
-      }
-   }
+            while (j >= 0 && (array[j].numMusicas < nm || (array[j].numMusicas == nm && strcmp(gnr, array[j].genero) < 0))) {
+                array[j + 1] = array[j];
+                j--;
+            }
+            array[j + 1] = key;
+        }
+    }
 
-   fclose(output_file);
-   free(filename);
+    // Gravar o arquivo
+    char *filename = malloc(sizeof(char) * 256);
+    if (filename == NULL) {
+        printf("Erro ao alocar memória para o nome do arquivo.\n");
+        return;
+    }
+
+    sprintf(filename, "resultados/command%d_output.txt", num + 1);
+    FILE *output_file = fopen(filename, "w");
+
+    if (validCount == 0) {
+        fprintf(output_file, "\n");
+    } else {
+        for (int i = 0; i < validCount; i++) {
+            fprintf(output_file, "%s;%d\n", array[i].genero, array[i].numMusicas);
+            free(array[i].genero);
+        }
+    }
+
+    fclose(output_file);
+    free(filename);
 }
