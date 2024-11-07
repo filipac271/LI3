@@ -6,8 +6,9 @@
 
 #include "utilidades.h"
 #include "controler/artistsController.h"
+#include "IOManager.h"
 
-int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,int numArtistsId,char* music_artist) {
+int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,int numArtistsId,char* music_artist, Output* Erros, char* linha) {
     int d;
     int pertence = 1;  // Assumir que todos os artistas pertencem
     int tembarra = 1;
@@ -35,6 +36,10 @@ int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,i
     }
 }
 
-
+  if((d & pertence & tembarra)==0)
+  {
+    outputErros(Erros,linha);
+    
+  }
     return (d & pertence & tembarra);  // Combinação bitwise dos resultados de duração e artistas
 }

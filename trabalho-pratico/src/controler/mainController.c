@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/resource.h>
+
 
 #include "controler/mainController.h"
 #include "controler/artistsController.h"
@@ -24,10 +26,10 @@ MainController* mainFeed(char* diretoria){
 
 
     mainData->artistsController =  artistFeed(diretoria);
+
     mainData->musicsController = musicsFeed(diretoria,mainData->artistsController);
+
     mainData->usersController = usersFeed(diretoria,mainData->musicsController);
-
-
 
 
     return mainData;
@@ -35,7 +37,9 @@ MainController* mainFeed(char* diretoria){
 
 
 void print_all_Data(MainController* data){
-   // print_all_artists(data->artistsController);
+    //Pequena utilização da variavel para tirar o warning de data not being used
+    (void)data;
+    //print_all_artists(data->artistsController);
     //print_all_musics(data->musicsController);
     //print_all_users(data->usersController);
 }

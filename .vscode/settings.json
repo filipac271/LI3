@@ -26,7 +26,8 @@
     "musics.h": "c",
     "users.h": "c",
     "inputmanager.h": "c",
-    "iomanager.h": "c"
+    "iomanager.h": "c",
+    "queriemanager.h": "c"
   }
 }
 

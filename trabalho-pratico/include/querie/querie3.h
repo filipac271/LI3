@@ -3,11 +3,11 @@
 #include <glib.h>
 #include "controler/usersController.h"
 #include "utilidades.h"
-#include "controler/musicsController.h"
-
-typedef struct generoMusica Genero;
 
 
-void querie3(int num,MusicData* musicController, int min , int max, UsersData* userController);
+typedef struct querie3 Genero;
+
+
+void querie3(int num, int min , int max, UsersData* userController);
 
 #endif

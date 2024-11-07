@@ -4,11 +4,15 @@
 #include <time.h>
 #include <glib.h>
 #include <unistd.h>
+#include "IOManager.h"
 
-int validaArtista (char* grupo, char* type){
+int validaArtista (char* grupo, char* type, char* linha,Output* erros){
 
     if(strcmp(type,"individual") == 0){
         if(!(strcmp(grupo,"\"[]\"") == 0)){
+                      
+           outputErros(erros,linha);
+            
             return 0;
         } 
     }

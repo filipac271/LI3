@@ -16,10 +16,10 @@
 
 
 
-int queries (MainController* data, FILE* querieFile) {
+void queries (MainController* data, FILE* querieFile) {
     if (querieFile == NULL) {
         printf("Erro ao abrir o arquivo!\n");
-        return -1;
+        return ;
     }
 
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
@@ -39,8 +39,6 @@ int queries (MainController* data, FILE* querieFile) {
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
-        Age* usersAge = getUsersByAge(UserController);
-        MusicData* MusicController = getMusicController(data);
         ArtistsData* ArtistContoller = getartistController(data);
 
         switch (line[0]) {
@@ -69,7 +67,7 @@ int queries (MainController* data, FILE* querieFile) {
 
             case '3':
                 sscanf(line + 1, "%d %d", &min, &max);
-                querie3(i, MusicController, min, max, UserController);
+                querie3(i, min, max, UserController);
                 break;
 
             default:
@@ -80,6 +78,6 @@ int queries (MainController* data, FILE* querieFile) {
     // Libera a memória alocada por getline
     free(line);
 
-    return i;
+    
 }
 
