@@ -26,32 +26,31 @@ ArtistsData* artistFeed(char* diretoria) {
 
     
     AData->artistsTable = init_artists_table();
-     Parser* parserE= newParser(diretoria,"artists.csv");
-    // Ignorar a primeira linha
 
+    
+  
+    Parser* parserE= newParser(diretoria,"artists.csv");
+  // Ignorar a primeira linha
     char* linha= pegaLinha(parserE);
-    
-   outputErros(Erros,linha);
-    
+    outputErros(Erros,linha);
+    free(linha);
 
     
     while (1) {
         
         
         parserE= parser(parserE);
-     if (getTokens(parserE)==NULL) 
-     {
-          freeParser(parserE); break;
-     }
+
     
         char** tokens = getTokens(parserE);
-      
-        // // Atualizar o lineOutput em cada iteração
-        // char lineOutput[2048];
-        // strncpy(lineOutput, get, 2048);  // Copia a linha para o buffer local
-        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
 
-                                                        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
+
+        if (tokens==NULL) {
+              freeParser(parserE); break;
+         }
+
+
+                                        // Aqui os tokens devem corresponder à ordem dos dados no arquivo
                                                         char* id = remove_quotes(tokens[0]);
                                                         char* name = remove_quotes(tokens[1]);
                                                         char* description = remove_quotes(tokens[2]);
@@ -87,17 +86,18 @@ ArtistsData* artistFeed(char* diretoria) {
     
             free(grupos_id);
 
+
         }
        
         // Libera as strings alocadas com remove_quotes
         freeCleanerArtist(id, name, description, ganhos, country, type);
-   
+        free(getLine(parserE));
     }
-     printf("FIM DE CICLO\n");
     // Libera a memória alocada por getline
-    free(linha);
+
     freeOutput(Erros);
    
+
    
     return AData;
 }
@@ -160,7 +160,10 @@ void print_artist_entry (gpointer key, gpointer value, gpointer user_data) {
         return;
     }
 
-    char* id = (char*)key;
+    // Suprime o aviso de variáveis não usadas
+    (void)user_data;
+
+    //char* id = (char*)key;
     Artist* artist = (Artist*)value;
 
     print_artist(artist);

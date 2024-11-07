@@ -14,7 +14,9 @@ char* pegaLinha(Parser* parserE);
 Parser* newParser(char* diretoria,char* subdiretoria);
 void freeParser(Parser* parserE);
 char** getTokens(Parser * parserE);
-char* getLinha( Parser* parserE);
+
+char* getLine (Parser* parserE);
+
 
 Output* iniciaOutput (char* filename);
 void freeOutput(Output* output);
@@ -24,4 +26,5 @@ void outputErros(Output* erros,char* linha);
 void output1(Output* output1, char* userEmail, char* userNome, char* userApelido,int idade, char* userCountry);
 void output2(Output* output2, char* nome, char* tipo, char* time,char* pais);
 void output3(Output* output3, char* genero, int num);
+
 #endif

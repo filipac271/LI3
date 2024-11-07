@@ -286,8 +286,7 @@ char** divideArtists(char* music_artist) {
         
     }*/
 
-    artistId_copy[copy_len-1] = NULL;
-    artistId_copy[copy_len-2] = '\0';
+    artistId_copy[copy_len-1] = '\0';
 
     int i = 0;
     char* artist;
@@ -366,7 +365,7 @@ liked_songs_id[numberS] = NULL;
 
 //Funcoes auxiliares para somar as horas e voltar a coloca-las num char*
 // Função para converter em segundos
-
+/*
 char* secondsToTimeString(int total_seconds) {
     int hours = total_seconds / 3600;
     int minutes = (total_seconds % 3600) / 60;
@@ -400,3 +399,4 @@ int timeStringToSeconds(char* timeString) {
 
     return total_seconds;
 }
+*/

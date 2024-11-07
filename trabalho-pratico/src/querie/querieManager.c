@@ -16,10 +16,10 @@
 
 
 
-int queries (MainController* data, FILE* querieFile) {
+void queries (MainController* data, FILE* querieFile) {
     if (querieFile == NULL) {
         printf("Erro ao abrir o arquivo!\n");
-        return -1;
+        return ;
     }
 
     char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
@@ -78,6 +78,6 @@ int queries (MainController* data, FILE* querieFile) {
     // Libera a memória alocada por getline
     free(line);
 
-    return i;
+    
 }
 

@@ -201,13 +201,10 @@ Age *insertGenero(Age* usersByAge, int idade, char* genero )
 
     if (nGeneros==0)
     {     
-
-
-         usersByAge[idade].generos=malloc(15*sizeof(char*));
-          usersByAge[idade].generos[nGeneros]=genero;
-         usersByAge[idade].numSongs[nGeneros]=1;
+        usersByAge[idade].generos=malloc(15*sizeof(char*));
+        usersByAge[idade].generos[nGeneros]=genero;
+        usersByAge[idade].numSongs[nGeneros]=1;
         usersByAge[idade].numGeneros=1;
-         
     }
     else{
 
@@ -223,12 +220,12 @@ Age *insertGenero(Age* usersByAge, int idade, char* genero )
     if(!inserido )
     {
         usersByAge[idade].generos[nGeneros]=genero;
-       usersByAge[idade].numSongs[nGeneros]++;
-       usersByAge[idade].numGeneros++;
+        usersByAge[idade].numSongs[nGeneros]++;
+        usersByAge[idade].numGeneros++;
     }
 
       }
-
+//printf("%s\n",usersByAge[idade].generos[nGeneros]);
     return usersByAge;
 }
 

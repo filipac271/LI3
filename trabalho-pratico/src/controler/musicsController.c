@@ -45,10 +45,14 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 //    MData->discographyIndo = iniciar_hash_info();
     
 
+
+    Parser* parserE= newParser(diretoria,"musics.csv");
+
     // Ignorar a primeira linha
-   char * line= pegaLinha(parserE);
-   outputErros(Erros,line);
-    
+    char * line= pegaLinha(parserE);
+    outputErros(Erros,line);
+    free(line);
+
     while (1) {
 
     
@@ -56,14 +60,16 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
        
         parserE= parser(parserE); 
-            if (getTokens(parserE)==NULL) 
+
+
+  
+      char** tokens= getTokens(parserE);
+
+     if (tokens==NULL) 
      {
           freeParser(parserE); break;
      }
 
-  
-      char** tokens= getTokens(parserE);
-   
         
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
@@ -110,6 +116,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         inserir_musica_na_htable(MData->musicsTable,nova_musica,music_id);
         
         //printf("Número de artistas após: %d\n", num_artistId);
+
         }
 
 
@@ -117,16 +124,15 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
         // Libera as strings alocadas com remove_quotes
         freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
-    
+        free(getLine(parserE));
     }
    
- printf("FIM DE CICLO\n");
    // print_all_Dinfos(MData);
     
-    // Libera a memória alocada por getline
-    free(line);
+
  freeOutput(Erros);
   
+
     return MData;
 }
 
@@ -169,7 +175,17 @@ Music* lookup_musica(MusicData* controller, char* music_id){
 
 // Função callback para imprimir a hash table
 void print_music_entry (gpointer key, gpointer value, gpointer user_data) {
-    char* id = (char*)key;
+
+    if (key == NULL || value == NULL) {
+        printf( "Chave ou valor nulo encontrado.\n");
+        sleep(2);
+        return;
+    }
+
+    // Suprime o aviso de variáveis não usadas
+    (void)user_data;
+
+    //char* id = (char*)key;
     Music* music = (Music*)value;
 
     print_musicas(music);

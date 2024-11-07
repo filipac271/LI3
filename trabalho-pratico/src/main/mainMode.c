@@ -38,7 +38,7 @@ int principal(char** argv) {
 
 
 
-    int numQueries = queries(data,queriesInput);
+    queries(data,queriesInput);
     
     destroyData(data);
 

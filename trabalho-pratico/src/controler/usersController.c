@@ -43,10 +43,14 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     UData->usersByAge=createUsersAge();
     Parser* parserE= newParser(diretoria,"users.csv");
     // Ignorar a primeira linha
+
+
+    Parser* parserE= newParser(diretoria,"users.csv");
+
     char* line = pegaLinha(parserE);
     outputErros(Erros,line);
-     
-    
+    free(line);
+
     while (1) {
 
 
@@ -54,16 +58,17 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
         
         parserE= parser(parserE); 
-                if (getTokens(parserE)==NULL) 
+
+
+      char** tokens= getTokens(parserE); 
+      if (tokens==NULL) 
      {
           freeParser(parserE); break;
      }
-
-      char** tokens= getTokens(parserE);
         // Atualizar o lineOutput em cada iteração
-        char lineOutput[2048];
-        strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
-        lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+        // char lineOutput[2048];
+        // strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
+        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
         int numberSongs=1;
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
         char* username = remove_quotes(tokens[0]);
@@ -104,17 +109,16 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
          insertUser(UData->usersTable,user,username); 
        
   
+
         }
 
       
         free(liked_songs_id); 
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
-   
+        free(getLine(parserE));
     
     }
-    printf("FIM DE CICLO\n");
-    // Libera a memória alocada por getline
-    free(line);
+
 
     freeOutput(Erros);
     return UData;
@@ -154,7 +158,16 @@ User* fetchUser(UsersData* controlador, char* username) {
 
 // Função callback para imprimir a hash table
 void print_user_entry (gpointer key, gpointer value, gpointer user_data) {
-    char* username = (char*)key;
+
+    if (key == NULL || value == NULL) {
+        printf( "Chave ou valor nulo encontrado.\n");
+        sleep(2);
+        return;
+    }
+
+    // Suprime o aviso de variáveis não usadas
+    (void)user_data;
+    //char* username = (char*)key;
     User* user= (User*)value;
 
     printUser(user);
@@ -205,6 +218,7 @@ char* getUBAGenero(UsersData * userController,int idade,int i) {
     Age* usersByAge= getUsersByAge(userController);
 
     char* genero= strdup (getGenero(usersByAge,idade,i) );
+
     return genero;
 
 }
