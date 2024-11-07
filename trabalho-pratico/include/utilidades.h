@@ -20,7 +20,7 @@ int validaEmail (char* email);
 
 int validaDuraçao (char* duracao);
 
-
+int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas);
 
 char** divideGroup(char* group, int numMembros);
 char** divideArtists(char* music_artist);

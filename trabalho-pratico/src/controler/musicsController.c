@@ -31,7 +31,6 @@ struct musicData {
 MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
  MusicData* MData = malloc(sizeof(MusicData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-    //FILE* ficheiro = abrirFILE(diretoria,"musics.csv");
 
     
     char *filename = malloc(sizeof(char) * 256);

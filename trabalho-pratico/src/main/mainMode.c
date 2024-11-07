@@ -16,7 +16,6 @@
 #include <glib.h>
 
 
-#define NUM_FILES 3
 
 
 
@@ -24,13 +23,7 @@ int principal(char** argv) {
 
     char* pastaPrincipal = argv[1];  // Recebe a pasta principal como argumento
     
-    char* queriesFile = argv[2];
-
-    FILE* queriesInput = abrirFILE(queriesFile,"");
-
-
-    // Lista de nomes de ficheiros na subpasta
-    //char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
+    char* queriesFile = argv[2];    // Recebe o ficheiro das queries como argumento
 
 
     MainController* data = feeder(pastaPrincipal);
@@ -38,11 +31,10 @@ int principal(char** argv) {
 
 
 
-    queries(data,queriesInput);
+    queries(data,queriesFile);
     
     destroyData(data);
 
-    fecharFILE(queriesInput);
 
 
     return 0;
