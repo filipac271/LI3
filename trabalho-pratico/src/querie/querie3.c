@@ -97,6 +97,8 @@ void querie3(int num, int min, int max, UsersData* userController)
         }
     }
 
+
+
 freeOutput (output);
     free(filename);
 }

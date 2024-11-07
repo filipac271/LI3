@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/resource.h>
+
 
 #include "controler/mainController.h"
 #include "controler/artistsController.h"
@@ -24,10 +26,10 @@ MainController* mainFeed(char* diretoria){
 
 
     mainData->artistsController =  artistFeed(diretoria);
+
     mainData->musicsController = musicsFeed(diretoria,mainData->artistsController);
+
     mainData->usersController = usersFeed(diretoria,mainData->musicsController);
-
-
 
 
     return mainData;

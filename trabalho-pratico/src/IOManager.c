@@ -4,11 +4,14 @@
 #include <unistd.h>
 #include "IOManager.h"
 #include "querie/querie3.h"
+#include "sys/resource.h"
 
 struct parser{
     FILE* file;
 
     char* line;
+
+    char* lineError;
 
     char** tokens;
 };
@@ -90,7 +93,8 @@ Parser* parser(Parser* parserE) {
     if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
     }
-
+    parserE->lineError = strdup(line);
+    parserE->line = line;
     char* lineCopy = line;
    
     int i = 0;
@@ -104,8 +108,7 @@ Parser* parser(Parser* parserE) {
     }
 
    
-   parserE->line = line;
-   
+
 
   
    return parserE;
@@ -118,6 +121,7 @@ Parser* newParser(char * diretoria,char* subdiretoria)
    parserE->file=file;
    parserE->tokens=malloc(10* sizeof(char *));
    parserE->line = NULL;
+   parserE->lineError = NULL;
 
   
    return parserE;
@@ -139,6 +143,10 @@ char* pegaLinha(Parser* parserE) {
         free(line);
         return NULL;
     }
+      // Remove a nova linha no final, se existir
+    if (line[strlen(line) - 1] == '\n') {
+            line[strlen(line) - 1] = '\0';
+    }
     return line;
 }
 
@@ -151,9 +159,14 @@ char** getTokens(Parser * parserE)
     return parserE->tokens;
 }
 
-char* getLinha( Parser* parserE)
+char* getLine( Parser* parserE)
 {
-    return strdup (parserE->linha);
+    return parserE->line;
+}
+
+char* getLineError( Parser* parserE)
+{
+    return parserE->lineError;
 }
 
 
@@ -180,7 +193,7 @@ void outputNULL(Output* output3)
 
 void outputErros(Output* erros,char* linha)
 {
-    fprintf(erros->file,"%s",linha);
+    fprintf(erros->file,"%s\n",linha);
 }
 
 void output1(Output* output1, char* userEmail, char* userNome, char* userApelido,int idade, char* userCountry)
@@ -205,6 +218,3 @@ void output3(Output* output3, char* genero, int num)
 
 
 
-char* getLine (Parser* parserE){
-    return parserE->line;
-}

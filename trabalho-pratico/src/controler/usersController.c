@@ -45,8 +45,6 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     // Ignorar a primeira linha
 
 
-    Parser* parserE= newParser(diretoria,"users.csv");
-
     char* line = pegaLinha(parserE);
     outputErros(Erros,line);
     free(line);
@@ -91,7 +89,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
  
      
-         char* linhaE=getLinha(parserE);
+         char* linhaE=getLineError(parserE);
         int isValid = validaUser(email,birth_date,subscription_type,musicData,liked_songs_id,numberSongs,Erros,linhaE);
 
         if(isValid){
@@ -115,6 +113,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
       
         free(liked_songs_id); 
         freeCleanerUsers(username,email,nome , apelido,birth_date, country,subscription_type);
+        free(linhaE);
         free(getLine(parserE));
     
     }

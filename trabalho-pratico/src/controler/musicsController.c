@@ -6,6 +6,7 @@
 #include "main/feeder.h"
 #include "Entitys/musics.h"
 #include "IOManager.h"
+#include "sys/resource.h"
 
 
 #include <glib.h>
@@ -42,12 +43,8 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
     Parser* parserE= newParser(diretoria,"musics.csv");
 
     //DINFO
-//    MData->discographyIndo = iniciar_hash_info();
+    //MData->discographyIndo = iniciar_hash_info();
     
-
-
-    Parser* parserE= newParser(diretoria,"musics.csv");
-
     // Ignorar a primeira linha
     char * line= pegaLinha(parserE);
     outputErros(Erros,line);
@@ -55,13 +52,10 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
     while (1) {
 
-    
-
-
        
         parserE= parser(parserE); 
 
-
+  
   
       char** tokens= getTokens(parserE);
 
@@ -90,7 +84,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
             //printf("DISCOGRAPHY: %d \n",discography);
 
 
-      char* linhaE=getLinha(parserE);
+      char* linhaE=getLineError(parserE);
      
         int isValid = validaMusic(music_duration,music_artist_id,artistsData,num_artistId,tokens[2], Erros,linhaE);
       
@@ -124,7 +118,9 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
         // Libera as strings alocadas com remove_quotes
         freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
+        free(linhaE);
         free(getLine(parserE));
+
     }
    
    // print_all_Dinfos(MData);

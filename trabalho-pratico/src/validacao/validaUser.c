@@ -44,7 +44,6 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
 if((t & d & e & existMusic)==0)
 {
     outputErros(Erros,linha);
-    free(linha);
 }
 
 
