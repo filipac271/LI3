@@ -63,10 +63,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
      {
           freeParser(parserE); break;
      }
-        // Atualizar o lineOutput em cada iteração
-        // char lineOutput[2048];
-        // strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
-        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+        
         int numberSongs=1;
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
         char* username = remove_quotes(tokens[0]);
@@ -98,8 +95,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
         int idade= calcular_idade(birth_date);
      
         UData->usersByAge= insertGeneros(UData->usersByAge,idade,liked_songs_id,numberSongs, musicData);
-        //insertLikedSongs(UData->usersByAge,idade,liked_songs_id,numberSongs);
-      
+       
 
         // Inserir os dados na hash table
 
@@ -198,13 +194,14 @@ Age* getUsersByAge(UsersData* data){
 
 Age* insertGeneros(Age* usersByAge, int idade,char** Songs,int SongCount, MusicData* musicController)
 {
+   
 
     for(int i=0;i<SongCount;i++)
     {
         Music* song= lookup_musica(musicController,Songs[i]);
          char* genero=get_music_genre(song);
-         
         usersByAge= insertGenero(usersByAge,idade,genero);
+       
     }
      return usersByAge;
         
@@ -227,6 +224,7 @@ int getUBANSongs(UsersData* userController, int idade, int j)
 
       Age* usersByAge= userController->usersByAge;
       int Nsongs=getUBANumberSongs(usersByAge,idade, j);
+      printf("%d\n",Nsongs);
       return Nsongs;
 
 
