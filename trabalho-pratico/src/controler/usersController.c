@@ -31,7 +31,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/users_errors.csv");
-    FILE *errosFileUsers = fopen(filename, "w");
+    Output* Erros= iniciaOutput(filename);
     free(filename);
     
     // char* line = NULL;  // Inicializado como NULL para getline alocar memória
@@ -41,13 +41,16 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     UData->usersTable = createTable();
    
     UData->usersByAge=createUsersAge();
+    Parser* parserE= newParser(diretoria,"users.csv");
     // Ignorar a primeira linha
+
 
     Parser* parserE= newParser(diretoria,"users.csv");
 
     char* line = pegaLinha(parserE);
-    fprintf(errosFileUsers,"%s",line);
+    outputErros(Erros,line);
     free(line);
+
     while (1) {
 
 
@@ -88,8 +91,8 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
  
      
-
-        int isValid = validaUser(email,birth_date,subscription_type,musicData,liked_songs_id,numberSongs);
+         char* linhaE=getLinha(parserE);
+        int isValid = validaUser(email,birth_date,subscription_type,musicData,liked_songs_id,numberSongs,Erros,linhaE);
 
         if(isValid){
            
@@ -106,9 +109,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
          insertUser(UData->usersTable,user,username); 
        
   
-        }else{ 
-            //fprintf(errosFileUsers,"%s\n",lineOutput);
-          
+
         }
 
       
@@ -119,7 +120,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     }
 
 
-    fclose(errosFileUsers);
+    freeOutput(Erros);
     return UData;
 }
 

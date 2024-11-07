@@ -5,6 +5,7 @@
 #include "Entitys/musics.h"
 #include "Entitys/users.h"
 #include "querie/querie3.h"
+#include "IOManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +21,8 @@ struct querie3
 
 void querie3(int num, int min, int max, UsersData* userController)
 {
-    struct querie3 array[15];
+
+   Genero array[15];
     int validCount = 0;
 
     for (int i = 0; i < 15; i++) {
@@ -28,7 +30,8 @@ void querie3(int num, int min, int max, UsersData* userController)
         array[i].genero = NULL;
     }
 
-    for (int i = min; i < max + 1; i++) {
+
+ for (int i = min; i < max + 1; i++) {
         for (int j = 0; j < getUBANGeneros(userController, i); j++) {
             int inserido = 0;
             char* genero = NULL;
@@ -76,23 +79,25 @@ void querie3(int num, int min, int max, UsersData* userController)
 
     // Gravar o arquivo
     char *filename = malloc(sizeof(char) * 256);
+
     if (filename == NULL) {
         printf("Erro ao alocar memória para o nome do arquivo.\n");
         return;
     }
+  sprintf(filename, "resultados/command%d_output.txt",num+1);
+   Output* output= iniciaOutput(filename);
 
-    sprintf(filename, "resultados/command%d_output.txt", num + 1);
-    FILE *output_file = fopen(filename, "w");
 
     if (validCount == 0) {
-        fprintf(output_file, "\n");
+         outputNULL(output);
     } else {
         for (int i = 0; i < validCount; i++) {
-            fprintf(output_file, "%s;%d\n", array[i].genero, array[i].numMusicas);
+                output3(output, array[i].genero,array[i].numMusicas);
             free(array[i].genero);
         }
     }
 
-    fclose(output_file);
+freeOutput (output);
     free(filename);
 }
+

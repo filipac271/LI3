@@ -3,11 +3,19 @@
 #include <string.h>
 #include <unistd.h>
 #include "IOManager.h"
+#include "querie/querie3.h"
 
 struct parser{
     FILE* file;
+
     char* line;
+
     char** tokens;
+};
+
+struct output
+{
+    FILE* file;
 };
 
 
@@ -68,6 +76,7 @@ Parser* parser(Parser* parserE) {
     size_t len=0;
     char* line = NULL;
 
+
    if( getline(&line,&len,parserE->file)==-1 ) 
    {
     free(line);
@@ -76,6 +85,7 @@ Parser* parser(Parser* parserE) {
    }
 
   
+
     // Remove a nova linha no final, se existir
     if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
@@ -84,7 +94,7 @@ Parser* parser(Parser* parserE) {
     char* lineCopy = line;
    
     int i = 0;
-    // parserE->linha=lineCopy;
+  
     // Divide a linha em tokens usando strsep
     char* token = strsep(&lineCopy, ";");
     while (token != NULL && i < 10) {
@@ -92,9 +102,11 @@ Parser* parser(Parser* parserE) {
         parserE->tokens[i++]=token;
         token = strsep(&lineCopy, ";");
     }
+
    
    parserE->line = line;
-    
+   
+
   
    return parserE;
 }
@@ -113,12 +125,14 @@ Parser* newParser(char * diretoria,char* subdiretoria)
 
 void freeParser(Parser* parserE)
 {
+
     fclose(parserE->file); 
     free(parserE->tokens);
     free(parserE);
 }
 
 char* pegaLinha(Parser* parserE) {
+
     size_t len=0;
     char* line = NULL; 
     if(getline(&line,&len,parserE->file) == -1) {
@@ -136,6 +150,59 @@ char** getTokens(Parser * parserE)
 
     return parserE->tokens;
 }
+
+char* getLinha( Parser* parserE)
+{
+    return strdup (parserE->linha);
+}
+
+
+
+
+Output* iniciaOutput (char* filename)
+{
+    FILE * output_file=fopen(filename, "w");
+    Output* output3= malloc(sizeof(Output*));
+    output3->file=output_file;
+    return output3;
+}
+
+void freeOutput(Output* output)
+{
+    fclose(output->file);
+    free(output);
+}
+
+void outputNULL(Output* output3)
+{
+    fprintf(output3->file,"\n");
+}
+
+void outputErros(Output* erros,char* linha)
+{
+    fprintf(erros->file,"%s",linha);
+}
+
+void output1(Output* output1, char* userEmail, char* userNome, char* userApelido,int idade, char* userCountry)
+{
+    fprintf(output1->file,"%s;%s;%s;%d;%s\n",userEmail,userNome,userApelido, idade,userCountry ); 
+}
+
+void output2(Output* output2, char* nome, char* tipo, char* time,char* pais)
+{
+     fprintf(output2->file,"%s;%s;%s;%s\n",nome,tipo, time, pais);
+}
+
+
+void output3(Output* output3, char* genero, int num)
+{
+
+   
+        fprintf(output3->file,"%s;%d\n",genero,num);
+
+    
+}
+
 
 
 char* getLine (Parser* parserE){

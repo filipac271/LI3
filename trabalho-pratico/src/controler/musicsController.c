@@ -35,35 +35,27 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
     
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/musics_errors.csv");
-    FILE *errosFileMusics = fopen(filename, "w");
+    Output* Erros= iniciaOutput(filename);
     free(filename);
-    
-    // char* line = NULL;  // Inicializado como NULL para getline alocar memória
-    // size_t len = 0;
-    // char* tokens[8];
-    
+  
     MData->musicsTable = iniciar_hash_musica();
+    Parser* parserE= newParser(diretoria,"musics.csv");
+
     //DINFO
 //    MData->discographyIndo = iniciar_hash_info();
     
+
 
     Parser* parserE= newParser(diretoria,"musics.csv");
 
     // Ignorar a primeira linha
     char * line= pegaLinha(parserE);
-    fprintf(errosFileMusics,"%s",line);
+    outputErros(Erros,line);
     free(line);
+
     while (1) {
 
-        // Pega a próxima linha
-    //     if (pegaLinha(ficheiro, &len, &line) == NULL){
-    //       break; 
-    //     } 
-    //        // Remove a nova linha no final, se existir
-    // if (line[0] != '\0' && line[strlen(line) - 1] == '\n') {
-    //     line[strlen(line) - 1] = '\0';
-    // }
-      //printf("%d\n", num_artists);
+    
 
 
        
@@ -72,14 +64,12 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
   
       char** tokens= getTokens(parserE);
+
      if (tokens==NULL) 
      {
           freeParser(parserE); break;
      }
-        // Atualizar o lineOutput em cada iteração
-        // char lineOutput[2048];
-        // strncpy(lineOutput, line, 2048);  // Copia a linha para o buffer local
-        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
+
         
 
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
@@ -100,8 +90,9 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
             //printf("DISCOGRAPHY: %d \n",discography);
 
 
-
-        int isValid = validaMusic(music_duration,music_artist_id,artistsData,num_artistId,tokens[2]);
+      char* linhaE=getLinha(parserE);
+     
+        int isValid = validaMusic(music_duration,music_artist_id,artistsData,num_artistId,tokens[2], Erros,linhaE);
       
         if(isValid){
             Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
@@ -125,8 +116,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         inserir_musica_na_htable(MData->musicsTable,nova_musica,music_id);
         
         //printf("Número de artistas após: %d\n", num_artistId);
-        }else{
-            //fprintf(errosFileMusics,"%s\n",lineOutput);
+
         }
 
 
@@ -140,8 +130,9 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
    // print_all_Dinfos(MData);
     
 
- 
-    fclose(errosFileMusics);
+ freeOutput(Erros);
+  
+
     return MData;
 }
 

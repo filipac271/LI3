@@ -18,23 +18,23 @@ struct artistsData{
 ArtistsData* artistFeed(char* diretoria) {
 
     ArtistsData* AData = malloc(sizeof(ArtistsData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-   // FILE* ficheiro = abrirFILE(diretoria,"artists.csv");
+  
+      char *filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/artists_errors.csv");
+    Output * Erros= iniciaOutput(filename);
+    free(filename);
 
-    FILE *errosFileArtists = abrirFILE_ERROS("resultados/artists_errors.csv");
-   
-    
-    // char* linha = NULL;  // Inicializado como NULL para getline alocar memória
-    //  size_t len = 0;
-    // char* tokens[8];
     
     AData->artistsTable = init_artists_table();
+
     
   
     Parser* parserE= newParser(diretoria,"artists.csv");
   // Ignorar a primeira linha
     char* linha= pegaLinha(parserE);
-    fprintf(errosFileArtists,"%s",linha);
+    outputErros(Erros,linha);
     free(linha);
+
     
     while (1) {
         
@@ -44,21 +44,11 @@ ArtistsData* artistFeed(char* diretoria) {
     
         char** tokens = getTokens(parserE);
 
-    //       int k = 0;
-    // while (tokens[k] != NULL) {  // Continua até encontrar NULL
-    //     printf("Token %d: %s\n", k + 1, tokens[k]);
-    //     k++;
-    // }
 
         if (tokens==NULL) {
               freeParser(parserE); break;
          }
 
-
-        // Atualizar o lineOutput em cada iteração
-        // char lineOutput[2048];
-        // strncpy(lineOutput, linha, 2048);  // Copia a linha para o buffer local
-        // lineOutput[2048 - 1] = '\0';  // Garante a terminação da string
 
                                         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
                                                         char* id = remove_quotes(tokens[0]);
@@ -70,7 +60,9 @@ ArtistsData* artistFeed(char* diretoria) {
                                                         char* country = remove_quotes(tokens[5]);
                                                         char* type = remove_quotes(tokens[6]);
         
-        int isValid = validaArtista(grupo, type);
+        char* linhaE=getLinha(parserE);
+       
+        int isValid = validaArtista(grupo, type,linhaE, Erros);
         
         if (isValid) {
             int numMembros = 1;
@@ -94,16 +86,18 @@ ArtistsData* artistFeed(char* diretoria) {
     
             free(grupos_id);
 
-        } else {
-            //fprintf(errosFileArtists, "%s\n", lineOutput);
+
         }
+       
         // Libera as strings alocadas com remove_quotes
         freeCleanerArtist(id, name, description, ganhos, country, type);
         free(getLine(parserE));
     }
     // Libera a memória alocada por getline
- 
-    fecharFILE(errosFileArtists);
+
+    freeOutput(Erros);
+   
+
    
     return AData;
 }
