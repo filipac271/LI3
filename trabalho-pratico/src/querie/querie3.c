@@ -26,22 +26,24 @@ void querie3(int num, int min, int max, UsersData* userController)
     int validCount = 0;
 
     for (int i = 0; i < 15; i++) {
-        array[i].numMusicas = -1;
+        array[i].numMusicas = 0;
         array[i].genero = NULL;
     }
 
 
  for (int i = min; i < max + 1; i++) {
+   
         for (int j = 0; j < getUBANGeneros(userController, i); j++) {
             int inserido = 0;
             char* genero = NULL;
-            int numSongs = -1;
+            int numSongs = 0;
             genero = getUBAGenero(userController, i, j);
             numSongs = getUBANSongs(userController, i, j);
-
+              
             for (int a = 0; a < validCount; a++) {
                 if (array[a].genero != NULL && strcmp(array[a].genero, genero) == 0) {
                     array[a].numMusicas += numSongs;
+                   
                     inserido = 1;
                     break;
                 }
@@ -54,6 +56,7 @@ void querie3(int num, int min, int max, UsersData* userController)
                     return;
                 }
                 array[validCount].numMusicas = numSongs;
+             
                 validCount++;
             }
 

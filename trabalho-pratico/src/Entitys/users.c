@@ -59,7 +59,13 @@ void printUser(User* user) {
     Age * usersAge=malloc(130* sizeof(Age));
     for (int i = 0; i < 130; i++) {
     usersAge[i].numGeneros = 0; 
-}
+    for (int j=0;j<15;j++)
+    {
+        usersAge[i].numSongs[j]=0;
+    }
+    
+    }
+
     return usersAge;
 }
 
@@ -177,6 +183,7 @@ void freeUsersByAge(Age* usersByAge){
 }
 
 int getUBANumberSongs(Age *userAge,int idade, int i){
+
     return (userAge[idade].numSongs[i]);
 }
 
@@ -220,7 +227,7 @@ Age *insertGenero(Age* usersByAge, int idade, char* genero )
     if(!inserido )
     {
         usersByAge[idade].generos[nGeneros]=genero;
-        usersByAge[idade].numSongs[nGeneros]++;
+        usersByAge[idade].numSongs[nGeneros]+=1;
         usersByAge[idade].numGeneros++;
     }
 
