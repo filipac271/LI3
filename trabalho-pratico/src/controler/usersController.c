@@ -224,7 +224,6 @@ int getUBANSongs(UsersData* userController, int idade, int j)
 
       Age* usersByAge= userController->usersByAge;
       int Nsongs=getUBANumberSongs(usersByAge,idade, j);
-      printf("%d\n",Nsongs);
       return Nsongs;
 
 
