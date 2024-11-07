@@ -5,6 +5,7 @@
 #include  "querie/querie2.h"
 #include  "querie/querie3.h"
 #include "utilidades.h"
+#include "IOManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,26 +17,21 @@
 
 
 
-void queries (MainController* data, FILE* querieFile) {
-    if (querieFile == NULL) {
-        printf("Erro ao abrir o arquivo!\n");
-        return ;
-    }
+void queries (MainController* data, char* querieFile) {
 
-    char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
-    size_t len = 0;     // Tamanho do buffer usado pelo getline
+    Parser* parserQ = newParser(querieFile,"");
+    char* line = NULL;
+    line = pegaLinha(parserQ);
+
+
     int min, max;
     int n;
     char country[256] = "";  // String para armazenar o país, inicializada como string vazia
     int i = 0;
-    for (i = 0; getline(&line, &len, querieFile) != -1; i++) {
+    for (i = 0; line != NULL; i++) {
         // Verifica se a linha tem pelo menos 1 caractere
         if (strlen(line) == 0) continue;
 
-        // Remove a nova linha no final, se existir
-        if (line[strlen(line) - 1] == '\n') {
-            line[strlen(line) - 1] = '\0';
-        }
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
@@ -73,10 +69,12 @@ void queries (MainController* data, FILE* querieFile) {
             default:
                 break;
         }
+
+        free(line);
+        line = pegaLinha(parserQ);
     }
 
-    // Libera a memória alocada por getline
-    free(line);
+    freeParser(parserQ);
 
     
 }

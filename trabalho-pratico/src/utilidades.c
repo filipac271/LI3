@@ -361,6 +361,55 @@ liked_songs_id[numberS] = NULL;
 
 
 
+// Função para comparar linha a linha dois arquivos e contar ocorrências corretas
+int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas) {
+    FILE *f1 = fopen(file1, "r");
+    FILE *f2 = fopen(file2, "r");
+
+    if (f1 == NULL || f2 == NULL) {
+        printf("Erro ao abrir um dos arquivos para comparação%s",file2);
+        return -1;  // Erro ao abrir arquivos
+    }
+
+
+    char linha1[1024], linha2[1024];
+    int linhaNumero = 1;
+    *ocorrenciasCorretas = 0;
+
+    while (fgets(linha1, sizeof(linha1), f1) && fgets(linha2, sizeof(linha2), f2)) {
+        // Remover quebra de linha para evitar diferenças acidentais
+        linha1[strcspn(linha1, "\n")] = '\0';
+        linha2[strcspn(linha2, "\n")] = '\0';
+
+
+        if (strcmp(linha1, linha2) == 0) {
+            (*ocorrenciasCorretas)++;  // Incrementa ocorrências corretas
+        } else {
+            printf("\nDiferença encontrada na linha %d do arquivo %s\n", linhaNumero, file1);
+            fclose(f1);
+            fclose(f2);
+            return 0;  // Arquivo é diferente
+        }
+        linhaNumero++;
+    }
+
+
+    // Verifica se ambos os arquivos terminaram ao mesmo tempo
+    if (fgets(linha1, sizeof(linha1), f1) || fgets(linha2, sizeof(linha2), f2)) {
+        printf("Tamanho diferente entre os arquivos, diferença encontrada na linha %d do arquivo %s\n", linhaNumero, file1);
+        fclose(f1);
+        fclose(f2);
+        return 0;
+    }
+
+    fclose(f1);
+    fclose(f2);
+    return 1;  // Arquivos são iguais
+}
+
+
+
+
 //Nao tenho bem a certeza se é suposto estas funçoes estarem aqui, mas vou coloca-las aqui e depois vejo
 
 //Funcoes auxiliares para somar as horas e voltar a coloca-las num char*

@@ -27,7 +27,6 @@ struct usersData
 UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
  UsersData* UData = malloc(sizeof(UsersData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
-   // FILE* ficheiro = abrirFILE(diretoria,"users.csv");
 
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/users_errors.csv");
