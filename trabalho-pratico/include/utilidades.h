@@ -12,6 +12,7 @@
 
 
 int calcular_idade( char* data_nascimento_str);
+
 guint get_garray_length(GArray *array);
 char* seconds_to_hhmmss(int total_seconds);
 char* remove_quotes(char* str);
@@ -25,8 +26,9 @@ int validaDuraçao (char* duracao);
 
 int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas);
 
-char** divideGroup(char* group, int numMembros);
+
 char** divideArtists(char* music_artist);
+char** divideGroup(char* group, int numMembros);
 int contar_elementos(char *str);
 char** likedSongs(char* songs, int numberS);
 

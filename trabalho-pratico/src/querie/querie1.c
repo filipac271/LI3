@@ -1,3 +1,4 @@
+
 #include "controler/usersController.h"
 #include "IOManager.h"
 #include "utilidades.h"
@@ -10,6 +11,7 @@
 
 
 void querie1(UsersData* userController, char* id,int i){
+
 char *filename = malloc(sizeof(char) * 256);
 sprintf(filename, "resultados/command%d_output.txt",i+1);
 
@@ -55,8 +57,6 @@ if(utilizador==NULL)
 
 free(filename);
 freeOutput(output);
-
-
 
 
 }

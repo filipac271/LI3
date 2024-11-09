@@ -1,4 +1,5 @@
 #include "Entitys/musics.h" 
+#include "utilidades.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -37,7 +38,7 @@ Music* new_music(char* music_id, char* music_title, char** music_artist_id, char
       n_music->music_artist_id[i] = strdup(music_artist_id[i]);
     }
     
-  n_music->num_artistId = num_artists;
+   n_music->num_artistId = num_artists;
   n_music->music_duration = strdup(music_duration);
   n_music->music_genre = strdup(music_genre);
   n_music->music_year = strdup(music_year);

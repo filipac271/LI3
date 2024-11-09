@@ -41,9 +41,6 @@ GArray* filter_and_sort_hash_table_by_discography(ArtistsData* controller, char 
 
 
 
-
-
-
 void querie2(ArtistsData* ArtistController, char* line, int i) {
     int n;
     char country[256] = "";  // String para armazenar o país, inicializada como string vazia
@@ -61,9 +58,11 @@ void querie2(ArtistsData* ArtistController, char* line, int i) {
     GArray* q2 = filter_and_sort_hash_table_by_discography(ArtistController, country);
     guint length = get_garray_length(q2);
 
+
     char* filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/command%d_output.txt", i + 1);
     Output* output = iniciaOutput(filename);
+
 
     // name 1;type 1;discography duration 1;country 1
     int j = 0;

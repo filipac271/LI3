@@ -9,6 +9,7 @@
 #include "IOManager.h"
 
 int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,int numArtistsId,char* music_artist, Output* Erros, char* linha) {
+
     int d;
     int pertence = 1;  // Assumir que todos os artistas pertencem
     int tembarra = 1;

@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,12 +34,14 @@ int calcular_idade( char* data_nascimento_str) {
     return idade;
 }
 
+
 guint get_garray_length(GArray *array) {
     if (array == NULL) {
         return 0; // Retorna 0 se o GArray for NULL
     }
     return array->len; // Retorna o tamanho do GArray
 }
+
 
 char* seconds_to_hhmmss(int total_seconds) {
     // Aloca memória para a string de saída
@@ -60,6 +61,7 @@ char* seconds_to_hhmmss(int total_seconds) {
 
     return time_string;
 }
+
 
 // Função para remover aspas de uma string
 char* remove_quotes(char* str) {
@@ -83,6 +85,7 @@ char* remove_quotes(char* str) {
 
     return new_str;
 }
+
 
 
 //Funções que libertam memória da cópia retornada do retiraAcentos
@@ -242,8 +245,28 @@ int validaDuraçao (char* duracao){
 }
 
 
+// Função para calcular a idade
+int calcular_idade( char* data_nascimento_str) {
+    // Data atual
+    int ano_atual = 2024, mes_atual = 9, dia_atual = 9;
 
+    // Variáveis para armazenar ano, mês e dia de nascimento
+    int ano_nascimento, mes_nascimento, dia_nascimento;
 
+    // Converter a string da data de nascimento para inteiros
+    sscanf(data_nascimento_str, "%d/%d/%d", &ano_nascimento, &mes_nascimento, &dia_nascimento);
+
+    // Calcular a idade base
+    int idade = ano_atual - ano_nascimento;
+
+    // Ajustar se o mês atual for anterior ao mês de nascimento,
+    // ou se for o mesmo mês, mas o dia atual for anterior ao dia de nascimento
+    if (mes_atual < mes_nascimento || (mes_atual == mes_nascimento && dia_atual < dia_nascimento)) {
+        idade--;
+    }
+
+    return idade;
+}
 
 
 
@@ -251,6 +274,8 @@ int validaDuraçao (char* duracao){
 
 char** divideGroup(char* group, int numMembros)
 {
+           
+         
     // Verificar se a string é vazia ("[]")
     if (strcmp(group, "\"[]\"") == 0) {
         // Alocar um array vazio
@@ -342,10 +367,11 @@ char** divideArtists(char* music_artist) {
     char* artist;
     //artist para a ser igual à string até a virgula
     while ((artist = strsep(&artistId_copy, ",")) != NULL && i < numMembros) {
+
         while (*artist == ' ' || *artist == '\'') artist++;
         int artist_len = strlen(artist);
         while (artist_len > 0 && (artist[artist_len - 1] == '\'' || artist[artist_len - 1] == ' ')) {
-            artist[--artist_len] = '\0';
+          artist[--artist_len] = '\0';
         }
 
         result_array[i] = (artist);
@@ -401,8 +427,7 @@ char** likedSongs(char* songs, int numberS)
    
     }
 liked_songs_id[numberS] = NULL;
-    // Liberta a memória alocada para uma string auxiliar do processo
-  //  free(song_copy);  
+
 
 
     return liked_songs_id;
@@ -456,5 +481,4 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
     fclose(f2);
     return 1;  // Arquivos são iguais
 }
-
 
