@@ -2,6 +2,9 @@
 #define MAINCONTROLLER_H
 #include <stdio.h>
 #include "controler/usersController.h"
+#include "controler/artistsController.h"
+#include "controler/musicsController.h"
+
 
 typedef struct mainController MainController;
 

@@ -1,12 +1,5 @@
-#include "main/feeder.h"
-#include "parser/parsermusica.h"
-#include "parser/userParser.h"
-#include "controler/artistsController.h"
-#include "controler/usersController.h"
-#include "controler/musicsController.h"
 #include "controler/mainController.h"
 #include "querie/querieManager.h"
-#include "IOManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,22 +12,18 @@
 
 
 
-int principal(char** argv) {
+int principal(char* pastaPrincipal , char* queriesFile) {
 
-    char* pastaPrincipal = argv[1];  // Recebe a pasta principal como argumento
-    
-    char* queriesFile = argv[2];    // Recebe o ficheiro das queries como argumento
+    //O mainFeed devolverá o controllador geral que contem os outros controladores das outras 3 entidades que já contêm o dataset parseado
+    MainController* data = mainFeed(pastaPrincipal);
 
-
-    MainController* data = feeder(pastaPrincipal);
+    //Função simples que printa todas as HashTables principais
     print_all_Data(data);
-
-
 
     queries(data,queriesFile);
     
+    //Função que liberta a memória do mainController e dos outros controladores
     destroyData(data);
-
 
 
     return 0;

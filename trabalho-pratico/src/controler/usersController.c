@@ -26,22 +26,19 @@ struct usersData
 
 UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
- UsersData* UData = malloc(sizeof(UsersData));  // Corrigido: alocando corretamente o tamanho de `ArtistsData`
+    UsersData* UData = malloc(sizeof(UsersData));  
 
     char *filename = malloc(sizeof(char) * 256);
     sprintf(filename, "resultados/users_errors.csv");
     Output* Erros= iniciaOutput(filename);
     free(filename);
     
-    // char* line = NULL;  // Inicializado como NULL para getline alocar memória
-    // size_t len = 0;
-    // char* tokens[8];
+    
     
     UData->usersTable = createTable();
    
     UData->usersByAge=createUsersAge();
     Parser* parserE= newParser(diretoria,"users.csv");
-    // Ignorar a primeira linha
 
 
     char* line = pegaLinha(parserE);
@@ -49,19 +46,16 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     free(line);
 
     while (1) {
-
-
-      
-
         
         parserE= parser(parserE); 
 
 
-      char** tokens= getTokens(parserE); 
-      if (tokens==NULL) 
-     {
+        char** tokens= getTokens(parserE); 
+     
+        if (tokens==NULL) 
+         {
           freeParser(parserE); break;
-     }
+         }
         
         int numberSongs=1;
         // Aqui os tokens devem corresponder à ordem dos dados no arquivo
@@ -182,10 +176,6 @@ void destroyUsersData(UsersData* data){
 }
 
 
-/*
-GHashTable* getUserTable(UsersData* data){
-    return data->usersTable;
-}*/
 Age* getUsersByAge(UsersData* data){
     return data->usersByAge;
 }
@@ -200,21 +190,25 @@ Age* insertGeneros(Age* usersByAge, int idade,char** Songs,int SongCount, MusicD
         Music* song= lookup_musica(musicController,Songs[i]);
          char* genero=get_music_genre(song);
         usersByAge= insertGenero(usersByAge,idade,genero);
+        free(genero);
        
     }
      return usersByAge;
         
-        
+
 }
+
 
 
 
 char* getUBAGenero(UsersData * userController,int idade,int i) {
     Age* usersByAge= getUsersByAge(userController);
 
-    char* genero= strdup (getGenero(usersByAge,idade,i) );
+    char* genero= getGenero(usersByAge,idade,i);
+    char* copiaGenero = strdup(genero);
+    free(genero);
 
-    return genero;
+    return copiaGenero;
 
 }
 
