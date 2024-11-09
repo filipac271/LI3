@@ -1,3 +1,0 @@
-Data About;group;11:42:11;Cuba
-Benjamin;individual;10:27:44;Cuba
-Order Day;individual;05:06:35;Cuba
