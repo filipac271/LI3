@@ -42,7 +42,7 @@ Music* new_music(char* music_id, char* music_title, char** music_artist_id, char
   n_music->music_duration = strdup(music_duration);
   n_music->music_genre = strdup(music_genre);
   n_music->music_year = strdup(music_year);
-  n_music->music_lyrics = strdup(music_lyrics);
+  n_music->music_lyrics = (music_lyrics);
 
   return n_music;
 
@@ -64,7 +64,7 @@ void free_musica(Music* musica) {
         free(musica->music_duration);
         free(musica->music_genre);
         free(musica->music_year);
-        free(musica->music_lyrics);
+        //free(musica->music_lyrics);
 
         free(musica);
     }
