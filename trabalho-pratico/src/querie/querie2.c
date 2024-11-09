@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
+#include <unistd.h>
 
 
 
@@ -73,6 +74,8 @@ void querie2(ArtistsData* ArtistController, char* line, int i) {
             Artist* artist_atual = g_array_index(q2, Artist*, j);
 
             int discography = getArtistDiscography(artist_atual);
+            if(discography == 0)break;
+            
             char* time = seconds_to_hhmmss(discography);
 
             char* nome = getArtistName(artist_atual);
