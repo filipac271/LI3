@@ -28,7 +28,7 @@
 
 // Função principal para realizar os testes
 int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
-    printf("Entrada nos testes\n");
+    printf("Entrada nos testes (Mooshak) \n");
 
     struct timespec start, end;
 
@@ -128,12 +128,21 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
         // Comparar os arquivos gerado e esperado linha a linha
         int iguais = compararFicheirosPorLinha(resultadoFile, esperadoFile, &ocorrenciasCorretas);
-        if (iguais == 1) {
-            printf("Test %d: PASS - %d ocorrências corretas\n", j + 1, ocorrenciasCorretas);
-            correctLine++;
-        } else {
-            printf("Test %d: FAIL - %d ocorrências corretas\n\n", j + 1, ocorrenciasCorretas);
+        int numLinesResult = contar_linhas(resultadoFile);
+        int numLinesEsperado = contar_linhas(esperadoFile);
+        if ((numLinesEsperado == numLinesResult))
+        {
+            if (iguais == 1 ) {
+                printf("Test %d: PASS - %d ocorrências corretas\n", j + 1, ocorrenciasCorretas);
+                correctLine++;
+            } else {
+                printf("Test %d: FAIL - %d ocorrências corretas\n\n", j + 1, ocorrenciasCorretas);
+            }
+        }else{
+            printf(COLOR_RED"Test %d: FAIL - Os dois ficheiros não contem o mesmo número de linhas\n\n" COLOR_RESET,j+1);
         }
+        
+        
     }
 
 
@@ -149,27 +158,56 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     printf("Foram executadas %d queries 2\n",q2);
     printf("Foram executadas %d queries 3\n",q3);
 
-    int validLinesA = contar_linhas("resultados/artists_errors.csv");
-    int validLinesM = contar_linhas("resultados/musics_errors.csv");
-    int validLinesU = contar_linhas("resultados/users_errors.csv");
+    int validLinesA = 1;
+    int validLinesM = 1;
+    int validLinesU = 1;
 
-    if(validLinesA == 151){
-        printf(COLOR_GREEN "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+    if(strcmp(pastaPrincipal,"../../dataset/com_erros/") == 0){
+        validLinesA = contar_linhas("resultados/artists_errors.csv");
+        validLinesM = contar_linhas("resultados/musics_errors.csv");
+        validLinesU = contar_linhas("resultados/users_errors.csv");
+
+            if(validLinesA == 151){
+                printf(COLOR_GREEN "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+            }else{
+                printf(COLOR_RED "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+            }
+
+            if(validLinesM == 18882){
+                printf(COLOR_GREEN "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
+            }else{
+                printf(COLOR_RED "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
+            }
+
+            if(validLinesU == 37501){
+                printf(COLOR_GREEN "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
+            }else{
+                printf(COLOR_RED "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
+            }
     }else{
-        printf(COLOR_RED "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+
+
+            if(validLinesA == 1){
+                printf(COLOR_GREEN "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+            }else{
+                printf(COLOR_RED "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+            }
+
+            if(validLinesM == 1){
+                printf(COLOR_GREEN "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
+            }else{
+                printf(COLOR_RED "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
+            }
+
+            if(validLinesU == 1){
+                printf(COLOR_GREEN "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
+            }else{
+                printf(COLOR_RED "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
+            }
     }
 
-    if(validLinesM == 18882){
-        printf(COLOR_GREEN "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
-    }else{
-        printf(COLOR_RED "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
-    }
+
     
-    if(validLinesU == 37501){
-        printf(COLOR_GREEN "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
-    }else{
-        printf(COLOR_RED "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
-    }
     
     
 
