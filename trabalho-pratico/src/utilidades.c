@@ -109,7 +109,8 @@ void freeCleanerMusics(char* music_id,char* music_title,char* music_artist_id,ch
         free(music_duration);
         free(music_genre);
         free(music_year);
-        free(music_lyrics);
+        (void)music_lyrics;
+        //free(music_lyrics);
 
 }
 
