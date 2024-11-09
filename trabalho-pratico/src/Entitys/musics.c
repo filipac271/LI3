@@ -37,7 +37,7 @@ Music* new_music(char* music_id, char* music_title, char** music_artist_id, char
   n_music->music_duration = strdup(music_duration);
   n_music->music_genre = strdup(music_genre);
   n_music->music_year = strdup(music_year);
-  n_music->music_lyrics = (music_lyrics);
+
 
   return n_music;
 
@@ -125,7 +125,3 @@ char* get_music_year (Music* music){
   return strdup(music->music_year);
 }
 
-char* get_music_lyrics (Music* music){
-  return strdup(music->music_lyrics);
-
-}

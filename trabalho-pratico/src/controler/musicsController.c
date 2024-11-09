@@ -88,7 +88,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
        // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
         if(isValid){ 
            
-        Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
+        Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, num_artistId);
         // Soma o tempo da música à discografia de todos os seus autores
         inserir_discography_into_artist(artistsData,music_duration, music_artist_id,num_artistId);
          
@@ -103,7 +103,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         free(music_artist_id);        
 
         // Libera a memória alocada no remove_quotes
-        freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
+        freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year);
         free(linhaE);
         free(getLine(parserE));
 
