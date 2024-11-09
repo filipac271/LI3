@@ -8,7 +8,7 @@
 int main(int argc, char **argv){
     if(argc == 3){
     
-        principal(argv);
+        principal(argv[1], argv[2]);
     
         struct rusage r_usage;
         getrusage(RUSAGE_SELF,&r_usage);
@@ -17,7 +17,5 @@ int main(int argc, char **argv){
     else if (argc == 4){
         teste(argv);
     }
-
-
 
 }

@@ -73,7 +73,6 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         char *music_duration = remove_quotes(tokens[3]);
         char *music_genre = remove_quotes(tokens[4]);
         char *music_year = remove_quotes(tokens[5]);
-        char *music_lyrics = remove_quotes(tokens[6]);
 
         int num_artistId = contar_elementos(music_artists);
 
@@ -85,11 +84,11 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
 
       char* linhaE=getLineError(parserE);
-     
+      
         int isValid = validaMusic(music_duration,music_artist_id,artistsData,num_artistId,tokens[2], Erros,linhaE);
       
         if(isValid){
-            Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
+            Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, num_artistId);
 
             if(num_artistId > 1){
              // printf("ENTROU! \n");
@@ -117,12 +116,11 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         free(music_artist_id);
 
         // Libera as strings alocadas com remove_quotes
-        freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
+        freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year);
         free(linhaE);
         free(getLine(parserE));
 
     }
-   
    // print_all_Dinfos(MData);
     
 

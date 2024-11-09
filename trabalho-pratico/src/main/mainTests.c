@@ -69,6 +69,7 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
 }
 
 // Função principal para realizar os testes
+//mudar para uma cena tipo o principal
 int teste(char **argv) {
     printf("Entrada nos testes\n");
 

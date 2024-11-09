@@ -20,11 +20,7 @@
 
 
 
-int principal(char** argv) {
-
-    char* pastaPrincipal = argv[1];  // Recebe a pasta principal como argumento
-    
-    char* queriesFile = argv[2];
+int principal(char *pastaPrincipal, char *queriesFile) {
 
     FILE* queriesInput = abrirFILE(queriesFile,"");
 

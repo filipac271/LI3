@@ -10,8 +10,8 @@ int validaArtista (char* grupo, char* type, char* linha,Output* erros){
 
     if(strcmp(type,"individual") == 0){
         if(!(strcmp(grupo,"\"[]\"") == 0)){
-                      
-           outputErros(erros,linha);
+
+            outputErros(erros,linha);
             
             return 0;
         } 

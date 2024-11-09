@@ -12,15 +12,10 @@ struct music{
   char *music_duration;
   char *music_genre;
   char *music_year;
-  char *music_lyrics;
   int num_artistId;
 };
 
-
-
-
-
-Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, char* music_lyrics, int num_artists){
+Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, int num_artists){
   Music* n_music = malloc(sizeof(Music));
     if (n_music == NULL) {
         fprintf(stderr, "Memory allocation failed for new music\n");
@@ -44,9 +39,8 @@ Music* new_music(char* music_id, char* music_title, char** music_artist_id, char
   n_music->music_duration = strdup(music_duration);
   n_music->music_genre = strdup(music_genre);
   n_music->music_year = strdup(music_year);
-  n_music->music_lyrics = strdup(music_lyrics);
 
-  if (!n_music->music_id || !n_music->music_title || !n_music->music_artist_id || !n_music->music_duration || !n_music->music_genre || !n_music->music_lyrics) {
+  if (!n_music->music_id || !n_music->music_title || !n_music->music_artist_id || !n_music->music_duration || !n_music->music_genre) {
         printf("Memory allocation failed for one or more fields in new_music\n");
         free_musica(n_music);
         exit(1);
@@ -73,7 +67,6 @@ void free_musica(Music* musica) {
         free(musica->music_duration);
         free(musica->music_genre);
         free(musica->music_year);
-        free(musica->music_lyrics);
 
         free(musica);
     }
@@ -93,7 +86,6 @@ void print_musicas(Music * musica){
     printf("MUSIC_DURATION: %s\n", musica->music_duration);
     printf("MUSIC_GENRE: %s\n", musica->music_genre);
     printf("MUSIC_YEAR: %s\n", musica->music_year);
-    printf("MUSIC_LYRICS: %s\n", musica->music_lyrics);
 
   } else{
     printf("N existe esta musica\n");
@@ -139,11 +131,6 @@ char* get_music_genre (Music* music){
 
 char* get_music_year (Music* music){
   return music->music_year;
-}
-
-char* get_music_lyrics (Music* music){
-  return music->music_lyrics;
-
 }
 
 //COISAS TIRADAS DO .H SOBRE DINFO, VER DEPOIS SE É REALMENTE PARA APAGAR
