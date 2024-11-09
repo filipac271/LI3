@@ -1,4 +1,6 @@
 #include "Entitys/artists.h"
+#include "utilidades.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -19,20 +21,20 @@ struct artists
 
 
 // Função para criar um novo artista
-Artist* create_artist(char* id, const char* name, char* description, float ganho, char** grupo, char* country, char* type,int numMembros) {
+Artist* create_artist(char* id,  char* name, char* description,float ganho, char** grupo, char* country, char* type,int numMembros) {
     Artist* new_artist = malloc(sizeof(Artist));
     new_artist->id = strdup(id);
     new_artist->name = strdup(name);
     new_artist->descriçao = strdup(description);
-    new_artist->ganho_por_stream = ganho;
+    new_artist->ganho_por_stream = ganho;  
+
     new_artist->grupo = malloc(numMembros * sizeof(char*)); 
 
 
-    for (int i = 0; i < numMembros; i++) {
+       for (int i = 0; i < numMembros; i++) {
          new_artist->grupo[i] = strdup(grupo[i]);  // Duplica cada string
 
     }
-
 
     new_artist->country = strdup(country);
     new_artist->type = strdup(type);

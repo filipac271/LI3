@@ -1,5 +1,5 @@
-#include "../../include/controler/usersController.h"
-#include "../../include/controler/musicsController.h"
+#include "controler/usersController.h"
+#include "controler/musicsController.h"
 #include "controler/usersController.h"
 #include "utilidades.h"
 #include "Entitys/musics.h"
@@ -77,14 +77,13 @@ GArray* filter_and_sort_hash_table_by_discography(ArtistsData* controller, char 
 
 
 void querie2(ArtistsData* ArtistController, int n, int i, char* country){
-  //printf("COUNTRY DO INICIO DA FUNCAO QUERIE2: %s\n", country);
   
 
   GArray* q2 = filter_and_sort_hash_table_by_discography(ArtistController, country);
 
   guint length = get_garray_length(q2);
 
-char *filename = malloc(sizeof(char) * 256);
+  char *filename = malloc(sizeof(char) * 256);
   sprintf(filename, "resultados/command%d_output.txt",i+1);
   Output* output= iniciaOutput(filename);
   

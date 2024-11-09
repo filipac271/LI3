@@ -8,14 +8,11 @@
 typedef struct artistsData ArtistsData;
 
 void insert_artist_into_table(GHashTable* artists_table,Artist* newArtist, char* id);
-void inserir_discography_into_artist (ArtistsData* controller, int discography, char* artist_id);
-
+void inserir_discography_into_artist (ArtistsData* controller, char* music_duration, char** music_artist_id, int num_artistId);
 ArtistsData* artistFeed(char* diretoria);
 
 
 GHashTable* init_artists_table();
-
-Artist* create_artist(char* id, const char* name, char* description, float ganho, char** grupo, char* country, char* type,int numMembros);
 
 Artist* lookup_artist(ArtistsData* controller, char* id);
 
