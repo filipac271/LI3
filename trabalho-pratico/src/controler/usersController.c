@@ -26,6 +26,7 @@ struct usersData
 
 UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
+
     UsersData* UData = malloc(sizeof(UsersData));
     if(UData == NULL){
         fprintf(stderr,"Alocação de memória do UsersController não foi bem sucedido");
@@ -34,13 +35,14 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
     //Abre o ficheiro  "users_errors.csv" e aloca memória para o respetivo pointer 
     Output* Erros= iniciaOutput("resultados/users_errors.csv");
+
     
     UData->usersTable = createTable();
     UData->usersByAge=createUsersAge();
 
      //Inicia o Parser e abre o ficheiro "users.csv" do dataset
     Parser* parserE= newParser(diretoria,"users.csv");
-   
+
     // Ignorar a primeira linha
      char* line = pegaLinha(parserE);
      //Enviar a linha para o ficheiro users_erros.csv, esta não será inserida hashTable
@@ -55,10 +57,12 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
         char** tokens= getTokens(parserE); 
       
 
+
         if (tokens==NULL) 
          {
             // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
               freeParser(parserE); break;
+
          }
         
       
@@ -202,20 +206,25 @@ Age* insertGeneros(Age* usersByAge, int idade,char** Songs,int SongCount, MusicD
         Music* song= lookup_musica(musicController,Songs[i]);
          char* genero=get_music_genre(song);
         usersByAge= insertGenero(usersByAge,idade,genero);
+        free(genero);
        
     }
-     return usersByAge;    
 
+     return usersByAge;    
+  
 }
+
 
 
 // Procura o género no array usersByAge de uma dada idade na posição i
 char* getUBAGenero(UsersData * userController,int idade,int i) {
 
     Age* usersByAge= getUsersByAge(userController);
-    char* genero= strdup (getGenero(usersByAge,idade,i) );
+    char* genero= getGenero(usersByAge,idade,i);
+    char* copiaGenero = strdup(genero);
+    free(genero);
 
-    return genero;
+    return copiaGenero;
 
 }
 

@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
 #include "IOManager.h"
-#include "querie/querie3.h"
-#include "sys/resource.h"
 
 struct parser{
     FILE* file;
@@ -21,8 +20,7 @@ struct output
     FILE* file;
 };
 
-
-#define TOKEN_SIZE 8
+#define MaxTokensSize 8
 
 FILE* abrirFILE(char* diretoria, char* subdiretoria){
 
@@ -42,10 +40,7 @@ FILE* abrirFILE(char* diretoria, char* subdiretoria){
         ficheiro = fopen(filePath, "r");
         if (ficheiro == NULL) {
             printf("Erro ao abrir o ficheiro %s\n", filePath);
-        } else {
-           // printf("Ficheiro %s aberto com sucesso\n", filePath);
-        }
-
+        } 
     return ficheiro;
 }
 
@@ -76,25 +71,29 @@ void fecharFILE (FILE* ficheiro){
 
 
 Parser* parser(Parser* parserE) {
+
     size_t len=0;
     char* line = NULL;
 
-
    if( getline(&line,&len,parserE->file)==-1 ) 
    {
+    //Dá free de linha e return caso n haja mais linhas no ficheiro
     free(line);
     parserE->tokens[0]=NULL;
     return parserE;
    }
 
-  
 
     // Remove a nova linha no final, se existir
     if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
     }
+
+
     parserE->lineError = strdup(line);
     parserE->line = line;
+
+
     char* lineCopy = line;
    
     int i = 0;
@@ -107,19 +106,17 @@ Parser* parser(Parser* parserE) {
         token = strsep(&lineCopy, ";");
     }
 
-   
-
-
-  
+   //Retorna a estrutura do parser
    return parserE;
 }
 
+//Função que cria e aloca memoria para a estrutura e os campos do Parser
 Parser* newParser(char * diretoria,char* subdiretoria)
 {
-    FILE* file= abrirFILE(diretoria,subdiretoria);
+   FILE* file= abrirFILE(diretoria,subdiretoria);
    Parser* parserE=malloc(sizeof(struct parser));
    parserE->file=file;
-   parserE->tokens=malloc(10* sizeof(char *));
+   parserE->tokens=malloc(MaxTokensSize * sizeof(char *));
    parserE->line = NULL;
    parserE->lineError = NULL;
 
@@ -127,10 +124,10 @@ Parser* newParser(char * diretoria,char* subdiretoria)
    return parserE;
 }
 
+//Função que dá free da memoria para a estrutura e os campos do Parser
 void freeParser(Parser* parserE)
 {
-
-    fclose(parserE->file); 
+    fecharFILE(parserE->file); 
     free(parserE->tokens);
     free(parserE);
 }
@@ -140,13 +137,16 @@ char* pegaLinha(Parser* parserE) {
     size_t len=0;
     char* line = NULL; 
     if(getline(&line,&len,parserE->file) == -1) {
+        //Dá free de linha e return de NULL caso n haja mais linhas no ficheiro
         free(line);
         return NULL;
     }
-      // Remove a nova linha no final, se existir
+
+    // Remove a nova linha no final, se existir
     if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
     }
+
     return line;
 }
 
@@ -171,7 +171,7 @@ char* getLineError( Parser* parserE)
 
 
 
-
+//Função que cria e aloca memoria para a estrutura e os campos do Output
 Output* iniciaOutput (char* filename)
 {
     FILE * output_file=fopen(filename, "w");
@@ -180,41 +180,60 @@ Output* iniciaOutput (char* filename)
     return output3;
 }
 
+//Função que dá free da memoria para a estrutura e os campos do Output
 void freeOutput(Output* output)
 {
-    fclose(output->file);
+    fecharFILE(output->file);
     free(output);
 }
 
+//Função de output de queries com informações inválidas
 void outputNULL(Output* output3)
 {
     fprintf(output3->file,"\n");
 }
 
+//Função de output das linhas do dataset inválidas
 void outputErros(Output* erros,char* linha)
 {
     fprintf(erros->file,"%s\n",linha);
 }
 
+//Função de output da Querie 1
 void output1(Output* output1, char* userEmail, char* userNome, char* userApelido,int idade, char* userCountry)
 {
     fprintf(output1->file,"%s;%s;%s;%d;%s\n",userEmail,userNome,userApelido, idade,userCountry ); 
 }
 
+//Função de output da Querie 2
 void output2(Output* output2, char* nome, char* tipo, char* time,char* pais)
 {
-     fprintf(output2->file,"%s;%s;%s;%s\n",nome,tipo, time, pais);
+    fprintf(output2->file,"%s;%s;%s;%s\n",nome,tipo, time, pais);
 }
 
-
+//Função de output da Querie 3
 void output3(Output* output3, char* genero, int num)
 {
-
-   
-        fprintf(output3->file,"%s;%d\n",genero,num);
-
-    
+    fprintf(output3->file,"%s;%d\n",genero,num);  
 }
 
 
 
+int contar_linhas( char *nome_ficheiro) {
+    FILE *file = fopen(nome_ficheiro, "r");
+    if (file == NULL) {
+        perror("Erro ao abrir o ficheiro");
+        return -1;  // Retorna -1 em caso de erro
+    }
+
+    int linhas = 0;
+    char ch;
+    while ((ch = fgetc(file)) != EOF) {
+        if (ch == '\n') {
+            linhas++;
+        }
+    }
+
+    fclose(file);
+    return linhas;
+}

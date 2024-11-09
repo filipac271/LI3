@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <glib.h>
 
 
 struct users
@@ -20,11 +19,6 @@ struct users
 };
 
 
-// struct usersByAge
-// {
-//     char** likedSongs;
-//     int numberSongs;
-// };
 
 struct usersByAge
 {
@@ -44,11 +38,13 @@ void printUser(User* user) {
         printf("pais: %s\n", user->country);
         printf("SUBS: %s\n", user->subscription_type);
         printf("cancoes :\n");
+
         for(int i=0; i<user->number_liked_songs;i++)
         {
         printf("%s  ",user->liked_songs_id[i]);
         }
         printf("\n");
+
     }
     else printf("N tenho nada para printar\n");
 }
@@ -56,7 +52,7 @@ void printUser(User* user) {
  Age* createUsersAge()
 {
   
-    Age * usersAge=malloc(130* sizeof(Age));
+    struct usersByAge* usersAge = malloc(130 * sizeof(struct usersByAge));
     for (int i = 0; i < 130; i++) {
     usersAge[i].numGeneros = 0; 
     for (int j=0;j<15;j++)
@@ -74,7 +70,11 @@ void printUser(User* user) {
 User* newUser (char* username_, char* email_, char* first_name, char* last_name, char * birth_Date, char* pais, char* subscricao, char** liked_Songs_id,int songsN)
 {
     User* user= malloc(sizeof(User));
-    
+    if(user == NULL){
+        fprintf(stderr, "Memory allocation failed for new user\n");
+        exit(1);
+    }
+
     user->username=strdup(username_);
     user->email=strdup(email_);
     user->nome=strdup(first_name);
@@ -88,21 +88,52 @@ User* newUser (char* username_, char* email_, char* first_name, char* last_name,
       user->liked_songs_id[i] = strdup(liked_Songs_id[i]);  // Duplica cada string  
     }
 
-  
     user->number_liked_songs= songsN;
     
-    return user;
-   
+    return user; 
 }
 
 
 
+Age *insertGenero(Age* usersByAge, int idade, char* genero )
 
+{
+    int inserido=0;
+    int nGeneros=usersByAge[idade].numGeneros;
 
+    if (nGeneros==0)
+    {     
+        usersByAge[idade].generos=malloc(15*sizeof(char*));
+        usersByAge[idade].generos[nGeneros]=strdup(genero);
+        usersByAge[idade].numSongs[nGeneros]=1;
+        usersByAge[idade].numGeneros=1;
+    }
+    else{
+
+ 
+    for(int i=0;i<nGeneros && !inserido;i++)
+    {
+        if(strcmp(usersByAge[idade].generos[i],genero)==0)
+        {
+            usersByAge[idade].numSongs[i]++;
+            inserido=1;
+        }
+    }
+    if(!inserido )
+    {
+        usersByAge[idade].generos[nGeneros]=strdup(genero);
+        usersByAge[idade].numSongs[nGeneros]+=1;
+        usersByAge[idade].numGeneros++;
+    }
+
+      }
+//printf("%s\n",usersByAge[idade].generos[nGeneros]);
+    return usersByAge;
+}
 
 void freeUser(User* user) {
     
-     if (user == NULL)
+    if (user == NULL)
     {    
          return;
     }
@@ -115,8 +146,8 @@ void freeUser(User* user) {
     free(user->country); 
     free(user->subscription_type);
  
-    int i;
-    for( i=0;i<user->number_liked_songs;i++)
+    
+    for(int i=0;i<user->number_liked_songs;i++)
        {  
          free(user->liked_songs_id[i]);  
        }
@@ -131,16 +162,21 @@ void freeUsersByAge(Age* usersByAge){
     if(usersByAge[i].numGeneros>0)
     {
       
-       
+        for(int j = 0 ; j < usersByAge[i].numGeneros; j++)
+            {
+             free(usersByAge[i].generos[j]);
+            }
+
         free(usersByAge[i].generos);
     }
-
    }
-     free(usersByAge);
+
+    free(usersByAge);
 
 }
 
 
+//Getters
 
 // Retorna a data de nascimento
  char* getUserBirthDate(User* user) {
@@ -169,7 +205,7 @@ void freeUsersByAge(Age* usersByAge){
 
 // Retorna o SubscryptionType
  char* getUserSubscryptionType(User* user) {
-    return user->subscription_type;
+    return strdup(user->subscription_type);
 }
 
 // Retorna o liked_songs
@@ -190,8 +226,7 @@ int getUBANumberSongs(Age *userAge,int idade, int i){
 
 
 char* getGenero(Age *userAge,int idade,int i){
-    char * genero=(userAge[idade].generos[i]);
-    
+    char * genero= strdup(userAge[idade].generos[i]);
     return genero ;
 }
 
@@ -200,40 +235,6 @@ int getNGeneros(Age* userAge,int idade)
     return userAge[idade].numGeneros;
 }
 
-Age *insertGenero(Age* usersByAge, int idade, char* genero )
 
-{
-    int inserido=0;
-    int nGeneros=usersByAge[idade].numGeneros;
-
-    if (nGeneros==0)
-    {     
-        usersByAge[idade].generos=malloc(15*sizeof(char*));
-        usersByAge[idade].generos[nGeneros]=genero;
-        usersByAge[idade].numSongs[nGeneros]=1;
-        usersByAge[idade].numGeneros=1;
-    }
-    else{
-
- 
-    for(int i=0;i<nGeneros && !inserido;i++)
-    {
-        if(strcmp(usersByAge[idade].generos[i],genero)==0)
-        {
-            usersByAge[idade].numSongs[i]++;
-            inserido=1;
-        }
-    }
-    if(!inserido )
-    {
-        usersByAge[idade].generos[nGeneros]=genero;
-        usersByAge[idade].numSongs[nGeneros]+=1;
-        usersByAge[idade].numGeneros++;
-    }
-
-      }
-//printf("%s\n",usersByAge[idade].generos[nGeneros]);
-    return usersByAge;
-}
 
 

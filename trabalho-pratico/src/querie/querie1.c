@@ -1,8 +1,8 @@
-#include "../../include/controler/usersController.h"
-#include "querie/querie1.h"
-#include "../../include/controler/artistsController.h"
-#include "utilidades.h"
+
+#include "controler/usersController.h"
 #include "IOManager.h"
+#include "utilidades.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
@@ -57,8 +57,6 @@ if(utilizador==NULL)
 
 free(filename);
 freeOutput(output);
-
-
 
 
 }

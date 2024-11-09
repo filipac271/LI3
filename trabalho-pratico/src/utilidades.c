@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +8,59 @@
 
 #include "utilidades.h"
 #include "controler/musicsController.h"
+
+
+
+// Função para calcular a idade
+int calcular_idade( char* data_nascimento_str) {
+    // Data atual
+    int ano_atual = 2024, mes_atual = 9, dia_atual = 9;
+
+    // Variáveis para armazenar ano, mês e dia de nascimento
+    int ano_nascimento, mes_nascimento, dia_nascimento;
+
+    // Converter a string da data de nascimento para inteiros
+    sscanf(data_nascimento_str, "%d/%d/%d", &ano_nascimento, &mes_nascimento, &dia_nascimento);
+
+    // Calcular a idade base
+    int idade = ano_atual - ano_nascimento;
+
+    // Ajustar se o mês atual for anterior ao mês de nascimento,
+    // ou se for o mesmo mês, mas o dia atual for anterior ao dia de nascimento
+    if (mes_atual < mes_nascimento || (mes_atual == mes_nascimento && dia_atual < dia_nascimento)) {
+        idade--;
+    }
+
+    return idade;
+}
+
+
+guint get_garray_length(GArray *array) {
+    if (array == NULL) {
+        return 0; // Retorna 0 se o GArray for NULL
+    }
+    return array->len; // Retorna o tamanho do GArray
+}
+
+
+char* seconds_to_hhmmss(int total_seconds) {
+    // Aloca memória para a string de saída
+    char *time_string = malloc(16); // hh:mm:ss + \0 = 9 caracteres
+    if (time_string == NULL) {
+        return NULL; // Verifica se a alocação foi bem-sucedida
+    }
+
+    // Calcula horas, minutos e segundos
+    int hours = total_seconds / 3600;
+    int minutes = (total_seconds % 3600) / 60;
+    int seconds = total_seconds % 60;
+
+    // Formata a string no formato hh:mm:ss
+    //mudar aqui tambem para 16 caso se queira tirar os warning
+    snprintf(time_string, 16, "%02d:%02d:%02d", hours, minutes, seconds);
+
+    return time_string;
+}
 
 
 // Função para remover aspas de uma string
@@ -36,7 +88,7 @@ char* remove_quotes(char* str) {
 
 
 
-
+//Funções que libertam memória da cópia retornada do retiraAcentos
 void freeCleanerArtist(char* clean_id,char* clean_name,char* clean_description,char* ganhos, char* clean_country,char* clean_type){
 
         free(clean_id);
@@ -429,7 +481,4 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
     fclose(f2);
     return 1;  // Arquivos são iguais
 }
-
-
-
 

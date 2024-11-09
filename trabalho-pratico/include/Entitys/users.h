@@ -29,7 +29,6 @@ int getUBANumberSongs(Age *userAge,int idade, int i);
 char* getGenero(Age *userAge,int idade,int i);
 int getNGeneros(Age* userAge,int idade);
 Age *insertGenero(Age* usersByAge, int idade, char* genero );
-
 void freeUsersByAge(Age* usersByAge);
 #endif
 

@@ -1,7 +1,6 @@
 #ifndef MAINMODE_H
 #define MAINMODE_H
 
-void principal(char **argv);
-
+int principal(char* pastaPrincipal , char* queriesFile);
 
 #endif
