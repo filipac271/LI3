@@ -73,10 +73,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         char *music_duration = remove_quotes(tokens[3]);
         char *music_genre = remove_quotes(tokens[4]);
         char *music_year = remove_quotes(tokens[5]);
-<<<<<<< HEAD
-=======
         char *music_lyrics = (tokens[6]);
->>>>>>> main
 
         int num_artistId = contar_elementos(music_artists);
 
