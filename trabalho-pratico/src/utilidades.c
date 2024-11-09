@@ -11,8 +11,58 @@
 #include "controler/musicsController.h"
 
 
+
+// Função para calcular a idade
+int calcular_idade( char* data_nascimento_str) {
+    // Data atual
+    int ano_atual = 2024, mes_atual = 9, dia_atual = 9;
+
+    // Variáveis para armazenar ano, mês e dia de nascimento
+    int ano_nascimento, mes_nascimento, dia_nascimento;
+
+    // Converter a string da data de nascimento para inteiros
+    sscanf(data_nascimento_str, "%d/%d/%d", &ano_nascimento, &mes_nascimento, &dia_nascimento);
+
+    // Calcular a idade base
+    int idade = ano_atual - ano_nascimento;
+
+    // Ajustar se o mês atual for anterior ao mês de nascimento,
+    // ou se for o mesmo mês, mas o dia atual for anterior ao dia de nascimento
+    if (mes_atual < mes_nascimento || (mes_atual == mes_nascimento && dia_atual < dia_nascimento)) {
+        idade--;
+    }
+
+    return idade;
+}
+
+guint get_garray_length(GArray *array) {
+    if (array == NULL) {
+        return 0; // Retorna 0 se o GArray for NULL
+    }
+    return array->len; // Retorna o tamanho do GArray
+}
+
+char* seconds_to_hhmmss(int total_seconds) {
+    // Aloca memória para a string de saída
+    char *time_string = malloc(16); // hh:mm:ss + \0 = 9 caracteres
+    if (time_string == NULL) {
+        return NULL; // Verifica se a alocação foi bem-sucedida
+    }
+
+    // Calcula horas, minutos e segundos
+    int hours = total_seconds / 3600;
+    int minutes = (total_seconds % 3600) / 60;
+    int seconds = total_seconds % 60;
+
+    // Formata a string no formato hh:mm:ss
+    //mudar aqui tambem para 16 caso se queira tirar os warning
+    snprintf(time_string, 16, "%02d:%02d:%02d", hours, minutes, seconds);
+
+    return time_string;
+}
+
 // Função para remover aspas de uma string
-char* remove_quotes(const char* str) {
+char* remove_quotes(char* str) {
     size_t len = strlen(str);
 
     // Verifica se a string tem pelo menos 2 caracteres (as aspas)
@@ -35,7 +85,7 @@ char* remove_quotes(const char* str) {
 }
 
 
-
+//Funções que libertam memória da cópia retornada do retiraAcentos
 void freeCleanerArtist(char* clean_id,char* clean_name,char* clean_description,char* ganhos, char* clean_country,char* clean_type){
 
         free(clean_id);
@@ -408,44 +458,3 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
 }
 
 
-
-
-//Nao tenho bem a certeza se é suposto estas funçoes estarem aqui, mas vou coloca-las aqui e depois vejo
-
-//Funcoes auxiliares para somar as horas e voltar a coloca-las num char*
-// Função para converter em segundos
-/*
-char* secondsToTimeString(int total_seconds) {
-    int hours = total_seconds / 3600;
-    int minutes = (total_seconds % 3600) / 60;
-    int seconds = total_seconds % 60;
-
-    // Alocar memória para a string no formato hh:mm:ss (8 caracteres + '\0')
-    char* timeString = malloc(9 * sizeof(char));
-
-    // Verificar se a memória foi alocada
-    if (timeString == NULL) {
-        return NULL; // Retornar NULL em caso de falha
-    }
-
-    // Formatar a string no formato hh:mm:ss
-    sprintf(timeString, "%02d:%02d:%02d", hours, minutes, seconds);
-
-    return timeString;
-}
-
-
-int timeStringToSeconds(char* timeString) {
-    int hours, minutes, seconds;
-
-    // Fazer o parsing da string no formato hh:mm:ss
-    if (sscanf(timeString, "%02d:%02d:%02d", &hours, &minutes, &seconds) != 3) {
-        return -1; // Retorna -1 em caso de erro no formato da string
-    }
-
-    // Converter horas, minutos e segundos para o total de segundos
-    int total_seconds = (hours * 3600) + (minutes * 60) + seconds;
-
-    return total_seconds;
-}
-*/

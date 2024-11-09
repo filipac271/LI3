@@ -30,7 +30,6 @@ int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,i
     
 
     if (lookup_artist(artistsController,artistsId[i]) == NULL) {
-        //printf("Artista %s não encontrado na hash table\n", artistsId[i]);
         pertence = 0;
         break;
     }

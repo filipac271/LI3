@@ -1,5 +1,4 @@
 #define _GNU_SOURCE and #define _POSIX_C_SOURCE 1999309L
-#include "main/feeder.h"
 #include "controler/mainController.h"
 #include "querie/querieManager.h"
 #include "IOManager.h"
@@ -28,7 +27,7 @@
 
 
 // Função principal para realizar os testes
-int teste(char **argv) {
+int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     printf("Entrada nos testes\n");
 
     struct timespec start, end;
@@ -42,75 +41,58 @@ int teste(char **argv) {
     int q3 = 0;
 
 
-    char *pastaPrincipal = argv[1];       // Recebe a pasta principal como argumento
-    char *queriesFile = argv[2];          // Arquivo de queries
-    char *outputEsperado = argv[3];       // Pasta com os arquivos esperados
-
-    // FILE *queriesInput = abrirFILE(queriesFile, "");
     Parser* parserT = newParser(queriesFile,"");
-    MainController *data = feeder(pastaPrincipal);
+    MainController* data = mainFeed(pastaPrincipal);
 
-    char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
+    char* line = NULL;  
     line = pegaLinha(parserT);
 
-    int min, max;
-    int n;
-    char country[256] = "";  // String para armazenar o país, inicializada como string vazia
+
     int i = 0;
 
+    //For loop que mede os tempos de cada querie
     for (i = 0; line != NULL ; i++) {
-        // Verifica se a linha tem pelo menos 1 caractere
-        if (strlen(line) == 0) continue;
 
-        // Remove a nova linha no final, se existir
-        if (line[strlen(line) - 1] == '\n') {
-            line[strlen(line) - 1] = '\0';
-        }
-
-        // Recupera controladores
+        //Pega controladores
         UsersData* UserController = getUserController(data);
         ArtistsData* ArtistContoller = getartistController(data);
 
         switch (line[0]) {
             case '1':
-                if (strlen(line) >= 2) {
+                
 
                     clock_gettime(CLOCK_REALTIME, &start);
 
                     querie1(UserController, line + 2, i);
                     
                     clock_gettime(CLOCK_REALTIME, &end);
+
+                    //Tempo unico desta chamada da querie1
                     timeQ1 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
                     q1++;
-                }
+                
                 break;
 
             case '2':
-                // Limpa a string `country` antes de processar cada linha
-                strcpy(country, "");
-
-                // Lê o número e a string entre aspas, se existir
-                int query2_result = sscanf(line + 1, "%d \"%[^\"]\"", &n, country);
-
-                if (query2_result == 1) {
-                    // Apenas o número foi lido, país não fornecido
-                    strcpy(country, "");  // Define `country` como string vazia
-                }
 
                 clock_gettime(CLOCK_REALTIME, &start);
-                // Executa a query 2
-                querie2(ArtistContoller, n, i, country);
+                
+                querie2(ArtistContoller, line, i);
+
                 clock_gettime(CLOCK_REALTIME, &end);
+
+                //Tempo unico desta chamada da querie2
                 timeQ2 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
                 q2++;
                 break;
 
             case '3':
-                sscanf(line + 1, "%d %d", &min, &max);
                 clock_gettime(CLOCK_REALTIME, &start);
 
-                querie3(i, min, max, UserController);
+                querie3(i, line, UserController);
                 clock_gettime(CLOCK_REALTIME, &end);
+
+                //Tempo unico desta chamada da querie3
                 timeQ3 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
                 q3++;
                 break;
@@ -129,11 +111,10 @@ int teste(char **argv) {
 
 
 
-
-
     int j;
-    int passes = 0;
+    int correctLine = 0;
 
+    //For loop que faz comparação dos resultados com os outputs esperados
     for ( j = 0; j < i; j++) {
         // Nome do arquivo gerado
         char resultadoFile[256];
@@ -149,7 +130,7 @@ int teste(char **argv) {
         int iguais = compararFicheirosPorLinha(resultadoFile, esperadoFile, &ocorrenciasCorretas);
         if (iguais == 1) {
             printf("Test %d: PASS - %d ocorrências corretas\n", j + 1, ocorrenciasCorretas);
-            passes++;
+            correctLine++;
         } else {
             printf("Test %d: FAIL - %d ocorrências corretas\n\n", j + 1, ocorrenciasCorretas);
         }
@@ -167,7 +148,32 @@ int teste(char **argv) {
     printf("\nForam executadas %d queries 1\n",q1);
     printf("Foram executadas %d queries 2\n",q2);
     printf("Foram executadas %d queries 3\n",q3);
-    if (passes == (q1 + q2 + q3)) {
+
+    int validLinesA = contar_linhas("resultados/artists_errors.csv");
+    int validLinesM = contar_linhas("resultados/musics_errors.csv");
+    int validLinesU = contar_linhas("resultados/users_errors.csv");
+
+    if(validLinesA == 151){
+        printf(COLOR_GREEN "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+    }else{
+        printf(COLOR_RED "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+    }
+
+    if(validLinesM == 18882){
+        printf(COLOR_GREEN "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
+    }else{
+        printf(COLOR_RED "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
+    }
+    
+    if(validLinesU == 37501){
+        printf(COLOR_GREEN "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
+    }else{
+        printf(COLOR_RED "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
+    }
+    
+    
+
+    if (correctLine == (q1 + q2 + q3)) {
         printf(COLOR_GREEN "\nNão houve erros em nenhuma querie\n\n" COLOR_RESET);
     } else {
         printf(COLOR_RED "\nHouve erros em uma ou mais queries\n\n" COLOR_RESET);
@@ -175,7 +181,7 @@ int teste(char **argv) {
 
     destroyData(data);
 
-
+    //Código que mede o pico máximo de memoria a ser usada no programa no final do "principal" ser rodado
     struct rusage r_usage;
     getrusage(RUSAGE_SELF,&r_usage);
     printf("%ld KB\n",r_usage.ru_maxrss);

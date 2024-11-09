@@ -3,7 +3,6 @@
 #include "controler/mainController.h"
 #include "utilidades.h"
 #include "validacao/validaMusic.h"
-#include "main/feeder.h"
 #include "Entitys/musics.h"
 #include "IOManager.h"
 #include "sys/resource.h"
