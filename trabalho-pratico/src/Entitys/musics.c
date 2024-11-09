@@ -12,10 +12,15 @@ struct music{
   char *music_duration;
   char *music_genre;
   char *music_year;
+  char *music_lyrics;
   int num_artistId;
 };
 
-Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, int num_artists){
+
+
+
+
+Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, char* music_lyrics, int num_artists){
   Music* n_music = malloc(sizeof(Music));
     if (n_music == NULL) {
         fprintf(stderr, "Memory allocation failed for new music\n");
@@ -37,7 +42,7 @@ Music* new_music(char* music_id, char* music_title, char** music_artist_id, char
   n_music->music_duration = strdup(music_duration);
   n_music->music_genre = strdup(music_genre);
   n_music->music_year = strdup(music_year);
-
+  n_music->music_lyrics = (music_lyrics);
 
   return n_music;
 
@@ -78,6 +83,7 @@ void print_musicas(Music * musica){
     printf("MUSIC_DURATION: %s\n", musica->music_duration);
     printf("MUSIC_GENRE: %s\n", musica->music_genre);
     printf("MUSIC_YEAR: %s\n", musica->music_year);
+    printf("MUSIC_LYRICS: %s\n", musica->music_lyrics);
 
   } else{
     printf("N existe esta musica\n");
@@ -125,3 +131,7 @@ char* get_music_year (Music* music){
   return strdup(music->music_year);
 }
 
+char* get_music_lyrics (Music* music){
+  return strdup(music->music_lyrics);
+
+}

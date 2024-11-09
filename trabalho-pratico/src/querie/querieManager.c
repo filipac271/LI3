@@ -61,4 +61,3 @@ void queries (MainController* data, char* querieFile) {
 
     
 }
-

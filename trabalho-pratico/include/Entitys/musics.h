@@ -7,7 +7,7 @@ typedef struct music Music;
 
 
 
-Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, int num_artists);
+Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, char* music_lyrics, int num_artists);
 
 void free_musica(Music* musica);
 
@@ -30,7 +30,7 @@ char* get_music_genre (Music* music);
 
 char* get_music_year (Music* music);
 
-// char* get_music_lyrics (Music* music);
+char* get_music_lyrics (Music* music);
 
 
 #endif
