@@ -1,12 +1,5 @@
-#include "main/feeder.h"
-#include "parser/parsermusica.h"
-#include "parser/userParser.h"
-#include "controler/artistsController.h"
-#include "controler/usersController.h"
-#include "controler/musicsController.h"
 #include "controler/mainController.h"
 #include "querie/querieManager.h"
-#include "IOManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,29 +9,21 @@
 #include <glib.h>
 
 
-#define NUM_FILES 3
 
 
 
-int principal(char *pastaPrincipal, char *queriesFile) {
+int principal(char* pastaPrincipal , char* queriesFile) {
 
-    FILE* queriesInput = abrirFILE(queriesFile,"");
+    //O mainFeed devolverá o controllador geral que contem os outros controladores das outras 3 entidades que já contêm o dataset parseado
+    MainController* data = mainFeed(pastaPrincipal);
 
-
-    // Lista de nomes de ficheiros na subpasta
-    //char* fileNames[NUM_FILES] = {"artists.csv", "musics.csv", "users.csv"};
-
-
-    MainController* data = feeder(pastaPrincipal);
+    //Função simples que printa todas as HashTables principais
     print_all_Data(data);
 
-
-
-    queries(data,queriesInput);
+    queries(data,queriesFile);
     
+    //Função que liberta a memória do mainController e dos outros controladores
     destroyData(data);
-
-    fecharFILE(queriesInput);
 
 
     return 0;

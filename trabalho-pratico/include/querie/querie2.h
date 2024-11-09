@@ -12,7 +12,7 @@ gint compare_discography(gconstpointer a, gconstpointer b);
 
 GArray* filter_and_sort_hash_table_by_discography(ArtistsData* controller, char *country) ;
 
-void querie2(ArtistsData* ArtistController, int n, int i, char* country);
+void querie2(ArtistsData* ArtistController, char* line, int i);
 
 #endif
 

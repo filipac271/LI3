@@ -1,14 +1,11 @@
 #define _GNU_SOURCE and #define _POSIX_C_SOURCE 1999309L
-#include "main/feeder.h"
-#include "parser/parsermusica.h"
-#include "parser/userParser.h"
-
 #include "controler/mainController.h"
 #include "querie/querieManager.h"
 #include "IOManager.h"
 #include "querie/querie1.h"
 #include "querie/querie2.h"
 #include "querie/querie3.h"
+#include "utilidades.h"
 
 
 #include <stdio.h>
@@ -19,58 +16,18 @@
 #include <glib.h>
 #include<sys/resource.h>
 
+// Constantes de cor
+#define COLOR_RESET "\033[0m"
+#define COLOR_GREEN "\033[32m"
+#define COLOR_RED "\033[31m"
 
 
 
-// Função para comparar linha a linha dois arquivos e contar ocorrências corretas
-int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas) {
-    FILE *f1 = fopen(file1, "r");
-    FILE *f2 = fopen(file2, "r");
-
-    if (f1 == NULL || f2 == NULL) {
-        printf("Erro ao abrir um dos arquivos para comparação%s",file2);
-        return -1;  // Erro ao abrir arquivos
-    }
 
 
-    char linha1[1024], linha2[1024];
-    int linhaNumero = 1;
-    *ocorrenciasCorretas = 0;
-
-    while (fgets(linha1, sizeof(linha1), f1) && fgets(linha2, sizeof(linha2), f2)) {
-        // Remover quebra de linha para evitar diferenças acidentais
-        linha1[strcspn(linha1, "\n")] = '\0';
-        linha2[strcspn(linha2, "\n")] = '\0';
-
-
-        if (strcmp(linha1, linha2) == 0) {
-            (*ocorrenciasCorretas)++;  // Incrementa ocorrências corretas
-        } else {
-            printf("\nDiferença encontrada na linha %d do arquivo %s\n", linhaNumero, file1);
-            fclose(f1);
-            fclose(f2);
-            return 0;  // Arquivo é diferente
-        }
-        linhaNumero++;
-    }
-
-
-    // Verifica se ambos os arquivos terminaram ao mesmo tempo
-    if (fgets(linha1, sizeof(linha1), f1) || fgets(linha2, sizeof(linha2), f2)) {
-        printf("Tamanho diferente entre os arquivos, diferença encontrada na linha %d do arquivo %s\n", linhaNumero, file1);
-        fclose(f1);
-        fclose(f2);
-        return 0;
-    }
-
-    fclose(f1);
-    fclose(f2);
-    return 1;  // Arquivos são iguais
-}
 
 // Função principal para realizar os testes
-//mudar para uma cena tipo o principal
-int teste(char **argv) {
+int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     printf("Entrada nos testes\n");
 
     struct timespec start, end;
@@ -84,73 +41,58 @@ int teste(char **argv) {
     int q3 = 0;
 
 
-    char *pastaPrincipal = argv[1];       // Recebe a pasta principal como argumento
-    char *queriesFile = argv[2];          // Arquivo de queries
-    char *outputEsperado = argv[3];       // Pasta com os arquivos esperados
+    Parser* parserT = newParser(queriesFile,"");
+    MainController* data = mainFeed(pastaPrincipal);
 
-    FILE *queriesInput = abrirFILE(queriesFile, "");
-    MainController *data = feeder(pastaPrincipal);
+    char* line = NULL;  
+    line = pegaLinha(parserT);
 
-    char* line = NULL;  // Ponteiro para a linha, alocado dinamicamente pelo getline
-    size_t len = 0;     // Tamanho do buffer usado pelo getline
-    int min, max;
-    int n;
-    char country[256] = "";  // String para armazenar o país, inicializada como string vazia
+
     int i = 0;
 
-    for (i = 0; getline(&line, &len, queriesInput) != -1; i++) {
-        // Verifica se a linha tem pelo menos 1 caractere
-        if (strlen(line) == 0) continue;
+    //For loop que mede os tempos de cada querie
+    for (i = 0; line != NULL ; i++) {
 
-        // Remove a nova linha no final, se existir
-        if (line[strlen(line) - 1] == '\n') {
-            line[strlen(line) - 1] = '\0';
-        }
-
-        // Recupera controladores
+        //Pega controladores
         UsersData* UserController = getUserController(data);
         ArtistsData* ArtistContoller = getartistController(data);
 
         switch (line[0]) {
             case '1':
-                if (strlen(line) >= 2) {
+                
 
                     clock_gettime(CLOCK_REALTIME, &start);
 
                     querie1(UserController, line + 2, i);
                     
                     clock_gettime(CLOCK_REALTIME, &end);
+
+                    //Tempo unico desta chamada da querie1
                     timeQ1 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
                     q1++;
-                }
+                
                 break;
 
             case '2':
-                // Limpa a string `country` antes de processar cada linha
-                strcpy(country, "");
-
-                // Lê o número e a string entre aspas, se existir
-                int query2_result = sscanf(line + 1, "%d \"%[^\"]\"", &n, country);
-
-                if (query2_result == 1) {
-                    // Apenas o número foi lido, país não fornecido
-                    strcpy(country, "");  // Define `country` como string vazia
-                }
 
                 clock_gettime(CLOCK_REALTIME, &start);
-                // Executa a query 2
-                querie2(ArtistContoller, n, i, country);
+                
+                querie2(ArtistContoller, line, i);
+
                 clock_gettime(CLOCK_REALTIME, &end);
+
+                //Tempo unico desta chamada da querie2
                 timeQ2 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
                 q2++;
                 break;
 
             case '3':
-                sscanf(line + 1, "%d %d", &min, &max);
                 clock_gettime(CLOCK_REALTIME, &start);
 
-                querie3(i, min, max, UserController);
+                querie3(i, line, UserController);
                 clock_gettime(CLOCK_REALTIME, &end);
+
+                //Tempo unico desta chamada da querie3
                 timeQ3 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
                 q3++;
                 break;
@@ -158,19 +100,21 @@ int teste(char **argv) {
             default:
                 break;
         }
+
+        free(line);
+        line = pegaLinha(parserT);
+
     }
 
-    // Libera a memória alocada por getline
-    free(line);
-
-
+    freeParser(parserT);
 
 
 
 
     int j;
-    int passes = 0;
+    int correctLine = 0;
 
+    //For loop que faz comparação dos resultados com os outputs esperados
     for ( j = 0; j < i; j++) {
         // Nome do arquivo gerado
         char resultadoFile[256];
@@ -186,7 +130,7 @@ int teste(char **argv) {
         int iguais = compararFicheirosPorLinha(resultadoFile, esperadoFile, &ocorrenciasCorretas);
         if (iguais == 1) {
             printf("Test %d: PASS - %d ocorrências corretas\n", j + 1, ocorrenciasCorretas);
-            passes++;
+            correctLine++;
         } else {
             printf("Test %d: FAIL - %d ocorrências corretas\n\n", j + 1, ocorrenciasCorretas);
         }
@@ -204,12 +148,40 @@ int teste(char **argv) {
     printf("\nForam executadas %d queries 1\n",q1);
     printf("Foram executadas %d queries 2\n",q2);
     printf("Foram executadas %d queries 3\n",q3);
-    if(passes == (q1+q2+q3)) printf("\nNão houve erros em nenhuma querie\n\n");
+
+    int validLinesA = contar_linhas("resultados/artists_errors.csv");
+    int validLinesM = contar_linhas("resultados/musics_errors.csv");
+    int validLinesU = contar_linhas("resultados/users_errors.csv");
+
+    if(validLinesA == 151){
+        printf(COLOR_GREEN "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+    }else{
+        printf(COLOR_RED "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
+    }
+
+    if(validLinesM == 18882){
+        printf(COLOR_GREEN "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
+    }else{
+        printf(COLOR_RED "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
+    }
+    
+    if(validLinesU == 37501){
+        printf(COLOR_GREEN "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
+    }else{
+        printf(COLOR_RED "\nNumero de linhas do users_errors:%d\n" COLOR_RESET,validLinesU);
+    }
+    
+    
+
+    if (correctLine == (q1 + q2 + q3)) {
+        printf(COLOR_GREEN "\nNão houve erros em nenhuma querie\n\n" COLOR_RESET);
+    } else {
+        printf(COLOR_RED "\nHouve erros em uma ou mais queries\n\n" COLOR_RESET);
+    }
 
     destroyData(data);
-    fecharFILE(queriesInput);
 
-
+    //Código que mede o pico máximo de memoria a ser usada no programa no final do "principal" ser rodado
     struct rusage r_usage;
     getrusage(RUSAGE_SELF,&r_usage);
     printf("%ld KB\n",r_usage.ru_maxrss);

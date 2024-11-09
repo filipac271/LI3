@@ -27,4 +27,6 @@ void output1(Output* output1, char* userEmail, char* userNome, char* userApelido
 void output2(Output* output2, char* nome, char* tipo, char* time,char* pais);
 void output3(Output* output3, char* genero, int num);
 
+int contar_linhas( char *nome_ficheiro);
+
 #endif

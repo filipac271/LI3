@@ -12,10 +12,12 @@
 #include "IOManager.h"
 
 int validaUser(char* email, char* date, char* type,MusicData* musicsController,char** likedSongs,int numSongs, Output* Erros, char* linha){
+    
     int t = 1;
     int d = 1;
     int e = 1;
     int existMusic = 1;
+    int tembarra = 1;
 
     if (!(strcmp(type, "premium") == 0 || strcmp(type, "normal") == 0)) t = 0;
 
@@ -41,7 +43,11 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
     }
 }
 
-if((t & d & e & existMusic)==0)
+//    int tamanho = strlen(likedSongs[0]);   
+//     if (music_artist[1] != '[' || music_artist[tamanho-2] != ']'){tembarra = 0;    }
+
+
+if((t & d & e & existMusic & tembarra)==0)
 {
     outputErros(Erros,linha);
 }

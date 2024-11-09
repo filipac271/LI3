@@ -14,7 +14,7 @@ int getArtistNumMembros (Artist* artista);
 int getArtistDiscography (Artist* artista);
 void setArtistDiscography (Artist* artista, int discography);
 
-Artist* create_artist(char* id, const char* name, char* description, float ganho, char** grupo, char* country, char* type,int numMembros);
+Artist* create_artist(char* id,  char* name, char* description,float ganho, char** grupo, char* country, char* type,int numMembros);
 void print_artist(Artist* artist);
 void free_artist(Artist* artist);
 

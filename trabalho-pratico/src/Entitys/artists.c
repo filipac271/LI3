@@ -1,8 +1,9 @@
 #include "Entitys/artists.h"
+#include "utilidades.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <glib.h>
 
 struct artists
 {
@@ -19,20 +20,24 @@ struct artists
 
 
 // Função para criar um novo artista
-Artist* create_artist(char* id, const char* name, char* description, float ganho, char** grupo, char* country, char* type,int numMembros) {
+Artist* create_artist(char* id,  char* name, char* description,float ganho, char** grupo, char* country, char* type,int numMembros) {
     Artist* new_artist = malloc(sizeof(Artist));
+    if(new_artist == NULL){
+        fprintf(stderr, "Memory allocation failed for new artist\n");
+        exit(1);
+    }
     new_artist->id = strdup(id);
     new_artist->name = strdup(name);
     new_artist->descriçao = strdup(description);
-    new_artist->ganho_por_stream = ganho;
+    new_artist->ganho_por_stream = ganho;  
+
     new_artist->grupo = malloc(numMembros * sizeof(char*)); 
 
 
-    for (int i = 0; i < numMembros; i++) {
+       for (int i = 0; i < numMembros; i++) {
          new_artist->grupo[i] = strdup(grupo[i]);  // Duplica cada string
 
     }
-
 
     new_artist->country = strdup(country);
     new_artist->type = strdup(type);
@@ -50,18 +55,20 @@ void free_artist(Artist* artist) {
         free(artist->name);
         free(artist->descriçao);
         free(artist->country);
+
         int i;
         for ( i = 0; i < artist->numMembrosGrupo; i++)
         {
          free(artist->grupo[i]);
         }
+
         free(artist->grupo);
         free(artist->type);
         free(artist);
     }
 }
 
-
+//Função para printar todas as informações de um artista
 void print_artist(Artist* artist) {
     if (artist) {
         printf("ID: %s\n", artist->id);
@@ -91,7 +98,7 @@ void print_artist(Artist* artist) {
 
 
 char* getArtistId(Artist* artista){
-    return artista->id;
+    return strdup(artista->id);
 }
 
 char* getArtistName(Artist* artista){
@@ -99,7 +106,7 @@ char* getArtistName(Artist* artista){
 }
 
 char* getArtistDescriçao(Artist* artista){
-    return artista->descriçao;
+    return strdup(artista->descriçao);
 }
 
 float getArtistGanho(Artist* artista){
