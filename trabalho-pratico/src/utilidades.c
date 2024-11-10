@@ -451,4 +451,3 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
     fclose(f2);
     return 1;  // Arquivos são iguais
 }
-
