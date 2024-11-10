@@ -446,13 +446,6 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
     }
 
 
-    // Verifica se ambos os arquivos terminaram ao mesmo tempo
-    if (fgets(linha1, sizeof(linha1), f1) || fgets(linha2, sizeof(linha2), f2)) {
-        printf("Tamanho diferente entre os arquivos, diferença encontrada na linha %d do arquivo %s\n", linhaNumero, file1);
-        fclose(f1);
-        fclose(f2);
-        return 0;
-    }
 
     fclose(f1);
     fclose(f2);
