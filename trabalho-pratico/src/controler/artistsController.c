@@ -15,6 +15,36 @@ struct artistsData{
 };
 
 
+
+
+
+// Função para inicializar a hash table
+GHashTable* init_artists_table() {
+    
+    // A key da Hash Table é o ID  dos artistas
+    GHashTable* artists_table = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_artist);
+
+    // Verificar se a hash table foi criada corretamente
+    if (artists_table == NULL) {
+        printf("Erro: Hash table dos artistas não foi criada.\n");
+        exit(1);
+    } else {
+        printf("Hash table dos artistas criada com sucesso.\n");
+    }
+
+    return artists_table;
+
+}
+
+// Função para inserir um artista na hash table usando o id como chave
+void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,char* id) {
+    
+    g_hash_table_insert(artists_table, strdup(id), new_artist);
+    
+}
+
+
+
 ArtistsData* artistFeed(char* diretoria) {
 
     ArtistsData* AData = malloc(sizeof(ArtistsData)); 
@@ -139,23 +169,6 @@ void inserir_discography_into_artist (ArtistsData* controller, char* music_durat
 }
 
 
-// Função para inicializar a hash table
-GHashTable* init_artists_table() {
-    
-    // A key da Hash Table é o ID  dos artistas
-    GHashTable* artists_table = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_artist);
-
-    // Verificar se a hash table foi criada corretamente
-    if (artists_table == NULL) {
-        printf("Erro: Hash table dos artistas não foi criada.\n");
-        exit(1);
-    } else {
-        printf("Hash table dos artistas criada com sucesso.\n");
-    }
-
-    return artists_table;
-
-}
 
 
 // Função para libertar a memória alocada pela Hash Table contida em Artist Data 
@@ -167,12 +180,7 @@ void destroyTableArtist(ArtistsData* ArtistData){
 }
 
 
-// Função para inserir um artista na hash table usando o id como chave
-void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,char* id) {
-    
-    g_hash_table_insert(artists_table, strdup(id), new_artist);
-    
-}
+
 
 // Função para procurar um artista pelo id (chave da hash table)
 Artist* lookup_artist(ArtistsData* controller, char* id) {

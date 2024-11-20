@@ -130,15 +130,15 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
         int iguais = compararFicheirosPorLinha(resultadoFile, esperadoFile, &ocorrenciasCorretas);
         int numLinesResult = contar_linhas(resultadoFile);
         int numLinesEsperado = contar_linhas(esperadoFile);
-        if ((numLinesEsperado == numLinesResult))
-        {
-            if (iguais == 1 ) {
+        if (iguais == 1 ) {
                 printf("Test %d: PASS - %d ocorrências corretas\n", j + 1, ocorrenciasCorretas);
                 correctLine++;
-            } else {
-                printf("Test %d: FAIL - %d ocorrências corretas\n\n", j + 1, ocorrenciasCorretas);
-            }
-        }else{
+        } else {
+            printf("Test %d: FAIL - %d ocorrências corretas\n\n", j + 1, ocorrenciasCorretas);
+        }
+
+        if (!(numLinesEsperado == numLinesResult))
+        {    
             printf(COLOR_RED"Test %d: FAIL - Os dois ficheiros não contem o mesmo número de linhas\n\n" COLOR_RESET,j+1);
         }
         
