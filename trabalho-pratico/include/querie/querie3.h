@@ -9,4 +9,5 @@ typedef struct querie3 Genero;
 
 
 void querie3(int num, char* line, UsersData* userController);
+
 #endif

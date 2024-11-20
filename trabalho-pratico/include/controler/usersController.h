@@ -12,7 +12,6 @@ typedef struct usersData UsersData;
 
 UsersData* usersFeed(char* diretoria, MusicData* musicData);
 
-GHashTable* createTable();
 void insertUser(GHashTable* table, User* user,char* id);
 void print_all_users(UsersData* data);
 void print_user_entry (gpointer key, gpointer value, gpointer user_data);

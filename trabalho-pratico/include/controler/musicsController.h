@@ -11,7 +11,6 @@ typedef struct musicData MusicData;
 
 MusicData* musicsFeed(char* diretoria,ArtistsData* artistsData);
 
-GHashTable* iniciar_hash_musica();
 
 void inserir_musica_na_htable(GHashTable* musica, Music* new_music,char* music_id);
 

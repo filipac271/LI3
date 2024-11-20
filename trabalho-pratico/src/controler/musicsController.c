@@ -25,6 +25,39 @@ struct musicData {
 
 
 
+//Iniciar Hash Table
+GHashTable* iniciar_hash_musica(){
+
+// A key da Hash Table é o ID  das músicas
+  GHashTable* hash_musica = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_musica);
+
+ // Verificar se a hash table foi criada corretamente
+  if(hash_musica == NULL){
+   
+    printf("Erro: Hash table musica não foi criada.\n");
+    exit(1);
+
+  } else {
+
+    printf("Hash table musica criada com sucesso.\n");
+  }
+
+  return(hash_musica);
+
+}
+
+
+//Inserir música na Hash Table
+void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica,char* music_id){
+
+  g_hash_table_insert(musica, strdup(music_id), nova_musica);
+
+}
+
+
+
+
+
 
 MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
@@ -125,34 +158,7 @@ void destroyMusicTable(MusicData* data){
 }
 
 
-//Iniciar Hash Table
-GHashTable* iniciar_hash_musica(){
 
-// A key da Hash Table é o ID  das músicas
-  GHashTable* hash_musica = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_musica);
-
- // Verificar se a hash table foi criada corretamente
-  if(hash_musica == NULL){
-   
-    printf("Erro: Hash table musica não foi criada.\n");
-    exit(1);
-
-  } else {
-
-    printf("Hash table musica criada com sucesso.\n");
-  }
-
-  return(hash_musica);
-
-}
-
-
-//Inserir música na Hash Table
-void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica,char* music_id){
-
-  g_hash_table_insert(musica, strdup(music_id), nova_musica);
-
-}
 
 
 // Função para procurar uma música pelo id (chave da hash table)

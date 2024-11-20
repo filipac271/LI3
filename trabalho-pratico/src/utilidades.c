@@ -434,7 +434,7 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
         linha2[strcspn(linha2, "\n")] = '\0';
 
 
-        if (strcmp(linha1, linha2) == 0) {
+        if (strcmp(linha1, linha2) == 0) {            
             (*ocorrenciasCorretas)++;  // Incrementa ocorrências corretas
         } else {
             printf("\nDiferença encontrada na linha %d do arquivo %s\n", linhaNumero, file1);
@@ -444,6 +444,7 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
         }
         linhaNumero++;
     }
+    
 
 
 

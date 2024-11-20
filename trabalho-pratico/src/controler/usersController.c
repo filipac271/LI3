@@ -22,6 +22,36 @@ struct usersData
 };
 
 
+// Criar a Hash Table dos Users
+GHashTable* createTable() {
+
+    // A key da Hash Table é o UserName  
+   GHashTable* usersTable=g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)freeUser);
+
+   // Verificar se a hash table foi criada corretamente 
+   if (usersTable == NULL) {
+
+        printf("Erro: Hash table dos users não foi criada.\n");
+        exit(1);
+
+    } else {
+        printf("Hash table dos users criada com sucesso.\n");
+    }
+
+    return usersTable;
+}
+
+
+//Inserir o user na Hash Table
+void insertUser(GHashTable* table, User* user,char* id)
+{
+       g_hash_table_insert(table, strdup(id), user);
+
+}
+
+
+
+
 
 
 UsersData* usersFeed(char* diretoria, MusicData* musicData){
@@ -121,32 +151,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
 
 
-// Criar a Hash Table dos Users
-GHashTable* createTable() {
 
-    // A key da Hash Table é o UserName  
-   GHashTable* usersTable=g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)freeUser);
-
-   // Verificar se a hash table foi criada corretamente 
-   if (usersTable == NULL) {
-
-        printf("Erro: Hash table dos users não foi criada.\n");
-        exit(1);
-
-    } else {
-        printf("Hash table dos users criada com sucesso.\n");
-    }
-
-    return usersTable;
-}
-
-
-//Inserir o user na Hash Table
-void insertUser(GHashTable* table, User* user,char* id)
-{
-       g_hash_table_insert(table, strdup(id), user);
-
-}
 
 // Procurar um user na hash Table
 User* fetchUser(UsersData* controlador, char* username) {

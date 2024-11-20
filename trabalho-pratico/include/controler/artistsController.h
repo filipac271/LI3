@@ -12,7 +12,6 @@ void inserir_discography_into_artist (ArtistsData* controller, char* music_durat
 ArtistsData* artistFeed(char* diretoria);
 
 
-GHashTable* init_artists_table();
 
 Artist* lookup_artist(ArtistsData* controller, char* id);
 
