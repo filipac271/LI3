@@ -8,18 +8,21 @@
 #include "controler/artistsController.h"
 #include "IOManager.h"
 
-int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,int numArtistsId,char* music_artist, Output* Erros, char* linha) {
+int validaMusic(char* duracaoAspas, char* music_artists,ArtistsData* artistsController, Output* Erros, char* linha) {
+    char *duracao = remove_quotes(duracaoAspas);
 
     int d;
     int pertence = 1;  // Assumir que todos os artistas pertencem
     int tembarra = 1;
 
     d = validaDuraçao(duracao);
-    int tamanho = strlen(music_artist);   
-    if (music_artist[1] != '[' || music_artist[tamanho-2] != ']'){tembarra = 0;    }
+    int tamanho = strlen(music_artists);   
+    if (music_artists[1] != '[' || music_artists[tamanho-2] != ']'){tembarra = 0;}
 
+    char* music_artistsClean = remove_quotes(music_artists);
+    char** artistsId = divideArtists(music_artistsClean);
 
-
+    int numArtistsId = contar_elementos(music_artists);
 
     for (int i = 0; i < numArtistsId; i++) {
     if (artistsId[i] == NULL) {
@@ -41,5 +44,10 @@ int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,i
     outputErros(Erros,linha);
     
   }
-    return (d & pertence & tembarra);  // Combinação bitwise dos resultados de duração e artistas
+
+  free(duracao);
+  free(music_artistsClean);
+  free(artistsId);
+
+  return (d & pertence & tembarra);  // Combinação bitwise dos resultados de duração e artistas
 }

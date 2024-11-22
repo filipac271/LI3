@@ -7,14 +7,14 @@ typedef struct music Music;
 
 
 
-Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, char* music_lyrics, int num_artists);
+Music* new_music(char** tokens);
 
 void free_musica(Music* musica);
 
 void print_musicas(Music * musica);
 
 
-char* get_music_id (Music* music);
+int get_music_id (Music* music);
 
 char* get_music_title (Music* music);
 

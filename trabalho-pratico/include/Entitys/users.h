@@ -7,7 +7,7 @@ typedef struct users User;
 typedef struct usersByAge Age;
 
 
-User* newUser (char* username_, char* email_, char* first_name, char* last_name, char * birth_Date, char* pais, char* subscricao, char** liked_Songs_id,int songsN);
+User* newUser (char**);
 void freeUser (User* user);
 void printUser(User* user);
 

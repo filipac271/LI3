@@ -29,7 +29,7 @@ struct musicData {
 GHashTable* iniciar_hash_musica(){
 
 // A key da Hash Table é o ID  das músicas
-  GHashTable* hash_musica = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_musica);
+  GHashTable* hash_musica = g_hash_table_new_full(g_int_hash, g_int_equal, free, (GDestroyNotify)free_musica);
 
  // Verificar se a hash table foi criada corretamente
   if(hash_musica == NULL){
@@ -48,10 +48,11 @@ GHashTable* iniciar_hash_musica(){
 
 
 //Inserir música na Hash Table
-void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica,char* music_id){
+void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica, int music_id) {
+    int* key = malloc(sizeof(int));  // Aloca memória para a chave
 
-  g_hash_table_insert(musica, strdup(music_id), nova_musica);
-
+    *key = music_id;
+    g_hash_table_insert(musica, key, nova_musica);
 }
 
 
@@ -100,43 +101,27 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         }
      
 
-        char *music_id = remove_quotes(tokens[0]);
-        char *music_title = remove_quotes(tokens[1]);
-        char *music_artists = remove_quotes(tokens[2]);
-        char *music_duration = remove_quotes(tokens[3]);
-        char *music_genre = remove_quotes(tokens[4]);
-        char *music_year = remove_quotes(tokens[5]);
-        char *music_lyrics = (tokens[6]);
-
-        int num_artistId = contar_elementos(music_artists);
-
-        char** music_artist_id = divideArtists(music_artists);
-
-
-       // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
-       char* linhaE=getLineError(parserE);
+        // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
+        char* linhaE=getLineError(parserE);
     
-        int isValid = validaMusic(music_duration,music_artist_id,artistsData,num_artistId,tokens[2], Erros,linhaE);
+        int isValid = validaMusic(tokens[3],tokens[2],artistsData, Erros,linhaE);
+
+        
         
        // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
         if(isValid){ 
            
-        Music* nova_musica = new_music(music_id, music_title, music_artist_id, music_duration, music_genre, music_year, music_lyrics, num_artistId);
+        Music* nova_musica = new_music(tokens);
         // Soma o tempo da música à discografia de todos os seus autores
-        inserir_discography_into_artist(artistsData,music_duration, music_artist_id,num_artistId);
-         
+        inserir_discography_into_artist(artistsData,tokens[3],tokens[2]);
 
         // Inserir os dados na hash table
-        inserir_musica_na_htable(MData->musicsTable,nova_musica,music_id);
+        char *music_id = remove_quotes(tokens[0]);
+        inserir_musica_na_htable(MData->musicsTable,nova_musica,transformaIds(music_id));
+        free(music_id);
 
         }
 
-
-
-        free(music_artist_id);        
-
-        // Libera a memória alocada no remove_quotes
-        freeCleanerMusics(music_id,music_title,music_artists,music_duration,music_genre,music_year,music_lyrics);
         free(linhaE);
         free(getLine(parserE));
 
@@ -162,9 +147,9 @@ void destroyMusicTable(MusicData* data){
 
 
 // Função para procurar uma música pelo id (chave da hash table)
-Music* lookup_musica(MusicData* controller, char* music_id){
+Music* lookup_musica(MusicData* controller, int music_id){
 
-  return g_hash_table_lookup(controller->musicsTable, music_id);
+  return g_hash_table_lookup(controller->musicsTable, &music_id);
 }
 
 

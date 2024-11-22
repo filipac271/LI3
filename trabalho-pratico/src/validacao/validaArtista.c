@@ -12,7 +12,7 @@ int validaArtista (char* grupo, char* type, char* linha,Output* erros){
     int tembarra = 1;
 
 
-    if(strcmp(type,"individual") == 0){
+    if(strcmp(type,"\"individual\"") == 0){
         if(!(strcmp(grupo,"\"[]\"") == 0)){
                       
            terGrupo = 0;

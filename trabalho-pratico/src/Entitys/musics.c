@@ -6,7 +6,7 @@
 
 
 struct music{
-  char *music_id;
+  int music_id;
   char *music_title;
   char **music_artist_id;
   char *music_duration;
@@ -16,21 +16,24 @@ struct music{
   int num_artistId;
 };
 
+ 
 
-
-
-
-Music* new_music(char* music_id, char* music_title, char** music_artist_id, char* music_duration, char* music_genre, char* music_year, char* music_lyrics, int num_artists){
+Music* new_music(char** tokens){
   Music* n_music = malloc(sizeof(Music));
     if (n_music == NULL) {
         fprintf(stderr, "Memory allocation failed for new music\n");
         exit(1);
-    }
+    } 
+    
+  char *music_artists = remove_quotes(tokens[2]);
+  int num_artists = contar_elementos(music_artists);
+  char** music_artist_id = divideArtists(music_artists);
 
+  char* idChar = remove_quotes(tokens[0]);
+  n_music->music_id =transformaIds(idChar) ;
+  free(idChar);
 
-  n_music->music_id = strdup(music_id);
-  n_music->music_title = strdup(music_title);
-
+  n_music->music_title = remove_quotes(tokens[1]);
 
   n_music->music_artist_id = malloc((num_artists+1)* sizeof(char*));
 
@@ -38,12 +41,15 @@ Music* new_music(char* music_id, char* music_title, char** music_artist_id, char
       n_music->music_artist_id[i] = strdup(music_artist_id[i]);
     }
     
-   n_music->num_artistId = num_artists;
-  n_music->music_duration = strdup(music_duration);
-  n_music->music_genre = strdup(music_genre);
-  n_music->music_year = strdup(music_year);
-  n_music->music_lyrics = (music_lyrics);
+  n_music->num_artistId = num_artists;
+  n_music->music_duration = remove_quotes(tokens[3]);
+  n_music->music_genre = remove_quotes(tokens[4]);
+  n_music->music_year = remove_quotes(tokens[5]);
+  n_music->music_lyrics = tokens[6];
 
+  free(music_artists);
+  free(music_artist_id);
+  
   return n_music;
 
 }
@@ -51,7 +57,6 @@ Music* new_music(char* music_id, char* music_title, char** music_artist_id, char
 void free_musica(Music* musica) {
     if (musica) {
 
-        free(musica->music_id);
         free(musica->music_title);
 
         int i;
@@ -72,7 +77,7 @@ void free_musica(Music* musica) {
 
 void print_musicas(Music * musica){
   if(musica){
-    printf("ID_MUSIC: %s\n", musica->music_id);
+    printf("ID_MUSIC: %d\n", musica->music_id);
     printf("MUSIC_TITLE: %s\n", musica->music_title);
 
     printf("MUSIC_ARTIST:\n");
@@ -93,8 +98,8 @@ void print_musicas(Music * musica){
 
 //Getters
 
-char* get_music_id (Music* music){
-  return strdup(music->music_id);
+int get_music_id (Music* music){
+  return (music->music_id);
 }
 
 char* get_music_title (Music* music){

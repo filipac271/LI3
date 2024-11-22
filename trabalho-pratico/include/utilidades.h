@@ -21,16 +21,19 @@ void freeCleanerMusics(char* music_id,char* music_title,char* music_artist_id,ch
 void freeCleanerUsers(char* username,char* email,char* nome ,char*  apelido,char* birth_date,char*  country,char* subscription_type);
 int validaData(char* date);
 int validaEmail (char* email);
-
+int calculate_num_members( char* grupo);
 int validaDuraçao (char* duracao);
-
+void freeArray(int* array) ;
 int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas);
 
 
 char** divideArtists(char* music_artist);
 char** divideGroup(char* group, int numMembros);
 int contar_elementos(char *str);
-char** likedSongs(char* songs, int numberS);
+//char** likedSongs(char* songs, int numberS);
+int* likedSongs(char* songs, int numberS);
+
+int transformaIds (char* idString);
 
 
 #endif

@@ -82,53 +82,22 @@ ArtistsData* artistFeed(char* diretoria) {
              // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
               freeParser(parserE); break;
          }
-
-        
-        char* id = remove_quotes(tokens[0]);
-        char* name = remove_quotes(tokens[1]);
-        char* description = remove_quotes(tokens[2]);
-        char* ganhos = remove_quotes(tokens[3]);
-        float clean_ganhos = atof(ganhos);
-        char* grupo = tokens[4];
-        char* country = remove_quotes(tokens[5]);
-        char* type = remove_quotes(tokens[6]);
-        
      
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
-        int isValid = validaArtista(grupo,type,linhaE, Erros);
+        int isValid = validaArtista(tokens[4],tokens[6],linhaE, Erros);
         
         //Se a linha for válida é criado o artista e é inserido na Hash Table dos artistas
         if (isValid) {
-
-             int numMembros = 1;
-             if (strcmp(grupo, "\"[]\"") == 0) {
-
-                numMembros = 0;
-
-            } else {
-
-                // Conta o número de membros do grupo
-                for (int i = 2; grupo[i] != '\0'; i++) {
-                    if (grupo[i] == ',') numMembros++;
-                }
-            }
-         
-            
-            char** grupos_id = divideGroup(grupo, numMembros);
-
-             Artist* newArtist = create_artist(id, name, description, clean_ganhos, grupos_id, country, type, numMembros);
-            
+        
+            Artist* newArtist = create_artist(tokens);
             // Insere os dados na hash table
+            char* id = remove_quotes(tokens[0]);
             insert_artist_into_table(AData->artistsTable, newArtist, id);
-
-            free(grupos_id);
+            free(id);      
 
         }
        
-        // Liberta a memória alocada na função remove_quotes
-        freeCleanerArtist(id, name, description, ganhos, country, type);
-
         free(linhaE);
         free(getLine(parserE));
     }
@@ -141,22 +110,32 @@ ArtistsData* artistFeed(char* diretoria) {
 
 
 // Soma o tempo da música à discografia de todos os seus autores
-void inserir_discography_into_artist (ArtistsData* controller, char* music_duration, char** music_artist_id, int num_artistId) {
+void inserir_discography_into_artist (ArtistsData* controller, char* music_durationAspas, char* music_artists) {
+
+        char *music_duration = remove_quotes(music_durationAspas);
+        char* music_artistsClean = remove_quotes(music_artists);
+        char** music_artist_id = divideArtists(music_artistsClean);
+        int num_artistId = contar_elementos(music_artists);
+
+        
 
         if(num_artistId > 1){
 
               int i = 0;
               
               while(i < num_artistId){
-
+                    
                     int discography = duration_to_seconds(music_duration);
+                    
                      Artist * artista_atual = g_hash_table_lookup(controller->artistsTable, music_artist_id[i]);
+                     
                      setArtistDiscography(artista_atual, discography);
                 
                      i++;
               }
 
         } else{
+        
 
               int discography = duration_to_seconds(music_duration);          
               Artist * artista_atual = g_hash_table_lookup(controller->artistsTable, music_artist_id[0]);
@@ -164,6 +143,9 @@ void inserir_discography_into_artist (ArtistsData* controller, char* music_durat
 
         }
 
+        free(music_duration);
+        free(music_artistsClean);
+        free(music_artist_id);
     
 
 }

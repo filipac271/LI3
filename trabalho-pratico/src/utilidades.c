@@ -20,7 +20,14 @@ int calcular_idade( char* data_nascimento_str) {
     int ano_nascimento, mes_nascimento, dia_nascimento;
 
     // Converter a string da data de nascimento para inteiros
+    if(data_nascimento_str[0] == '\"'){
+
+    sscanf(data_nascimento_str, "\"%d/%d/%d\"", &ano_nascimento, &mes_nascimento, &dia_nascimento);
+    }else{
     sscanf(data_nascimento_str, "%d/%d/%d", &ano_nascimento, &mes_nascimento, &dia_nascimento);
+
+    }
+
 
     // Calcular a idade base
     int idade = ano_atual - ano_nascimento;
@@ -30,7 +37,6 @@ int calcular_idade( char* data_nascimento_str) {
     if (mes_atual < mes_nascimento || (mes_atual == mes_nascimento && dia_atual < dia_nascimento)) {
         idade--;
     }
-
     return idade;
 }
 
@@ -87,6 +93,22 @@ char* remove_quotes(char* str) {
 }
 
 
+int calculate_num_members( char* grupo) {
+
+    if (strcmp(grupo, "\"[]\"") == 0) {
+        return 0; // Nenhum membro no grupo
+    }
+
+    int numMembros = 1; // Pelo menos um membro
+    for (int i = 2; grupo[i] != '\0'; i++) { // Começa no índice 2 para pular as aspas iniciais e o colchete
+        if (grupo[i] == ',') {
+            numMembros++;
+        }
+    }
+    return numMembros;
+}
+
+
 
 //Funções que libertam memória da cópia retornada do retiraAcentos
 void freeCleanerArtist(char* clean_id,char* clean_name,char* clean_description,char* ganhos, char* clean_country,char* clean_type){
@@ -132,17 +154,17 @@ int validaData(char* date) {
     int year, month, day;
 
     // Verifica o tamanho esperado da string (aaaa/mm/dd = 10 caracteres)
-    if (strlen(date) != 10) {
+    if (strlen(date) != 12) {
         return 0;
     }
 
     // Verifica o formato: os caracteres nas posições 4 e 7 devem ser '/'
-    if (date[4] != '/' || date[7] != '/') {
+    if (date[5] != '/' || date[8] != '/') {
         return 0;
     }
 
     // Usa sscanf para extrair ano, mês e dia da string
-    if (sscanf(date, "%d/%d/%d", &year, &month, &day) != 3) {
+    if (sscanf(date, "\"%d/%d/%d\"", &year, &month, &day) != 3) {
         return 0;
     }
 
@@ -161,18 +183,21 @@ int validaData(char* date) {
 
 
 
-int validaEmail(char* email) {
+int validaEmail(char* emailAspas) {
+    char* email = remove_quotes(emailAspas);
     int i = 0, j = 0, k = 0;
 
     // Verificar o username (antes do '@')
     for (i = 0; email[i] != '@'; i++) {
         if (!(islower(email[i]) || isdigit(email[i]))) {
+            free(email);
             return 0;  // O username contém caracteres inválidos
         }
     }
 
     // Verificar se há pelo menos um caractere no username
     if (i == 0) {
+        free(email);
         return 0;  // O username não pode ser vazio
     }
 
@@ -181,12 +206,14 @@ int validaEmail(char* email) {
     // Verificar o lstring (antes do '.')
     for (j = 0; email[i] != '.'; i++, j++) {
         if (!(islower(email[i]))) {
+            free(email);
             return 0;  // lstring contém caracteres inválidos
         }
     }
 
     // Verificar se o lstring tem pelo menos 1 caractere
     if (j == 0) {
+        free(email);
         return 0;  // lstring não pode ser vazio
     }
 
@@ -195,15 +222,17 @@ int validaEmail(char* email) {
     // Verificar o rstring (após o '.')
     for (k = 0; email[i] != '\0'; i++, k++) {
         if (!(islower(email[i]))) {
+            free(email);
             return 0;  // rstring contém caracteres inválidos
         }
     }
 
     // Verificar se o rstring tem 2 ou 3 caracteres
     if (k != 2 && k != 3) {
+        free(email);
         return 0;  // rstring deve ter 2 ou 3 caracteres
     }
-
+    free(email);
     return 1;  // O e-mail é válido
 }
 
@@ -322,7 +351,7 @@ char** divideArtists(char* music_artist) {
 
     if (result_array == NULL) {
         printf("malloc falhou");
-        g_free(artistId_copy);
+        // g_free(artistId_copy);
         free(result_array);
         return NULL;
     }
@@ -331,12 +360,7 @@ char** divideArtists(char* music_artist) {
 
         return result_array;
     }
-    /*
-    //se a sting nao tiver len > 2 ou se nao tiver entre [] nao funciona 
-    if (len < 2 || music_artist[0] != '[' || music_artist[len - 1] != ']') {
-        printf( "Formato inválido da string:%s\n",music_artist);
-        
-    }*/
+
 
     artistId_copy[copy_len-1] = '\0';
 
@@ -358,8 +382,8 @@ char** divideArtists(char* music_artist) {
                 g_free(result_array[j]);
             }
             free(result_array);
-            g_free(artistId_copy);
-            g_free(artist);
+            // g_free(artistId_copy);
+            // g_free(artist);
 
             return NULL;
         }
@@ -367,47 +391,50 @@ char** divideArtists(char* music_artist) {
     }
 
     result_array[i] = NULL; // Finalizar o array com NULL
-    g_free(artistId_copy); 
-    g_free(artist);
+    // g_free(artistId_copy); 
+    // g_free(artist);
     return result_array;
 }
 
 
 
+//Funçao para dar free das copias do likedSongs
+void freeArray(int* array) {
+    if (array == NULL) return; // Proteção contra ponteiros nulos
 
-//dividir a string das liked_songs_id num arrays de stings (cada string um id)
-char** likedSongs(char* songs, int numberS)
-{
-    // Retira os primeiros elementos : "[' 
-    char* song_copy = &songs[3];
-    char* likedSong[numberS];
+    free(array); // Libera o array de ponteiros
+}
+
+
+
+//Função likedSongs que agora usa transformaIds
+int* likedSongs(char* songs, int numberS) {
+    // Copia a string original
+    char* song_copy = strdup(songs);
+    char* song_ptr = &song_copy[3]; // Ponteiro auxiliar para percorrer a string
+
+    // Cria um array de inteiros para armazenar os ids
+    int* likedSongIds = malloc(numberS * sizeof(int));
+    if (likedSongIds == NULL) {
+        fprintf(stderr, "Erro ao alocar memória para likedSongIds\n");
+        free(song_copy);
+        return NULL;
+    }
+
     int i = 0;
-    
-    char* likedSongs = strsep(&song_copy, "\'");  
+    char* likedSong = strsep(&song_ptr, "\'");  // Divide a string original
 
-    //Divide as liked songs 
-    while (likedSongs != NULL && i < numberS) {
-      
-
-        likedSong[i++] = likedSongs;  // Armazenar o token no array
-
-        likedSongs = strsep(&song_copy, "\'");  
-        likedSongs = strsep(&song_copy, "\'"); 
+    // Divide as liked songs e aplica transformaIds em cada ID
+    while (likedSong != NULL && i < numberS) {
+        likedSongIds[i++] = transformaIds(likedSong);  // Chama a função transformaIds
+        likedSong = strsep(&song_ptr, "\'");
+        likedSong = strsep(&song_ptr, "\'");
     }
-   
-    // Alocação do array de strings liked_songs_id
-    char** liked_songs_id = malloc((numberS+1 ) * sizeof(char*));
-   
-    //Passa para o array de strings as cancoes ja divididas
-    for (int s = 0; s < numberS; s++) {
-        liked_songs_id[s] = likedSong[s];  // Duplicar cada ID
-   
-    }
-liked_songs_id[numberS] = NULL;
 
+    // Libera a memória alocada para a cópia da string original
+    free(song_copy);
 
-
-    return liked_songs_id;
+    return likedSongIds;
 }
 
 
@@ -451,4 +478,17 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
     fclose(f1);
     fclose(f2);
     return 1;  // Arquivos são iguais
+}
+
+int transformaIds (char* idString){
+
+    char* id = &idString[1];
+    //int tamanho = strlen(id);
+    //id[tamanho-1] = '\0';
+    // printf("%s\n",id);
+    // sleep(1);
+    int idINT = atoi(id);
+    //printf("%d\n",idINT);
+
+    return idINT;
 }

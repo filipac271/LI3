@@ -36,10 +36,9 @@ if (utilizador != NULL)
       userNome =getUserNome(utilizador);
       userApelido =getUserApelido(utilizador);
       userCountry =getUserCountry(utilizador);
-
-
+   
       int idade = calcular_idade(userBirthDate);
-     
+   
       output1(output,userEmail,userNome,userApelido,idade, userCountry);
       free(userBirthDate);
       free(userEmail);
