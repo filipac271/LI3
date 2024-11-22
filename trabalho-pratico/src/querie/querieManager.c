@@ -33,7 +33,7 @@ void queries (MainController* data, char* querieFile) {
         switch (line[0]) {
             case '1':
                 
-                    querie1(UserController, line + 2, i);
+                querie1(UserController, line + 2, i);
                 
                 break;
 

@@ -17,10 +17,14 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
     int existMusic = 1;
     int tembarra = 1;
 
+
+    if (songs[1] != '[') {
+        outputErros(Erros,linha);
+        return 0;
+    }
+    
     int* liked_songs_id = likedSongs(songs,numSongs);
 
-    if (songs[1] != '[') tembarra = 0;
-    
     if (!(strcmp(type, "\"premium\"") == 0 || strcmp(type, "\"normal\"") == 0)) t = 0;
 
     d = validaData(date);
