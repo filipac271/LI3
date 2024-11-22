@@ -18,7 +18,7 @@ char* getUserApelido(User* user);
 char* getUserBirthDate(User* user);
 char* getUserCountry(User* user);
 char* getUserSubscryptionType(User* user);
-char** getUserLikedSongs(User* user);
+//char** getUserLikedSongs(User* user);
 int getUserNumberLikedSongs(User* user);
 
 

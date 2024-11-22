@@ -3,11 +3,11 @@
 
 typedef struct artists Artist;
 
-char* getArtistId(Artist* artista);
+int getArtistId(Artist* artista);
 char* getArtistName (Artist* artista);
-char* getArtistDescriçao (Artist* artista);
+//char* getArtistDescriçao (Artist* artista);
 float getArtistGanho(Artist* artista);
-char** getArtistGrupo (Artist* artista);
+//char** getArtistGrupo (Artist* artista);
 char* getArtistCountry (Artist* artista);
 char* getArtistType (Artist* artista);
 int getArtistNumMembros (Artist* artista);

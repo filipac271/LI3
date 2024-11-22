@@ -26,7 +26,7 @@ struct usersData
 GHashTable* createTable() {
 
     // A key da Hash Table é o UserName  
-   GHashTable* usersTable=g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)freeUser);
+   GHashTable* usersTable=g_hash_table_new_full(g_int_hash, g_int_equal, free, (GDestroyNotify)freeUser);
 
    // Verificar se a hash table foi criada corretamente 
    if (usersTable == NULL) {
@@ -43,9 +43,11 @@ GHashTable* createTable() {
 
 
 //Inserir o user na Hash Table
-void insertUser(GHashTable* table, User* user,char* id)
+void insertUser(GHashTable* table, User* user,int id)
 {
-       g_hash_table_insert(table, strdup(id), user);
+    int* key = malloc(sizeof(int));  // Aloca memória para a chave
+    *key = id;
+    g_hash_table_insert(table,key, user);
 
 }
 
@@ -99,14 +101,13 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
         int numSongs=calculate_num_members(songs);
 
-        int* liked_songs_id = likedSongs(songs,numSongs);
-
-        int isValid = validaUser(tokens[1],tokens[4],tokens[6],musicData,liked_songs_id,numSongs,Erros,linhaE);
+        int isValid = validaUser(tokens[1],tokens[4],tokens[6],musicData,songs,numSongs,Erros,linhaE);
 
 
         if(isValid){  
             
             int idade= calcular_idade(tokens[4]); 
+            int* liked_songs_id = likedSongs(songs,numSongs);
 
 
             //  Inserir os Géneros das Liked Songs no array usersByAge
@@ -116,13 +117,13 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
              User* user= newUser(tokens);
 
              char* username = remove_quotes(tokens[0]);
-             insertUser(UData->usersTable,user,username); 
+             insertUser(UData->usersTable,user,transformaIds(username)); 
              free(username);
-            
+             freeArray(liked_songs_id);
+
         }
         free(linhaE);
         free(getLine(parserE));
-        freeArray(liked_songs_id);
     }
 
     // Liberta a memória alocada pelo Output Erros e fecha o ficheiro dos erros
@@ -138,9 +139,9 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
 
 // Procurar um user na hash Table
-User* fetchUser(UsersData* controlador, char* username) {
+User* fetchUser(UsersData* controlador, int username) {
 
-    return  g_hash_table_lookup(controlador->usersTable, username);
+    return  g_hash_table_lookup(controlador->usersTable, &username);
 
 }
 

@@ -110,10 +110,11 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
         
        // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
         if(isValid){ 
-           
+
         Music* nova_musica = new_music(tokens);
         // Soma o tempo da música à discografia de todos os seus autores
         inserir_discography_into_artist(artistsData,tokens[3],tokens[2]);
+
 
         // Inserir os dados na hash table
         char *music_id = remove_quotes(tokens[0]);

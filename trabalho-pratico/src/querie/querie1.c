@@ -10,14 +10,14 @@
 
 
 
-void querie1(UsersData* userController, char* id,int i){
+void querie1(UsersData* userController, char* idChar,int i){
 
 char *filename = malloc(sizeof(char) * 256);
 sprintf(filename, "resultados/command%d_output.txt",i+1);
 
 
 Output* output= iniciaOutput(filename);
- 
+int id = transformaIds(idChar);
 User* utilizador = fetchUser(userController,id);
  
 

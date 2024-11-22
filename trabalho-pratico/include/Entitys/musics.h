@@ -18,7 +18,7 @@ int get_music_id (Music* music);
 
 char* get_music_title (Music* music);
 
-char** get_music_artist_id (Music* music);
+//char** get_music_artist_id (Music* music);
 
 char* get_music_duration (Music* music);
 
@@ -30,7 +30,7 @@ char* get_music_genre (Music* music);
 
 char* get_music_year (Music* music);
 
-char* get_music_lyrics (Music* music);
+//char* get_music_lyrics (Music* music);
 
 
 #endif

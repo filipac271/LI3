@@ -22,7 +22,7 @@ struct artistsData{
 GHashTable* init_artists_table() {
     
     // A key da Hash Table é o ID  dos artistas
-    GHashTable* artists_table = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_artist);
+    GHashTable* artists_table = g_hash_table_new_full(g_int_hash, g_int_equal, free, (GDestroyNotify)free_artist);
 
     // Verificar se a hash table foi criada corretamente
     if (artists_table == NULL) {
@@ -37,10 +37,11 @@ GHashTable* init_artists_table() {
 }
 
 // Função para inserir um artista na hash table usando o id como chave
-void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,char* id) {
-    
-    g_hash_table_insert(artists_table, strdup(id), new_artist);
-    
+void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,int id) {
+    int* key = malloc(sizeof(int));  // Aloca memória para a chave
+
+    *key = id;
+    g_hash_table_insert(artists_table, key,new_artist);
 }
 
 
@@ -93,7 +94,7 @@ ArtistsData* artistFeed(char* diretoria) {
             Artist* newArtist = create_artist(tokens);
             // Insere os dados na hash table
             char* id = remove_quotes(tokens[0]);
-            insert_artist_into_table(AData->artistsTable, newArtist, id);
+            insert_artist_into_table(AData->artistsTable, newArtist, transformaIds(id));
             free(id);      
 
         }
@@ -113,9 +114,8 @@ ArtistsData* artistFeed(char* diretoria) {
 void inserir_discography_into_artist (ArtistsData* controller, char* music_durationAspas, char* music_artists) {
 
         char *music_duration = remove_quotes(music_durationAspas);
-        char* music_artistsClean = remove_quotes(music_artists);
-        char** music_artist_id = divideArtists(music_artistsClean);
         int num_artistId = contar_elementos(music_artists);
+        int* music_artist_id = likedSongs(music_artists,num_artistId);
 
         
 
@@ -127,7 +127,7 @@ void inserir_discography_into_artist (ArtistsData* controller, char* music_durat
                     
                     int discography = duration_to_seconds(music_duration);
                     
-                     Artist * artista_atual = g_hash_table_lookup(controller->artistsTable, music_artist_id[i]);
+                     Artist * artista_atual = lookup_artist(controller, music_artist_id[i]);
                      
                      setArtistDiscography(artista_atual, discography);
                 
@@ -138,14 +138,13 @@ void inserir_discography_into_artist (ArtistsData* controller, char* music_durat
         
 
               int discography = duration_to_seconds(music_duration);          
-              Artist * artista_atual = g_hash_table_lookup(controller->artistsTable, music_artist_id[0]);
+              Artist * artista_atual = lookup_artist(controller, music_artist_id[0]);
               setArtistDiscography(artista_atual, discography); 
 
         }
 
         free(music_duration);
-        free(music_artistsClean);
-        free(music_artist_id);
+        freeArray(music_artist_id);
     
 
 }
@@ -165,9 +164,9 @@ void destroyTableArtist(ArtistsData* ArtistData){
 
 
 // Função para procurar um artista pelo id (chave da hash table)
-Artist* lookup_artist(ArtistsData* controller, char* id) {
+Artist* lookup_artist(ArtistsData* controller, int id) {
 
-    return g_hash_table_lookup(controller->artistsTable, id);
+    return g_hash_table_lookup(controller->artistsTable, &id);
 
 }
 

@@ -16,16 +16,19 @@ int validaMusic(char* duracaoAspas, char* music_artists,ArtistsData* artistsCont
     int tembarra = 1;
 
     d = validaDuraçao(duracao);
-    int tamanho = strlen(music_artists);   
-    if (music_artists[1] != '[' || music_artists[tamanho-2] != ']'){tembarra = 0;}
+    if (music_artists[1] != '[' ){
+      outputErros(Erros,linha);
+      free(duracao);
+      return 0;
+    }
 
-    char* music_artistsClean = remove_quotes(music_artists);
-    char** artistsId = divideArtists(music_artistsClean);
 
     int numArtistsId = contar_elementos(music_artists);
+    int* artistsId = likedSongs(music_artists,numArtistsId);
+
 
     for (int i = 0; i < numArtistsId; i++) {
-    if (artistsId[i] == NULL) {
+    if (artistsId[i] == -1) {
         printf("Erro: artistsId[%d] é NULL\n", i);
         pertence = 0;
         break;
@@ -46,8 +49,7 @@ int validaMusic(char* duracaoAspas, char* music_artists,ArtistsData* artistsCont
   }
 
   free(duracao);
-  free(music_artistsClean);
-  free(artistsId);
-
+  freeArray(artistsId);
+  
   return (d & pertence & tembarra);  // Combinação bitwise dos resultados de duração e artistas
 }

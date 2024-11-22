@@ -8,11 +8,11 @@
 struct music{
   int music_id;
   char *music_title;
-  char **music_artist_id;
+  int* music_artist_id;
   char *music_duration;
   char *music_genre;
   char *music_year;
-  char *music_lyrics;
+  //char *music_lyrics;
   int num_artistId;
 };
 
@@ -24,10 +24,10 @@ Music* new_music(char** tokens){
         fprintf(stderr, "Memory allocation failed for new music\n");
         exit(1);
     } 
-    
-  char *music_artists = remove_quotes(tokens[2]);
-  int num_artists = contar_elementos(music_artists);
-  char** music_artist_id = divideArtists(music_artists);
+  
+  //O remove quotes já manda uma cópia
+  int num_artists = contar_elementos(tokens[2]);
+  int* music_artist_id = likedSongs(tokens[2],num_artists);
 
   char* idChar = remove_quotes(tokens[0]);
   n_music->music_id =transformaIds(idChar) ;
@@ -35,20 +35,19 @@ Music* new_music(char** tokens){
 
   n_music->music_title = remove_quotes(tokens[1]);
 
-  n_music->music_artist_id = malloc((num_artists+1)* sizeof(char*));
+  n_music->music_artist_id = malloc((num_artists)* sizeof(int));
 
     for(int i = 0; i < num_artists; i++){
-      n_music->music_artist_id[i] = strdup(music_artist_id[i]);
+      n_music->music_artist_id[i] = music_artist_id[i];
     }
     
   n_music->num_artistId = num_artists;
   n_music->music_duration = remove_quotes(tokens[3]);
   n_music->music_genre = remove_quotes(tokens[4]);
   n_music->music_year = remove_quotes(tokens[5]);
-  n_music->music_lyrics = tokens[6];
+  //n_music->music_lyrics = remove_quotes(tokens[6]);
 
-  free(music_artists);
-  free(music_artist_id);
+  freeArray(music_artist_id);
   
   return n_music;
 
@@ -58,12 +57,6 @@ void free_musica(Music* musica) {
     if (musica) {
 
         free(musica->music_title);
-
-        int i;
-
-        for(i = 0;i < musica->num_artistId; i++){
-            free(musica->music_artist_id[i]);
-        }
         free(musica->music_artist_id);
 
         free(musica->music_duration);
@@ -82,13 +75,13 @@ void print_musicas(Music * musica){
 
     printf("MUSIC_ARTIST:\n");
     for(int i = 0; i < musica->num_artistId; i++){
-      printf("%s\n", musica->music_artist_id[i]);
+      printf("%d\n", musica->music_artist_id[i]);
     }
 
     printf("MUSIC_DURATION: %s\n", musica->music_duration);
     printf("MUSIC_GENRE: %s\n", musica->music_genre);
     printf("MUSIC_YEAR: %s\n", musica->music_year);
-    printf("MUSIC_LYRICS: %s\n", musica->music_lyrics);
+    //printf("MUSIC_LYRICS: %s\n", musica->music_lyrics);
 
   } else{
     printf("N existe esta musica\n");
@@ -106,9 +99,9 @@ char* get_music_title (Music* music){
   return strdup(music->music_title);
 }
 
-char** get_music_artist_id (Music* music){
-  return music->music_artist_id;
-}
+// char** get_music_artist_id (Music* music){
+//   return music->music_artist_id;
+// }
 
 char* get_music_duration (Music* music){
   return strdup(music->music_duration);
@@ -136,7 +129,7 @@ char* get_music_year (Music* music){
   return strdup(music->music_year);
 }
 
-char* get_music_lyrics (Music* music){
-  return strdup(music->music_lyrics);
+// char* get_music_lyrics (Music* music){
+//   return strdup(music->music_lyrics);
 
-}
+// }

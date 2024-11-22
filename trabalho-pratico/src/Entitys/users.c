@@ -7,8 +7,7 @@
 
 struct users
 {
-    char* username;
-    //int username
+    int username;
     char* email;
     char* nome;
     char* apelido;
@@ -32,7 +31,7 @@ struct usersByAge
 //Dá print de um user
 void printUser(User* user) {
     if (user) {
-        printf("User: %s\n", user->username);
+        printf("User: %d\n", user->username);
         printf("mail: %s\n", user->email);
         printf("Name: %s\n", user->nome);
         printf("Last name: %s\n", user->apelido);
@@ -81,8 +80,12 @@ User* newUser (char** tokens)
     int numSongs=calculate_num_members(songs);
     int* liked_songs_id =likedSongs(songs,numSongs);
  
+    //O remove quotes já manda uma cópia
 
-    user->username=remove_quotes(tokens[0]);
+    char* idChar = remove_quotes(tokens[0]);
+    user->username =transformaIds(idChar);
+    free(idChar);
+
     user->email=remove_quotes(tokens[1]);
     user->nome=remove_quotes(tokens[2]);
     user->apelido=remove_quotes(tokens[3]);
@@ -151,7 +154,6 @@ void freeUser(User* user) {
          return;
     }
   
-    free(user->username); 
     free(user->email);
     free(user->nome);
     free(user->apelido);

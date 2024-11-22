@@ -93,7 +93,7 @@ char* remove_quotes(char* str) {
 }
 
 
-int calculate_num_members( char* grupo) {
+int calculate_num_members(char* grupo) {
 
     if (strcmp(grupo, "\"[]\"") == 0) {
         return 0; // Nenhum membro no grupo
@@ -109,45 +109,6 @@ int calculate_num_members( char* grupo) {
 }
 
 
-
-//Funções que libertam memória da cópia retornada do retiraAcentos
-void freeCleanerArtist(char* clean_id,char* clean_name,char* clean_description,char* ganhos, char* clean_country,char* clean_type){
-
-        free(clean_id);
-        free(clean_name);
-        free(clean_description);
-        free(ganhos);
-        free(clean_country);
-        free(clean_type);
-}
-
-
-
-void freeCleanerMusics(char* music_id,char* music_title,char* music_artist_id,char* music_duration,char* music_genre,char* music_year,char* music_lyrics){
-
-        free(music_id);
-        free(music_title);
-        free(music_artist_id);
-        free(music_duration);
-        free(music_genre);
-        free(music_year);
-        (void)music_lyrics;
-        //free(music_lyrics);
-
-}
-
-
-void freeCleanerUsers(char* username,char* email,char* nome ,char*  apelido,char* birth_date,char*  country,char* subscription_type){
-        free(username);
-        free(email);
-        free(nome);
-        free(apelido);
-        free(birth_date);
-        free(country);
-        free(subscription_type);
-
-
-}
 
 
 int validaData(char* date) {
@@ -276,24 +237,24 @@ int validaDuraçao (char* duracao){
 
 
 
-
-
-char** divideGroup(char* group, int numMembros)
+int* divideGroup(char* group, int numMembros)
 {
-           
-         
     // Verificar se a string é vazia ("[]")
     if (strcmp(group, "\"[]\"") == 0) {
-        // Alocar um array vazio
-        char** result_array = malloc(sizeof(char*));
-        result_array[0] = NULL;  // Marcar o fim do array
+        // Retornar um array vazio
+        int* result_array = malloc(sizeof(int)); // Aloca espaço para um array vazio
+        result_array[0] = -1;  // Indicador de array vazio
         return result_array;
     }
 
-
-    // Retira os primeiros elementos, por exemplo: "['
+    // Avança o ponteiro para ignorar os primeiros caracteres: "['
     char* group_copy = &group[3];
-    char* artistas_array[numMembros];
+    int* result_array = malloc(numMembros * sizeof(int));
+    if (result_array == NULL) {
+        fprintf(stderr, "Erro ao alocar memória para o array de inteiros\n");
+        exit(1);
+    }
+
     int i = 0;
 
     // Obter o primeiro elemento separado por aspas simples
@@ -301,28 +262,14 @@ char** divideGroup(char* group, int numMembros)
 
     // Dividir os itens do grupo
     while (membro != NULL && i < numMembros) {
-        artistas_array[i++] = membro;  // Armazena o token no array
-        membro = strsep(&group_copy, "\''");  // Salta a vírgula e o espaço
-        membro = strsep(&group_copy, "\''");  // Pega o próximo membro entre aspas
+        result_array[i++] = transformaIds(membro);  // Usa transformaIds para converter o token em inteiro
+        membro = strsep(&group_copy, "\'");  // Salta a vírgula e o espaço
+        membro = strsep(&group_copy, "\'");  // Pega o próximo membro entre aspas
     }
 
-    // Aloca o array de strings
-    char** result_array = malloc((numMembros + 1) * sizeof(char*));
-
-    // Copia os itens do array temporário para o array final
-    for (int j = 0; j < numMembros; j++) {
-        result_array[j] = artistas_array[j];
-    }
-
-    // Adiciona um NULL no final para marcar o fim do array
-    result_array[numMembros] = NULL;
-   
-    // Libera a memória temporária
-    free(group_copy);
-
-    
     return result_array;
 }
+
 
 
 // Função para contar o número de membros

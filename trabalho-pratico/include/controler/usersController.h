@@ -12,10 +12,10 @@ typedef struct usersData UsersData;
 
 UsersData* usersFeed(char* diretoria, MusicData* musicData);
 
-void insertUser(GHashTable* table, User* user,char* id);
+void insertUser(GHashTable* table, User* user,int id);
 void print_all_users(UsersData* data);
 void print_user_entry (gpointer key, gpointer value, gpointer user_data);
-User* fetchUser(UsersData* controlador, char* username);
+User* fetchUser(UsersData* controlador, int username);
 void destroyUsersData(UsersData* data);
 Age* getUsersByAge(UsersData* data);
 Age* insertGeneros(Age* usersByAge, int idade,int* liked_songs_id,int SongCount, MusicData* musicController);

@@ -10,15 +10,17 @@
 #include <unistd.h>
 #include "IOManager.h"
 
-int validaUser(char* email, char* date, char* type,MusicData* musicsController,int* liked_songs_id,int numSongs, Output* Erros, char* linha){
+int validaUser(char* email, char* date, char* type,MusicData* musicsController,char* songs,int numSongs, Output* Erros, char* linha){
     int t = 1;
     int d = 1;
     int e = 1;
     int existMusic = 1;
     int tembarra = 1;
 
+    int* liked_songs_id = likedSongs(songs,numSongs);
 
-
+    if (songs[1] != '[') tembarra = 0;
+    
     if (!(strcmp(type, "\"premium\"") == 0 || strcmp(type, "\"normal\"") == 0)) t = 0;
 
     d = validaData(date);
@@ -36,7 +38,7 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,i
 
         
     if (lookup_musica(musicsController,liked_songs_id[i]) == NULL) {
-//         printf("Artista %d não encontrado na hash table\n", liked_songs_id[i]);
+        // printf("Artista %d não encontrado na hash table\n", liked_songs_id[i]);
         // sleep(1);
         existMusic = 0;
         
@@ -44,8 +46,6 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,i
     }
 }
 
-//    int tamanho = strlen(liked_songs_id[0]);   
-//     if (music_artist[1] != '[' || music_artist[tamanho-2] != ']'){tembarra = 0;    }
 
 
 if((t & d & e & existMusic & tembarra)==0)
@@ -53,7 +53,7 @@ if((t & d & e & existMusic & tembarra)==0)
     outputErros(Erros,linha);
 }
 
-
+freeArray(liked_songs_id);
     
 return (t & d & e & existMusic);
 
