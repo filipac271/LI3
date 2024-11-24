@@ -26,20 +26,18 @@ Music* new_music(char** tokens){
     } 
   
   //O remove quotes já manda uma cópia
-  int num_artists = contar_elementos(tokens[2]);
-  int* music_artist_id = likedSongs(tokens[2],num_artists);
+  int num_artists = calculate_num_members(tokens[2]);
+  int* music_artist_id = divideArray(tokens[2],num_artists);
 
-  char* idChar = remove_quotes(tokens[0]);
-  n_music->music_id =transformaIds(idChar) ;
-  free(idChar);
+  //char* idChar = remove_quotes(tokens[0]);
+  n_music->music_id =transformaIds(tokens[0]) ;
+  //free(idChar);
 
   n_music->music_title = remove_quotes(tokens[1]);
-
   n_music->music_artist_id = malloc((num_artists)* sizeof(int));
-
-    for(int i = 0; i < num_artists; i++){
-      n_music->music_artist_id[i] = music_artist_id[i];
-    }
+  for(int i = 0; i < num_artists; i++){
+    n_music->music_artist_id[i] = music_artist_id[i];
+  }
     
   n_music->num_artistId = num_artists;
   n_music->music_duration = remove_quotes(tokens[3]);

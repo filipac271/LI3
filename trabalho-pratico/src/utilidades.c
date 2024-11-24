@@ -21,13 +21,10 @@ int calcular_idade( char* data_nascimento_str) {
 
     // Converter a string da data de nascimento para inteiros
     if(data_nascimento_str[0] == '\"'){
-
-    sscanf(data_nascimento_str, "\"%d/%d/%d\"", &ano_nascimento, &mes_nascimento, &dia_nascimento);
+        sscanf(data_nascimento_str, "\"%d/%d/%d\"", &ano_nascimento, &mes_nascimento, &dia_nascimento);
     }else{
-    sscanf(data_nascimento_str, "%d/%d/%d", &ano_nascimento, &mes_nascimento, &dia_nascimento);
-
+        sscanf(data_nascimento_str, "%d/%d/%d", &ano_nascimento, &mes_nascimento, &dia_nascimento);
     }
-
 
     // Calcular a idade base
     int idade = ano_atual - ano_nascimento;
@@ -100,7 +97,7 @@ int calculate_num_members(char* grupo) {
     }
 
     int numMembros = 1; // Pelo menos um membro
-    for (int i = 2; grupo[i] != '\0'; i++) { // Começa no índice 2 para pular as aspas iniciais e o colchete
+    for (int i = 2; grupo[i] != '\0'; i++) { // Começa no índice 2 para pular as aspas iniciais e o parentesis
         if (grupo[i] == ',') {
             numMembros++;
         }
@@ -272,79 +269,6 @@ int* divideGroup(char* group, int numMembros)
 
 
 
-// Função para contar o número de membros
-int contar_elementos(char *str) {
-    int count = 0;
-    char *p = str;
-    while (*p) {
-        if (*p == ',') count++;
-        p++;
-    }
-    return count + 1;
-}
-
-char** divideArtists(char* music_artist) {
-
-    // tira os [ ] e o \0
-    // [ 'aooooo', 'a00000' ]\0
-    char* artistId_copy = &music_artist[2];
-    int copy_len = strlen(artistId_copy);
-
-    int numMembros = contar_elementos(artistId_copy);
-
-
-    //aloca espaço para os membros mais um para o \0
-    char** result_array = malloc((numMembros + 1) * sizeof(char*));
-
-    if (result_array == NULL) {
-        printf("malloc falhou");
-        // g_free(artistId_copy);
-        free(result_array);
-        return NULL;
-    }
-    if(music_artist[0] == 'A'){
-        result_array[0] = music_artist;
-
-        return result_array;
-    }
-
-
-    artistId_copy[copy_len-1] = '\0';
-
-    int i = 0;
-    char* artist;
-    //artist para a ser igual à string até a virgula
-    while ((artist = strsep(&artistId_copy, ",")) != NULL && i < numMembros) {
-
-        while (*artist == ' ' || *artist == '\'') artist++;
-        int artist_len = strlen(artist);
-        while (artist_len > 0 && (artist[artist_len - 1] == '\'' || artist[artist_len - 1] == ' ')) {
-          artist[--artist_len] = '\0';
-        }
-
-        result_array[i] = (artist);
-        if (result_array[i] == NULL) {
-            printf("strdup falhou");
-            for (int j = 0; j < i; j++) {
-                g_free(result_array[j]);
-            }
-            free(result_array);
-            // g_free(artistId_copy);
-            // g_free(artist);
-
-            return NULL;
-        }
-        i++;
-    }
-
-    result_array[i] = NULL; // Finalizar o array com NULL
-    // g_free(artistId_copy); 
-    // g_free(artist);
-    return result_array;
-}
-
-
-
 //Funçao para dar free das copias do likedSongs
 void freeArray(int* array) {
     if (array == NULL) return; // Proteção contra ponteiros nulos
@@ -354,34 +278,35 @@ void freeArray(int* array) {
 
 
 
-//Função likedSongs que agora usa transformaIds
-int* likedSongs(char* songs, int numberS) {
-    // Copia a string original
-    char* song_copy = strdup(songs);
-    char* song_ptr = &song_copy[3]; // Ponteiro auxiliar para percorrer a string
+//Função divideArray que agora usa transformaIds
+int* divideArray(char* inputArray, int numElementos) {
+// Cria uma cópia da string original para evitar modificações na original
+    char* inputCopy = strdup(inputArray);
+    char* currentPosition = &inputCopy[3]; // Posição atual na string, ignorando os primeiros caracteres (ex: "[')
 
-    // Cria um array de inteiros para armazenar os ids
-    int* likedSongIds = malloc(numberS * sizeof(int));
-    if (likedSongIds == NULL) {
-        fprintf(stderr, "Erro ao alocar memória para likedSongIds\n");
-        free(song_copy);
+    // Aloca memória para armazenar os IDs inteiros
+    int* idsArray = malloc(numElementos * sizeof(int));
+    if (idsArray == NULL) {
+        fprintf(stderr, "Erro ao alocar memória para idsArray\n");
+        free(inputCopy);
         return NULL;
     }
 
     int i = 0;
-    char* likedSong = strsep(&song_ptr, "\'");  // Divide a string original
+    char* currentElement = strsep(&currentPosition, "\'");  // Extrai o primeiro elemento
 
-    // Divide as liked songs e aplica transformaIds em cada ID
-    while (likedSong != NULL && i < numberS) {
-        likedSongIds[i++] = transformaIds(likedSong);  // Chama a função transformaIds
-        likedSong = strsep(&song_ptr, "\'");
-        likedSong = strsep(&song_ptr, "\'");
+    // Processa cada elemento, aplicando a transformação de string para ID
+    while (currentElement != NULL && i < numElementos) {
+        idsArray[i++] = transformaIds(currentElement);  // Converte para inteiro usando transformaIds
+        currentElement = strsep(&currentPosition, "\'");         // Avança para o próximo separador ignorando as virgulas e o primero separador
+        currentElement = strsep(&currentPosition, "\'");         // Captura o id ignorando o segundo separador
     }
+    
+    // Libera a memória temporária da copia
+    free(inputCopy);
 
-    // Libera a memória alocada para a cópia da string original
-    free(song_copy);
+    return idsArray;
 
-    return likedSongIds;
 }
 
 
@@ -420,22 +345,30 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
     }
     
 
-
-
     fclose(f1);
     fclose(f2);
     return 1;  // Arquivos são iguais
 }
 
+//Funciona apenas se a string já vier sem aspas o que é o caso dos arrays mas não dos ids individuais
 int transformaIds (char* idString){
+    char* id;
+    int idINT;
 
-    char* id = &idString[1];
-    //int tamanho = strlen(id);
-    //id[tamanho-1] = '\0';
-    // printf("%s\n",id);
+    if (idString[0] == '\"') {
+        id = strndup(&idString[2], strlen(idString) - 3); // Cria uma cópia sem modificar a original
+    } else {
+        //id = strndup(&idString[1], strlen(idString) - 1); // Cria uma cópia sem o primeiro caractere
+        //A linha de codigo acima é o politicamente mais correto pq da maneira que está em baixo se chamarmos divideArray
+        // multiplas vezes(2 ou 3(numero de zeros há esquerda +1)) no mesmo token os ids vão começar a sair errados
+        //mas desta maneira é mais rápido pq n alocamos memoria tantas vezes o que nos poupa 0.5s
+        //Caso se queria mudar para a versão que aloca memória tem que se eliminar o if que dá free no final da funçao e deixar só o free
+        id = &idString[1];
+    }
+
+    idINT = atoi(id); // Converte a string para inteiro
+    // printf("%d\n",idINT);
     // sleep(1);
-    int idINT = atoi(id);
-    //printf("%d\n",idINT);
-
+    if (idString[0] == '\"')free(id); // Libera a memória da cópia
     return idINT;
 }

@@ -51,6 +51,24 @@ void insertUser(GHashTable* table, User* user,int id)
 
 }
 
+// Inserir os géneros das músicas no array usersByAge
+Age* insertGeneros(Age* usersByAge, int idade,int* liked_songs_id,int SongCount, MusicData* musicController)
+{
+
+
+   for(int i=0;i<SongCount;i++)
+    {
+        Music* song= lookup_musica(musicController,liked_songs_id[i]);
+        char* genero=get_music_genre(song);
+        usersByAge= insertGenero(usersByAge,idade,genero);
+        free(genero);
+       
+    }
+
+
+     return usersByAge;    
+  
+}
 
 
 
@@ -97,18 +115,14 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
 
-        char* songs = tokens[7];
+        int numSongs=calculate_num_members(tokens[7]);
 
-        int numSongs=calculate_num_members(songs);
-
-        int isValid = validaUser(tokens[1],tokens[4],tokens[6],musicData,songs,numSongs,Erros,linhaE);
-
+        int isValid = validaUser(tokens[1],tokens[4],tokens[6],musicData,tokens[7],numSongs,Erros,linhaE);
 
         if(isValid){  
             
             int idade= calcular_idade(tokens[4]); 
-            int* liked_songs_id = likedSongs(songs,numSongs);
-
+            int* liked_songs_id = divideArray(tokens[7],numSongs);
 
             //  Inserir os Géneros das Liked Songs no array usersByAge
             UData->usersByAge= insertGeneros(UData->usersByAge,idade,liked_songs_id,numSongs, musicData);
@@ -116,9 +130,9 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
             // Criar o User e inseri-lo na Hash Table
              User* user= newUser(tokens);
 
-             char* username = remove_quotes(tokens[0]);
-             insertUser(UData->usersTable,user,transformaIds(username)); 
-             free(username);
+             //char* username = remove_quotes(tokens[0]);
+             insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
+             //free(username);
              freeArray(liked_songs_id);
 
         }
@@ -186,25 +200,6 @@ Age* getUsersByAge(UsersData* data){
     return data->usersByAge;
 }
 
-
-// Inserir os géneros das músicas no array usersByAge
-Age* insertGeneros(Age* usersByAge, int idade,int* liked_songs_id,int SongCount, MusicData* musicController)
-{
-
-
-   for(int i=0;i<SongCount;i++)
-    {
-        Music* song= lookup_musica(musicController,liked_songs_id[i]);
-        char* genero=get_music_genre(song);
-        usersByAge= insertGenero(usersByAge,idade,genero);
-        free(genero);
-       
-    }
-
-
-     return usersByAge;    
-  
-}
 
 
 

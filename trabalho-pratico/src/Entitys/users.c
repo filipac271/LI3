@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define numGenerosDif 15
+#define numIdades 130
+
 
 struct users
 {
@@ -24,7 +27,7 @@ struct users
 struct usersByAge
 {
     char** generos;
-    int numSongs[15];
+    int numSongs[numGenerosDif];
     int numGeneros;
 };
 
@@ -53,10 +56,10 @@ void printUser(User* user) {
  Age* createUsersAge()
 {
   
-    struct usersByAge* usersAge = malloc(130 * sizeof(struct usersByAge));
-    for (int i = 0; i < 130; i++) {
+    struct usersByAge* usersAge = malloc(numIdades * sizeof(struct usersByAge));
+    for (int i = 0; i < numIdades; i++) {
     usersAge[i].numGeneros = 0; 
-    for (int j=0;j<15;j++)
+    for (int j=0;j<numGenerosDif;j++)
     {
         usersAge[i].numSongs[j]=0;
     }
@@ -78,13 +81,13 @@ User* newUser (char** tokens)
 
     char* songs = tokens[7];
     int numSongs=calculate_num_members(songs);
-    int* liked_songs_id =likedSongs(songs,numSongs);
+    int* liked_songs_id =divideArray(songs,numSongs);
  
     //O remove quotes já manda uma cópia
 
-    char* idChar = remove_quotes(tokens[0]);
-    user->username =transformaIds(idChar);
-    free(idChar);
+    //char* idChar = remove_quotes(tokens[0]);
+    user->username =transformaIds(tokens[0]);
+    //free(idChar);
 
     user->email=remove_quotes(tokens[1]);
     user->nome=remove_quotes(tokens[2]);
@@ -94,13 +97,9 @@ User* newUser (char** tokens)
     user->subscription_type=remove_quotes(tokens[6]); 
 
     user->liked_songs_id = malloc((numSongs) * sizeof(int));
-
-    // Copia os IDs para o array do usuário
     for (int i = 0; i < numSongs; i++) {
         user->liked_songs_id[i] = liked_songs_id[i];
     }
-
-
     user->number_liked_songs= numSongs;
 
 
@@ -120,7 +119,7 @@ Age *insertGenero(Age* usersByAge, int idade, char* genero )
 
     if (nGeneros==0)
     {     
-        usersByAge[idade].generos=malloc(15*sizeof(char*));
+        usersByAge[idade].generos=malloc(numGenerosDif * sizeof(char*));
         usersByAge[idade].generos[nGeneros]=strdup(genero);
         usersByAge[idade].numSongs[nGeneros]=1;
         usersByAge[idade].numGeneros=1;
@@ -167,7 +166,7 @@ void freeUser(User* user) {
    
 void freeUsersByAge(Age* usersByAge){
     
-   for (int i=0;i<130;i++)
+   for (int i=0;i<numIdades;i++)
    {
     if(usersByAge[i].numGeneros>0)
     {

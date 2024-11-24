@@ -91,36 +91,28 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
         char** tokens= getTokens(parserE);
 
-
         if (tokens==NULL) 
         {
           // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
           freeParser(parserE); 
           break;
-        
         }
-     
 
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
-    
         int isValid = validaMusic(tokens[3],tokens[2],artistsData, Erros,linhaE);
 
-        
-        
-       // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
+        // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
         if(isValid){ 
+          Music* nova_musica = new_music(tokens);
 
-        Music* nova_musica = new_music(tokens);
-        // Soma o tempo da música à discografia de todos os seus autores
-        inserir_discography_into_artist(artistsData,tokens[3],tokens[2]);
+          // Soma o tempo da música à discografia de todos os seus autores
+          inserir_discography_into_artist(artistsData,tokens[3],tokens[2]);
 
-
-        // Inserir os dados na hash table
-        char *music_id = remove_quotes(tokens[0]);
-        inserir_musica_na_htable(MData->musicsTable,nova_musica,transformaIds(music_id));
-        free(music_id);
-
+          // Inserir os dados na hash table
+          // char *music_id = remove_quotes(tokens[0]);
+          inserir_musica_na_htable(MData->musicsTable,nova_musica,transformaIds(tokens[0]));
+          // free(music_id);
         }
 
         free(linhaE);

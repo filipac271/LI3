@@ -4,9 +4,6 @@
 typedef struct music Music;
 
 
-
-
-
 Music* new_music(char** tokens);
 
 void free_musica(Music* musica);

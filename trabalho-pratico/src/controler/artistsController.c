@@ -56,7 +56,6 @@ ArtistsData* artistFeed(char* diretoria) {
   
      //Abre o ficheiro  "artists_errors.csv" e aloca memória para o respetivo pointer 
     Output * Erros= iniciaOutput("resultados/artists_errors.csv");
-   
  
     AData->artistsTable = init_artists_table();
 
@@ -77,7 +76,6 @@ ArtistsData* artistFeed(char* diretoria) {
     
         char** tokens = getTokens(parserE);
 
-         
         if (tokens==NULL) {
 
              // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
@@ -93,9 +91,9 @@ ArtistsData* artistFeed(char* diretoria) {
         
             Artist* newArtist = create_artist(tokens);
             // Insere os dados na hash table
-            char* id = remove_quotes(tokens[0]);
-            insert_artist_into_table(AData->artistsTable, newArtist, transformaIds(id));
-            free(id);      
+            // char* id = remove_quotes(tokens[0]);
+            insert_artist_into_table(AData->artistsTable, newArtist, transformaIds(tokens[0]));
+            //free(id);      
 
         }
        
@@ -114,8 +112,8 @@ ArtistsData* artistFeed(char* diretoria) {
 void inserir_discography_into_artist (ArtistsData* controller, char* music_durationAspas, char* music_artists) {
 
         char *music_duration = remove_quotes(music_durationAspas);
-        int num_artistId = contar_elementos(music_artists);
-        int* music_artist_id = likedSongs(music_artists,num_artistId);
+        int num_artistId = calculate_num_members(music_artists);
+        int* music_artist_id = divideArray(music_artists,num_artistId);
 
         
 

@@ -21,8 +21,6 @@ char* getUserSubscryptionType(User* user);
 //char** getUserLikedSongs(User* user);
 int getUserNumberLikedSongs(User* user);
 
-
-
 Age* createUsersAge();
 
 int getUBANumberSongs(Age *userAge,int idade, int i);

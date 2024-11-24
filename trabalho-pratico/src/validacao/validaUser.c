@@ -23,7 +23,7 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
         return 0;
     }
     
-    int* liked_songs_id = likedSongs(songs,numSongs);
+    int* liked_songs_id = divideArray(songs,numSongs);
 
     if (!(strcmp(type, "\"premium\"") == 0 || strcmp(type, "\"normal\"") == 0)) t = 0;
 
@@ -33,22 +33,14 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
 
     for (int i = 0; i < numSongs; i++) {
        
-    if (liked_songs_id[i] == -1) {
-        printf("Erro: artistsId[%d] é NULL\n", i);
-        existMusic = 0;
-        break;
+        if (lookup_musica(musicsController,liked_songs_id[i]) == NULL) {
+            // printf("Artista %d não encontrado na hash table\n", liked_songs_id[i]);
+            // sleep(1);
+            existMusic = 0;
+            
+            break;
+        }
     }
-
-
-        
-    if (lookup_musica(musicsController,liked_songs_id[i]) == NULL) {
-        // printf("Artista %d não encontrado na hash table\n", liked_songs_id[i]);
-        // sleep(1);
-        existMusic = 0;
-        
-        break;
-    }
-}
 
 
 

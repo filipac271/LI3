@@ -7,10 +7,7 @@
 
 typedef struct musicData MusicData;
 
-
-
 MusicData* musicsFeed(char* diretoria,ArtistsData* artistsData);
-
 
 Music* lookup_musica(MusicData* controller, int music_id);
 

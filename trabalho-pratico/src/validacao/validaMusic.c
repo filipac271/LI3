@@ -23,23 +23,17 @@ int validaMusic(char* duracaoAspas, char* music_artists,ArtistsData* artistsCont
     }
 
 
-    int numArtistsId = contar_elementos(music_artists);
-    int* artistsId = likedSongs(music_artists,numArtistsId);
+    int numArtistsId = calculate_num_members(music_artists);
+    int* artistsId = divideArray(music_artists,numArtistsId);
 
 
     for (int i = 0; i < numArtistsId; i++) {
-    if (artistsId[i] == -1) {
-        printf("Erro: artistsId[%d] é NULL\n", i);
-        pertence = 0;
-        break;
-    }
 
-    
+      if (lookup_artist(artistsController,artistsId[i]) == NULL) {
+          pertence = 0;
+          break;
+      }
 
-    if (lookup_artist(artistsController,artistsId[i]) == NULL) {
-        pertence = 0;
-        break;
-    }
 }
 
   if((d & pertence & tembarra)==0)
