@@ -5,6 +5,6 @@
 #include "controler/artistsController.h"
 #include "IOManager.h"
 
-int validaMusic(char* duracao, char** artistsId,ArtistsData* artistsController,int numArtistsId,char* music_artist, Output* Erros, char* linha) ;
+int validaMusic(char* duracaoAspas, char* music_artists,ArtistsData* artistsController, Output* Erros, char* linha) ;
 
 #endif

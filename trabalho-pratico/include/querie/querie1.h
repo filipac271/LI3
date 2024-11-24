@@ -4,5 +4,5 @@
 #include "controler/usersController.h"
 
 
-void querie1(UsersData* userController, char* id,int i);
+void querie1(UsersData* userController, char* idChar,int i);
 #endif

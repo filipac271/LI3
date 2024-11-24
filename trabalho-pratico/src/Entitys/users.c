@@ -1,19 +1,23 @@
 #include "Entitys/users.h"
+#include "utilidades.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
+#define numGenerosDif 15
+#define numIdades 130
+
 
 struct users
 {
-    char* username;
+    int username;
     char* email;
     char* nome;
     char* apelido;
     char* birth_date;
     char* country;
     char* subscription_type;
-    char** liked_songs_id;
+    int* liked_songs_id;
     int number_liked_songs;
 
 };
@@ -23,14 +27,14 @@ struct users
 struct usersByAge
 {
     char** generos;
-    int numSongs[15];
+    int numSongs[numGenerosDif];
     int numGeneros;
 };
 
 //Dá print de um user
 void printUser(User* user) {
     if (user) {
-        printf("User: %s\n", user->username);
+        printf("User: %d\n", user->username);
         printf("mail: %s\n", user->email);
         printf("Name: %s\n", user->nome);
         printf("Last name: %s\n", user->apelido);
@@ -41,7 +45,7 @@ void printUser(User* user) {
 
         for(int i=0; i<user->number_liked_songs;i++)
         {
-        printf("%s  ",user->liked_songs_id[i]);
+        printf("%d  ",user->liked_songs_id[i]);
         }
         printf("\n");
 
@@ -52,10 +56,10 @@ void printUser(User* user) {
  Age* createUsersAge()
 {
   
-    struct usersByAge* usersAge = malloc(130 * sizeof(struct usersByAge));
-    for (int i = 0; i < 130; i++) {
+    struct usersByAge* usersAge = malloc(numIdades * sizeof(struct usersByAge));
+    for (int i = 0; i < numIdades; i++) {
     usersAge[i].numGeneros = 0; 
-    for (int j=0;j<15;j++)
+    for (int j=0;j<numGenerosDif;j++)
     {
         usersAge[i].numSongs[j]=0;
     }
@@ -67,7 +71,7 @@ void printUser(User* user) {
 
 
 // Cria um novo user 
-User* newUser (char* username_, char* email_, char* first_name, char* last_name, char * birth_Date, char* pais, char* subscricao, char** liked_Songs_id,int songsN)
+User* newUser (char** tokens)
 {
     User* user= malloc(sizeof(User));
     if(user == NULL){
@@ -75,20 +79,30 @@ User* newUser (char* username_, char* email_, char* first_name, char* last_name,
         exit(1);
     }
 
-    user->username=strdup(username_);
-    user->email=strdup(email_);
-    user->nome=strdup(first_name);
-    user->apelido=strdup(last_name);
-    user->birth_date=strdup(birth_Date);
-    user->country=strdup(pais);
-    user->subscription_type=strdup(subscricao); 
-  
-    user->liked_songs_id = malloc((songsN+1) * sizeof(char*));  // Aloca memória para o array de ponteiros
-    for (int i = 0; i < songsN; i++) {
-      user->liked_songs_id[i] = strdup(liked_Songs_id[i]);  // Duplica cada string  
-    }
+    char* songs = tokens[7];
+    int numSongs=calculate_num_members(songs);
+    int* liked_songs_id =divideArray(songs,numSongs);
+ 
+    //O remove quotes já manda uma cópia
 
-    user->number_liked_songs= songsN;
+    user->username =transformaIds(tokens[0]);
+
+    user->email=remove_quotes(tokens[1]);
+    user->nome=remove_quotes(tokens[2]);
+    user->apelido=remove_quotes(tokens[3]);
+    user->birth_date=remove_quotes(tokens[4]);
+    user->country=remove_quotes(tokens[5]);
+    user->subscription_type=remove_quotes(tokens[6]); 
+
+    user->liked_songs_id = malloc((numSongs) * sizeof(int));
+    for (int i = 0; i < numSongs; i++) {
+        user->liked_songs_id[i] = liked_songs_id[i];
+    }
+    user->number_liked_songs= numSongs;
+
+
+    freeArray(liked_songs_id);
+
     
     return user; 
 }
@@ -103,7 +117,7 @@ Age *insertGenero(Age* usersByAge, int idade, char* genero )
 
     if (nGeneros==0)
     {     
-        usersByAge[idade].generos=malloc(15*sizeof(char*));
+        usersByAge[idade].generos=malloc(numGenerosDif * sizeof(char*));
         usersByAge[idade].generos[nGeneros]=strdup(genero);
         usersByAge[idade].numSongs[nGeneros]=1;
         usersByAge[idade].numGeneros=1;
@@ -127,7 +141,6 @@ Age *insertGenero(Age* usersByAge, int idade, char* genero )
     }
 
       }
-//printf("%s\n",usersByAge[idade].generos[nGeneros]);
     return usersByAge;
 }
 
@@ -138,7 +151,6 @@ void freeUser(User* user) {
          return;
     }
   
-    free(user->username); 
     free(user->email);
     free(user->nome);
     free(user->apelido);
@@ -146,18 +158,13 @@ void freeUser(User* user) {
     free(user->country); 
     free(user->subscription_type);
  
-    
-    for(int i=0;i<user->number_liked_songs;i++)
-       {  
-         free(user->liked_songs_id[i]);  
-       }
     free(user->liked_songs_id);
     free(user); 
 }
    
 void freeUsersByAge(Age* usersByAge){
     
-   for (int i=0;i<130;i++)
+   for (int i=0;i<numIdades;i++)
    {
     if(usersByAge[i].numGeneros>0)
     {
@@ -208,10 +215,10 @@ void freeUsersByAge(Age* usersByAge){
     return strdup(user->subscription_type);
 }
 
-// Retorna o liked_songs
- char** getUserLikedSongs(User* user) {
-    return user->liked_songs_id;
-}
+// // Retorna o liked_songs
+//  char** getUserLikedSongs(User* user) {
+//     return user->liked_songs_id;
+// }
 
 // Retorna o número de liked_songs
  int getUserNumberLikedSongs(User* user) {

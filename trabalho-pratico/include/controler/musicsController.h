@@ -7,14 +7,9 @@
 
 typedef struct musicData MusicData;
 
-
-
 MusicData* musicsFeed(char* diretoria,ArtistsData* artistsData);
 
-
-void inserir_musica_na_htable(GHashTable* musica, Music* new_music,char* music_id);
-
-Music* lookup_musica(MusicData* controller, char* music_id);
+Music* lookup_musica(MusicData* controller, int music_id);
 
 void print_music_entry (gpointer key, gpointer value, gpointer user_data);
 

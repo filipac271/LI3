@@ -43,6 +43,9 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
     Parser* parserT = newParser(queriesFile,"");
     MainController* data = mainFeed(pastaPrincipal);
+          
+
+    print_all_Data(data);
 
     char* line = NULL;  
     line = pegaLinha(parserT);
@@ -105,6 +108,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
         line = pegaLinha(parserT);
 
     }
+
 
     freeParser(parserT);
 
@@ -217,11 +221,11 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
         printf(COLOR_RED "\nHouve erros em uma ou mais queries\n\n" COLOR_RESET);
     }
 
-    destroyData(data);
 
-    //Código que mede o pico máximo de memoria a ser usada no programa no final do "principal" ser rodado
+    destroyData(data);
     struct rusage r_usage;
     getrusage(RUSAGE_SELF,&r_usage);
     printf("%ld KB\n",r_usage.ru_maxrss);
+
     return 0;
 }

@@ -9,19 +9,22 @@
 
 typedef struct usersData UsersData;
 
-
 UsersData* usersFeed(char* diretoria, MusicData* musicData);
 
-void insertUser(GHashTable* table, User* user,char* id);
 void print_all_users(UsersData* data);
+
 void print_user_entry (gpointer key, gpointer value, gpointer user_data);
-User* fetchUser(UsersData* controlador, char* username);
+
+User* fetchUser(UsersData* controlador, int username);
+
 void destroyUsersData(UsersData* data);
+
 Age* getUsersByAge(UsersData* data);
-Age* insertGeneros(Age* usersByAge, int idade,char** Songs,int SongCount, MusicData* musicController);
+
 char* getUBAGenero(UsersData * userController,int idade,int i);
 
 int getUBANSongs(UsersData* userController, int idade, int j);
 
 int getUBANGeneros(UsersData * userController,int idade);
+
 #endif
