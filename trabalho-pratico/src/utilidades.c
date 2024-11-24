@@ -260,8 +260,8 @@ int* divideGroup(char* group, int numMembros)
     // Dividir os itens do grupo
     while (membro != NULL && i < numMembros) {
         result_array[i++] = transformaIds(membro);  // Usa transformaIds para converter o token em inteiro
-        membro = strsep(&group_copy, "\'");  // Salta a vírgula e o espaço
-        membro = strsep(&group_copy, "\'");  // Pega o próximo membro entre aspas
+        membro = strsep(&group_copy, "\'");  // Avança para o próximo separador ignorando as virgulas e o primero separador
+        membro = strsep(&group_copy, "\'");  // Captura o id ignorando o segundo separador
     }
 
     return result_array;

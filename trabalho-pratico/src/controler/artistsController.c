@@ -91,9 +91,7 @@ ArtistsData* artistFeed(char* diretoria) {
         
             Artist* newArtist = create_artist(tokens);
             // Insere os dados na hash table
-            // char* id = remove_quotes(tokens[0]);
             insert_artist_into_table(AData->artistsTable, newArtist, transformaIds(tokens[0]));
-            //free(id);      
 
         }
        

@@ -39,9 +39,7 @@ Artist* create_artist(char** tokens) {
     int numMembros = calculate_num_members(grupo); 
     int* grupos_id = divideGroup(grupo, numMembros);
     
-    // char* idChar = remove_quotes(tokens[0]);
     new_artist->id = transformaIds(tokens[0]);
-    //    free(idChar);    
 
     new_artist->name = remove_quotes(tokens[1]);
     //new_artist->descriçao = remove_quotes(tokens[2]);

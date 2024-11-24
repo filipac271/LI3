@@ -85,9 +85,7 @@ User* newUser (char** tokens)
  
     //O remove quotes já manda uma cópia
 
-    //char* idChar = remove_quotes(tokens[0]);
     user->username =transformaIds(tokens[0]);
-    //free(idChar);
 
     user->email=remove_quotes(tokens[1]);
     user->nome=remove_quotes(tokens[2]);

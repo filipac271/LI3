@@ -110,9 +110,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
           inserir_discography_into_artist(artistsData,tokens[3],tokens[2]);
 
           // Inserir os dados na hash table
-          // char *music_id = remove_quotes(tokens[0]);
           inserir_musica_na_htable(MData->musicsTable,nova_musica,transformaIds(tokens[0]));
-          // free(music_id);
         }
 
         free(linhaE);

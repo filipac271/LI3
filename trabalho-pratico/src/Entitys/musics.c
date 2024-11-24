@@ -29,9 +29,7 @@ Music* new_music(char** tokens){
   int num_artists = calculate_num_members(tokens[2]);
   int* music_artist_id = divideArray(tokens[2],num_artists);
 
-  //char* idChar = remove_quotes(tokens[0]);
   n_music->music_id =transformaIds(tokens[0]) ;
-  //free(idChar);
 
   n_music->music_title = remove_quotes(tokens[1]);
   n_music->music_artist_id = malloc((num_artists)* sizeof(int));
