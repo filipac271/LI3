@@ -7,7 +7,7 @@ typedef struct users User;
 typedef struct usersByAge Age;
 
 
-User* newUser (char* username_, char* email_, char* first_name, char* last_name, char * birth_Date, char* pais, char* subscricao, char** liked_Songs_id,int songsN);
+User* newUser (char**);
 void freeUser (User* user);
 void printUser(User* user);
 
@@ -18,10 +18,8 @@ char* getUserApelido(User* user);
 char* getUserBirthDate(User* user);
 char* getUserCountry(User* user);
 char* getUserSubscryptionType(User* user);
-char** getUserLikedSongs(User* user);
+//char** getUserLikedSongs(User* user);
 int getUserNumberLikedSongs(User* user);
-
-
 
 Age* createUsersAge();
 

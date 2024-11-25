@@ -4,14 +4,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 struct artists
 {
-    char* id; //A0000xxx
+    int id; 
     char* name;
-    char* descriçao;
+    //char* descriçao;
     float ganho_por_stream;
-    char** grupo;
+    int* grupo;
     char* country;
     char* type;
     int numMembrosGrupo;
@@ -19,31 +20,42 @@ struct artists
 };
 
 
+
+
 // Função para criar um novo artista
-Artist* create_artist(char* id,  char* name, char* description,float ganho, char** grupo, char* country, char* type,int numMembros) {
+Artist* create_artist(char** tokens) {
     Artist* new_artist = malloc(sizeof(Artist));
     if(new_artist == NULL){
         fprintf(stderr, "Memory allocation failed for new artist\n");
         exit(1);
     }
-    new_artist->id = strdup(id);
-    new_artist->name = strdup(name);
-    new_artist->descriçao = strdup(description);
-    new_artist->ganho_por_stream = ganho;  
 
-    new_artist->grupo = malloc(numMembros * sizeof(char*)); 
+    //O remove quotes já manda uma cópia
 
+    char* ganhos = remove_quotes(tokens[3]);
+    float clean_ganhos = atof(ganhos);
 
-       for (int i = 0; i < numMembros; i++) {
-         new_artist->grupo[i] = strdup(grupo[i]);  // Duplica cada string
+    char* grupo = tokens[4];
+    int numMembros = calculate_num_members(grupo); 
+    int* grupos_id = divideGroup(grupo, numMembros);
+    
+    new_artist->id = transformaIds(tokens[0]);
 
+    new_artist->name = remove_quotes(tokens[1]);
+    //new_artist->descriçao = remove_quotes(tokens[2]);
+    new_artist->ganho_por_stream = clean_ganhos;  
+    new_artist->grupo = malloc(numMembros * sizeof(int)); 
+    for (int i = 0; i < numMembros; i++)
+    {
+        new_artist->grupo[i] = grupos_id[i]; 
     }
-
-    new_artist->country = strdup(country);
-    new_artist->type = strdup(type);
+    
+    new_artist->country = remove_quotes(tokens[5]);
+    new_artist->type = remove_quotes(tokens[6]);
     new_artist->numMembrosGrupo=numMembros;
     new_artist->total_discography = 0;
-
+    free(ganhos);
+    freeArray(grupos_id);
 
     return new_artist;
 }
@@ -51,16 +63,9 @@ Artist* create_artist(char* id,  char* name, char* description,float ganho, char
 // Função para liberar memória dos artistas
 void free_artist(Artist* artist) {
     if (artist) {
-        free(artist->id);
         free(artist->name);
-        free(artist->descriçao);
+        //free(artist->descriçao);
         free(artist->country);
-
-        int i;
-        for ( i = 0; i < artist->numMembrosGrupo; i++)
-        {
-         free(artist->grupo[i]);
-        }
 
         free(artist->grupo);
         free(artist->type);
@@ -71,25 +76,25 @@ void free_artist(Artist* artist) {
 //Função para printar todas as informações de um artista
 void print_artist(Artist* artist) {
     if (artist) {
-        printf("ID: %s\n", artist->id);
+        printf("ID: %d\n", artist->id);
         printf("Name: %s\n", artist->name);
-        printf("Description: %s\n", artist->descriçao);
+        //printf("Description: %s\n", artist->descriçao);
         printf("Ganho por Stream: %.2f\n", artist->ganho_por_stream);
-        printf("Grupo:\n");
+        printf("Grupo:");
         
         if (artist->numMembrosGrupo > 0) {
             for (int i = 0; i < artist->numMembrosGrupo; i++) {
-                printf("%s\n", artist->grupo[i]);  // Acessa o membro específico do grupo
+                printf("%d;", artist->grupo[i]);  // Acessa o membro específico do grupo
             }
+                printf("\n");
         } else {
-            printf("SOLO SINGER");
+            printf("SOLO SINGER\n");
         }
 
-        printf("\n");
         printf("Country: %s\n", artist->country);
         printf("Type: %s\n", artist->type);
         printf("Numero de Membros: %d\n", artist->numMembrosGrupo);
-        printf("Total DURATION: %d", artist->total_discography);
+        printf("Total DURATION: %d\n", artist->total_discography);
         printf("\n");
     } else {
         printf("N tenho nada para printar\n");
@@ -97,25 +102,25 @@ void print_artist(Artist* artist) {
 }
 
 
-char* getArtistId(Artist* artista){
-    return strdup(artista->id);
+int getArtistId(Artist* artista){
+    return artista->id;
 }
 
 char* getArtistName(Artist* artista){
     return strdup(artista->name);
 }
 
-char* getArtistDescriçao(Artist* artista){
-    return strdup(artista->descriçao);
-}
+// char* getArtistDescriçao(Artist* artista){
+//     return strdup(artista->descriçao);
+// }
 
 float getArtistGanho(Artist* artista){
     return artista->ganho_por_stream;
 }
 
-char** getArtistGrupo(Artist* artista){
-    return artista->grupo;
-}
+// char** getArtistGrupo(Artist* artista){
+//     return artista->grupo;
+// }
 
 char* getArtistCountry(Artist* artista){
     return  strdup(artista->country);
@@ -136,5 +141,6 @@ int getArtistDiscography(Artist* artista){
 }
 
 void setArtistDiscography(Artist* artista, int discography){
+    
     artista->total_discography += discography;
 }

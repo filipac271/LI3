@@ -22,7 +22,7 @@ struct artistsData{
 GHashTable* init_artists_table() {
     
     // A key da Hash Table é o ID  dos artistas
-    GHashTable* artists_table = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)free_artist);
+    GHashTable* artists_table = g_hash_table_new_full(g_int_hash, g_int_equal, free, (GDestroyNotify)free_artist);
 
     // Verificar se a hash table foi criada corretamente
     if (artists_table == NULL) {
@@ -37,10 +37,11 @@ GHashTable* init_artists_table() {
 }
 
 // Função para inserir um artista na hash table usando o id como chave
-void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,char* id) {
-    
-    g_hash_table_insert(artists_table, strdup(id), new_artist);
-    
+void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,int id) {
+    int* key = malloc(sizeof(int));  // Aloca memória para a chave
+
+    *key = id;
+    g_hash_table_insert(artists_table, key,new_artist);
 }
 
 
@@ -55,7 +56,6 @@ ArtistsData* artistFeed(char* diretoria) {
   
      //Abre o ficheiro  "artists_errors.csv" e aloca memória para o respetivo pointer 
     Output * Erros= iniciaOutput("resultados/artists_errors.csv");
-   
  
     AData->artistsTable = init_artists_table();
 
@@ -76,59 +76,25 @@ ArtistsData* artistFeed(char* diretoria) {
     
         char** tokens = getTokens(parserE);
 
-         
         if (tokens==NULL) {
 
              // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
               freeParser(parserE); break;
          }
-
-        
-        char* id = remove_quotes(tokens[0]);
-        char* name = remove_quotes(tokens[1]);
-        char* description = remove_quotes(tokens[2]);
-        char* ganhos = remove_quotes(tokens[3]);
-        float clean_ganhos = atof(ganhos);
-        char* grupo = tokens[4];
-        char* country = remove_quotes(tokens[5]);
-        char* type = remove_quotes(tokens[6]);
-        
      
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
-        int isValid = validaArtista(grupo,type,linhaE, Erros);
+        int isValid = validaArtista(tokens[4],tokens[6],linhaE, Erros);
         
         //Se a linha for válida é criado o artista e é inserido na Hash Table dos artistas
         if (isValid) {
-
-             int numMembros = 1;
-             if (strcmp(grupo, "\"[]\"") == 0) {
-
-                numMembros = 0;
-
-            } else {
-
-                // Conta o número de membros do grupo
-                for (int i = 2; grupo[i] != '\0'; i++) {
-                    if (grupo[i] == ',') numMembros++;
-                }
-            }
-         
-            
-            char** grupos_id = divideGroup(grupo, numMembros);
-
-             Artist* newArtist = create_artist(id, name, description, clean_ganhos, grupos_id, country, type, numMembros);
-            
+        
+            Artist* newArtist = create_artist(tokens);
             // Insere os dados na hash table
-            insert_artist_into_table(AData->artistsTable, newArtist, id);
-
-            free(grupos_id);
+            insert_artist_into_table(AData->artistsTable, newArtist, transformaIds(tokens[0]));
 
         }
        
-        // Liberta a memória alocada na função remove_quotes
-        freeCleanerArtist(id, name, description, ganhos, country, type);
-
         free(linhaE);
         free(getLine(parserE));
     }
@@ -141,29 +107,40 @@ ArtistsData* artistFeed(char* diretoria) {
 
 
 // Soma o tempo da música à discografia de todos os seus autores
-void inserir_discography_into_artist (ArtistsData* controller, char* music_duration, char** music_artist_id, int num_artistId) {
+void inserir_discography_into_artist (ArtistsData* controller, char* music_durationAspas, char* music_artists) {
+
+        char *music_duration = remove_quotes(music_durationAspas);
+        int num_artistId = calculate_num_members(music_artists);
+        int* music_artist_id = divideArray(music_artists,num_artistId);
+
+        
 
         if(num_artistId > 1){
 
               int i = 0;
               
               while(i < num_artistId){
-
+                    
                     int discography = duration_to_seconds(music_duration);
-                     Artist * artista_atual = g_hash_table_lookup(controller->artistsTable, music_artist_id[i]);
+                    
+                     Artist * artista_atual = lookup_artist(controller, music_artist_id[i]);
+                     
                      setArtistDiscography(artista_atual, discography);
                 
                      i++;
               }
 
         } else{
+        
 
               int discography = duration_to_seconds(music_duration);          
-              Artist * artista_atual = g_hash_table_lookup(controller->artistsTable, music_artist_id[0]);
+              Artist * artista_atual = lookup_artist(controller, music_artist_id[0]);
               setArtistDiscography(artista_atual, discography); 
 
         }
 
+        free(music_duration);
+        freeArray(music_artist_id);
     
 
 }
@@ -183,9 +160,9 @@ void destroyTableArtist(ArtistsData* ArtistData){
 
 
 // Função para procurar um artista pelo id (chave da hash table)
-Artist* lookup_artist(ArtistsData* controller, char* id) {
+Artist* lookup_artist(ArtistsData* controller, int id) {
 
-    return g_hash_table_lookup(controller->artistsTable, id);
+    return g_hash_table_lookup(controller->artistsTable, &id);
 
 }
 

@@ -27,7 +27,9 @@ MainController* mainFeed(char* diretoria){
 
     mainData->artistsController =  artistFeed(diretoria);
 
+
     mainData->musicsController = musicsFeed(diretoria,mainData->artistsController);
+
 
     mainData->usersController = usersFeed(diretoria,mainData->musicsController);
 
