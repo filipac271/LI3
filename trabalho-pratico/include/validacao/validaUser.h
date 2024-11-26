@@ -4,7 +4,7 @@
 
 #include <glib.h>
 #include"controler/musicsController.h"
-#include "IOManager.h"
+#include "Output.h"
 
 int validaUser(char* email, char* date, char* type,MusicData* musicsController,char* songs,int numSongs, Output* Erros, char* linha);
 

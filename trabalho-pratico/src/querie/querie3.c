@@ -1,13 +1,15 @@
 #include "controler/usersController.h"
 #include "utilidades.h"
 #include "Entitys/users.h"
-#include "IOManager.h"
+#include "Output.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <glib.h>
 #include <unistd.h>
+
+#include "querie/querie3.h"
 
 struct querie3 {
     char* genero;     // Nome do género musical
@@ -94,7 +96,7 @@ void querie3(int num, char* line, UsersData* userController) {
         outputNULL(output);
     } else {
         for (int i = 0; i < validCount; i++) {
-            output3(output, array[i].genero, array[i].numMusicas);  // Grava cada género e contagem de músicas no ficheiro
+            output3(output, array[i].genero, array[i].numMusicas, line[1]);  // Grava cada género e contagem de músicas no ficheiro
             free(array[i].genero);  // Liberta a memória alocada para o nome do género
         }
     }

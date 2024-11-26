@@ -6,7 +6,7 @@
 
 #include "utilidades.h"
 #include "controler/artistsController.h"
-#include "IOManager.h"
+#include "Output.h"
 
 int validaMusic(char* duracaoAspas, char* music_artists,ArtistsData* artistsController, Output* Erros, char* linha) {
     char *duracao = remove_quotes(duracaoAspas);
