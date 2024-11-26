@@ -1,7 +1,7 @@
 #include "controler/artistsController.h"
 #include "utilidades.h"
 #include "Entitys/artists.h"
-#include "IOManager.h"
+#include "Output.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,7 +82,7 @@ void querie2(ArtistsData* ArtistController, char* line, int i) {
             char* tipo = getArtistType(artist_atual);
             char* pais = getArtistCountry(artist_atual);
 
-            output2(output, nome, tipo, time, pais);
+            output2(output, nome, tipo, time, pais, line[1]);
 
             free(nome);
             free(tipo);

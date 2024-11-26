@@ -5,7 +5,7 @@
 #include  "querie/querie2.h"
 #include  "querie/querie3.h"
 #include "utilidades.h"
-#include "IOManager.h"
+#include "Input.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,7 +33,7 @@ void queries (MainController* data, char* querieFile) {
         switch (line[0]) {
             case '1':
                 
-                querie1(UserController, line + 2, i);
+                querie1(UserController, line + 2, i, line[1]);
                 
                 break;
 

@@ -4,7 +4,7 @@
 #include <time.h>
 #include <glib.h>
 #include <unistd.h>
-#include "IOManager.h"
+#include "Output.h"
 
 int validaArtista (char* grupo, char* type, char* linha,Output* erros){
 

@@ -1,4 +1,4 @@
-#include "validacao/validaUser.h"
+
 #include "utilidades.h"
 #include "controler/musicsController.h"
 
@@ -8,7 +8,7 @@
 #include <time.h>
 #include <glib.h>
 #include <unistd.h>
-#include "IOManager.h"
+#include "Output.h"
 
 int validaUser(char* email, char* date, char* type,MusicData* musicsController,char* songs,int numSongs, Output* Erros, char* linha){
     int t = 1;

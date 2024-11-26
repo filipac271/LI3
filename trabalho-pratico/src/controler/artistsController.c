@@ -1,8 +1,9 @@
 #include "Entitys/artists.h"
+#include "Entitys/musics.h"
 #include "controler/artistsController.h"
 #include "validacao/validaArtista.h"
 #include "utilidades.h"
-#include "IOManager.h"
+#include "Input.h"
 
 #include <glib.h>
 #include <stdio.h>
