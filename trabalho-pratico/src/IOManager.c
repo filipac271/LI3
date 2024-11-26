@@ -171,7 +171,6 @@ char* getLineError( Parser* parserE)
 
 
 
-//mudar para output
 //Função que cria e aloca memoria para a estrutura e os campos do Output
 Output* iniciaOutput (char* filename)
 {
