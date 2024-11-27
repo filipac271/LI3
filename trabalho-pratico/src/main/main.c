@@ -5,6 +5,13 @@
 #include <stdlib.h>
 #include <sys/resource.h>
 
+
+/* PEQUENA NOTA DOS FICHEIROS .H JÁ ALTERADOS:
+    utilidades.h
+    
+
+*/
+
 int main(int argc, char **argv){
     if(argc == 3){
     
