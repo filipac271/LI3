@@ -12,12 +12,6 @@
 typedef struct parser Parser;
 
 /**
- * @typedef Output
- * @brief Representa um objeto de saída de dados.
- */
-typedef struct output Output;
-
-/**
  * @brief Abre um ficheiro na diretoria e subdiretoria especificadas.
  * 
  * Ao receber uma diretoria e a respetiva subdiretoria, esta função abre o ficheiro em modo de leitura.
