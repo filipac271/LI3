@@ -66,7 +66,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
                     clock_gettime(CLOCK_REALTIME, &start);
 
-                    querie1(UserController, line + 2, i,line[1]);
+                    querie1(UserController, line , i);
                     
                     clock_gettime(CLOCK_REALTIME, &end);
 

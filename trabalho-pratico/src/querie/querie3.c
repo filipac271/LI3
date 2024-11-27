@@ -20,7 +20,7 @@ struct querie3 {
 // e grava os resultados num ficheiro de saída.
 void querie3(int num, char* line, UsersData* userController) {
     int min, max;
-    sscanf(line + 1, "%d %d", &min, &max);  // Lê o intervalo de idades (min e max) a partir da linha de entrada
+    sscanf(line + 2, "%d %d", &min, &max);  // Lê o intervalo de idades (min e max) a partir da linha de entrada
 
     Genero array[15];   // Array para armazenar géneros e contagem de músicas
     int validCount = 0; // Contador de géneros válidos (diferentes)
