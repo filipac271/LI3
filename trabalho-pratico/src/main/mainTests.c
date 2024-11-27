@@ -1,7 +1,7 @@
 #define _GNU_SOURCE and #define _POSIX_C_SOURCE 1999309L
 #include "controler/mainController.h"
 #include "querie/querieManager.h"
-#include "IOManager.h"
+#include "Input.h"
 #include "querie/querie1.h"
 #include "querie/querie2.h"
 #include "querie/querie3.h"
@@ -66,7 +66,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
                     clock_gettime(CLOCK_REALTIME, &start);
 
-                    querie1(UserController, line + 2, i);
+                    querie1(UserController, line , i);
                     
                     clock_gettime(CLOCK_REALTIME, &end);
 

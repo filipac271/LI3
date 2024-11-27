@@ -1,6 +1,6 @@
 
 #include "controler/usersController.h"
-#include "IOManager.h"
+#include "Output.h"
 #include "utilidades.h"
 
 #include <stdio.h>
@@ -10,13 +10,16 @@
 
 
 
-void querie1(UsersData* userController, char* idChar,int i){
+void querie1(UsersData* userController, char* line,int i){
 
 char *filename = malloc(sizeof(char) * 256);
 sprintf(filename, "resultados/command%d_output.txt",i+1);
 
+char* idChar= line+3;
+char c = line[1];
 
 Output* output= iniciaOutput(filename);
+
 int id = transformaIds(idChar);
 User* utilizador = fetchUser(userController,id);
  
@@ -28,7 +31,6 @@ char* userNome;
 char* userApelido;
 char* userCountry;
 
-
 if (utilizador != NULL)
 { 
       userBirthDate = getUserBirthDate(utilizador);
@@ -39,7 +41,7 @@ if (utilizador != NULL)
    
       int idade = calcular_idade(userBirthDate);
    
-      output1(output,userEmail,userNome,userApelido,idade, userCountry);
+      output1(output,userEmail,userNome,userApelido,idade, userCountry,c);
       free(userBirthDate);
       free(userEmail);
       free(userNome);

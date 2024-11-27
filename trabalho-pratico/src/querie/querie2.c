@@ -1,7 +1,7 @@
 #include "controler/artistsController.h"
 #include "utilidades.h"
 #include "Entitys/artists.h"
-#include "IOManager.h"
+#include "Output.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,7 +50,7 @@ void querie2(ArtistsData* ArtistController, char* line, int i) {
     strcpy(country, "");
 
     // Lê o número e a string entre aspas, se existir
-    int query2_result = sscanf(line + 1, "%d \"%[^\"]\"", &n, country);
+    int query2_result = sscanf(line + 2, "%d \"%[^\"]\"", &n, country);
     if (query2_result == 1) {
         // Apenas o número foi lido, país não fornecido
         strcpy(country, "");  // Define `country` como string vazia
@@ -82,7 +82,7 @@ void querie2(ArtistsData* ArtistController, char* line, int i) {
             char* tipo = getArtistType(artist_atual);
             char* pais = getArtistCountry(artist_atual);
 
-            output2(output, nome, tipo, time, pais);
+            output2(output, nome, tipo, time, pais, line[1]);
 
             free(nome);
             free(tipo);
