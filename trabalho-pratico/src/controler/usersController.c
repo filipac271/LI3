@@ -129,7 +129,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
        
             // Criar o User e inseri-lo na Hash Table
              User* user= newUser(tokens);
-
+            
              insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
              freeArray(liked_songs_id);
 

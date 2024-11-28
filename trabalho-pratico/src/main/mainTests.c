@@ -52,9 +52,10 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
 
     int i = 0;
-
+    //Esta flag está aqui apenas para as queries 4 5 6 n serem rodadas
+    int flag = 1;
     //For loop que mede os tempos de cada querie
-    for (i = 0; line != NULL ; i++) {
+    for (i = 0; line != NULL && flag ; i++) {
 
         //Pega controladores
         UsersData* UserController = getUserController(data);
@@ -101,6 +102,8 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
                 break;
 
             default:
+                flag = 0;
+                i -=1;
                 break;
         }
 

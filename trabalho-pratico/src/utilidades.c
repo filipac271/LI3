@@ -355,7 +355,11 @@ int transformaIds (char* idString){
     char* id;
     int idINT;
 
-    if (idString[0] == '\"') {
+    //O primeiro if é para o caso de ser um id de um ALbum que tem duas letras
+    if(idString[2] == 'L' && idString[0] == '\"'){
+        id = strndup(&idString[3], strlen(idString) - 4); // Cria uma cópia sem modificar a original
+    }
+    else if (idString[0] == '\"') {
         id = strndup(&idString[2], strlen(idString) - 3); // Cria uma cópia sem modificar a original
     } else {
         //id = strndup(&idString[1], strlen(idString) - 1); // Cria uma cópia sem o primeiro caractere
@@ -370,5 +374,14 @@ int transformaIds (char* idString){
     // printf("%d\n",idINT);
     // sleep(1);
     if (idString[0] == '\"')free(id); // Libera a memória da cópia
+
     return idINT;
+}
+
+//Função que poem toda a funçao em lowerCase
+void toLowerCase(char *str) {
+    while (*str) { // Itera sobre cada caractere da string
+        *str = tolower((unsigned char)*str); // Converte o caractere para minúscula
+        str++;
+    }
 }

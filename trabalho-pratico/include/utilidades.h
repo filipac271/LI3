@@ -153,4 +153,7 @@ int transformaIds(char* idString);
  */
 int compararFicheirosPorLinha(char *file1, char *file2, int *ocorrenciasCorretas);
 
+void toLowerCase(char *str);
+
+
 #endif // UTILIDADES_H
