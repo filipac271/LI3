@@ -54,10 +54,9 @@ ArtistsData* artistFeed(char* diretoria) {
         fprintf(stderr,"Alocação de memória do ArtistsController não foi bem sucedido");
         exit(1);
     }  
-  
      //Abre o ficheiro  "artists_errors.csv" e aloca memória para o respetivo pointer 
     Output * Erros= iniciaOutput("resultados/artists_errors.csv");
- 
+
     AData->artistsTable = init_artists_table();
 
     //Inicia o Parser e abre o ficheiro "artists.csv" do dataset
@@ -80,9 +79,8 @@ ArtistsData* artistFeed(char* diretoria) {
         if (tokens==NULL) {
 
              // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
-              freeParser(parserE); break;
-         }
-     
+            freeParser(parserE); break;
+        }
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
         int isValid = validaArtista(tokens[4],tokens[6],linhaE, Erros);
@@ -95,14 +93,14 @@ ArtistsData* artistFeed(char* diretoria) {
             insert_artist_into_table(AData->artistsTable, newArtist, transformaIds(tokens[0]));
 
         }
-       
+
         free(linhaE);
         free(getLine(parserE));
     }
-   
+
     // Liberta a memória alocada pelo Output Erros e fecha o ficheiro dos erros
     freeOutput(Erros);
-   
+    
     return AData;
 }
 
@@ -118,25 +116,25 @@ void inserir_discography_into_artist (ArtistsData* controller, char* music_durat
 
         if(num_artistId > 1){
 
-              int i = 0;
-              
-              while(i < num_artistId){
+            int i = 0;
+            
+            while(i < num_artistId){
                     
                     int discography = duration_to_seconds(music_duration);
                     
                      Artist * artista_atual = lookup_artist(controller, music_artist_id[i]);
-                     
-                     setArtistDiscography(artista_atual, discography);
+                    
+                    setArtistDiscography(artista_atual, discography);
                 
-                     i++;
-              }
+                    i++;
+            }
 
         } else{
         
 
-              int discography = duration_to_seconds(music_duration);          
+            int discography = duration_to_seconds(music_duration);          
               Artist * artista_atual = lookup_artist(controller, music_artist_id[0]);
-              setArtistDiscography(artista_atual, discography); 
+            setArtistDiscography(artista_atual, discography); 
 
         }
 
@@ -208,7 +206,7 @@ void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country
     g_hash_table_iter_init(&iter, controller->artistsTable);
 
     while (g_hash_table_iter_next(&iter, &key, &value)) {
-      
+    
         Artist* artist_to_filter = value;
         char* pais = getArtistCountry(artist_to_filter);
 

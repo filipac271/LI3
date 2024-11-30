@@ -11,6 +11,9 @@
 #include "controler/artistsController.h"
 #include "controler/musicsController.h"
 #include "controler/usersController.h"
+#include "controler/historyController.h"
+#include "Entitys/history.h"
+
 
 
 struct mainController
@@ -18,6 +21,7 @@ struct mainController
     ArtistsData* artistsController;
     MusicData* musicsController;
     UsersData* usersController;
+    HistoryData* historyController;
 };
 
 
@@ -33,6 +37,8 @@ MainController* mainFeed(char* diretoria){
 
     mainData->usersController = usersFeed(diretoria,mainData->musicsController);
 
+    mainData ->historyController = historyFeed(diretoria, mainData->musicsController);
+
 
     return mainData;
 }
@@ -44,6 +50,7 @@ void print_all_Data(MainController* data){
     //print_all_artists(data->artistsController);
     //print_all_musics(data->musicsController);
     //print_all_users(data->usersController);
+   // print_all_history(data->historyController);
 }
 
 
@@ -51,9 +58,11 @@ void destroyData(MainController* data){
     destroyTableArtist(data->artistsController);
     destroyMusicTable(data->musicsController);
     destroyUsersData(data->usersController);
+    destroyHistoryData(data->historyController);
     free(data->usersController);
     free(data->musicsController);
     free(data->artistsController);
+    free(data->historyController);
     free(data);
 }
 
@@ -68,4 +77,8 @@ MusicData* getMusicController (MainController* data){
 
 ArtistsData* getartistController (MainController* data){
     return data->artistsController;
+}
+
+HistoryData* gethistoryController (MainController* data){
+    return data->historyController;
 }

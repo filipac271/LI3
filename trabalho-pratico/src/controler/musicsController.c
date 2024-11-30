@@ -139,6 +139,7 @@ void destroyMusicTable(MusicData* data){
 
 // Função para procurar uma música pelo id (chave da hash table)
 Music* lookup_musica(MusicData* controller, int music_id){
+ // printf("CENA %d\n", music_id);
 
   return g_hash_table_lookup(controller->musicsTable, &music_id);
 }

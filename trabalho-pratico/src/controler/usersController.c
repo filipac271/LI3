@@ -94,7 +94,7 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     Parser* parserE= newParser(diretoria,"users.csv");
 
     // Ignorar a primeira linha
-     char* line = pegaLinha(parserE);
+        char* line = pegaLinha(parserE);
      //Enviar a linha para o ficheiro users_erros.csv, esta não será inserida hashTable
     outputErros(Erros,line);
     free(line);
@@ -104,13 +104,12 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
         parserE= parser(parserE); 
 
         char** tokens= getTokens(parserE); 
-      
-        if (tokens==NULL) 
-         {
-            // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
-              freeParser(parserE); break;
+        
+        if (tokens==NULL){
+        // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
+        freeParser(parserE); break;
 
-         }
+        }
     
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
@@ -126,12 +125,12 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
             //  Inserir os Géneros das Liked Songs no array usersByAge
             UData->usersByAge= insertGeneros(UData->usersByAge,idade,liked_songs_id,numSongs, musicData);
-       
+        
             // Criar o User e inseri-lo na Hash Table
-             User* user= newUser(tokens);
+            User* user= newUser(tokens);
 
-             insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
-             freeArray(liked_songs_id);
+            insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
+            freeArray(liked_songs_id);
 
         }
         free(linhaE);
@@ -218,10 +217,10 @@ char* getUBAGenero(UsersData * userController,int idade,int i) {
 int getUBANSongs(UsersData* userController, int idade, int j)
 {
 
-      Age* usersByAge= userController->usersByAge;
-      int Nsongs=getUBANumberSongs(usersByAge,idade, j);
+    Age* usersByAge= userController->usersByAge;
+    int Nsongs=getUBANumberSongs(usersByAge,idade, j);
 
-      return Nsongs;
+    return Nsongs;
 
 }
 
@@ -229,8 +228,8 @@ int getUBANSongs(UsersData* userController, int idade, int j)
 /// Procura o número de géneros no array usersByAge de uma dada idade 
 int getUBANGeneros(UsersData * userController,int idade)
 {
-      Age* usersByAge= userController->usersByAge;
-      int nGeneros= getNGeneros(usersByAge, idade);
+    Age* usersByAge= userController->usersByAge;
+    int nGeneros= getNGeneros(usersByAge, idade);
 
-      return nGeneros;
+    return nGeneros;
 }

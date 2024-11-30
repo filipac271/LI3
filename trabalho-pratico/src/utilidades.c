@@ -372,3 +372,68 @@ int transformaIds (char* idString){
     if (idString[0] == '\"')free(id); // Libera a memória da cópia
     return idINT;
 }
+
+
+
+
+
+
+//FUNCOES PARA O HISTORICO
+
+// aaaa/mm/dd hh:mm:ss 
+void pega_data(char* datetime, char* data) {
+    memcpy(data, datetime, 10);
+    data[10] = '\0'; // Adiciona o terminador nulo
+}
+
+int calcular_dia_da_semana(int ano, int mes, int dia) {
+    if (mes < 3) {
+        mes += 12;
+        ano -= 1;
+    }
+    int k = ano % 100;
+    int j = ano / 100;
+    int dia_da_semana = (dia + 13 * (mes + 1) / 5 + k + k / 4 + j / 4 - 2 * j) % 7;
+    return (dia_da_semana + 5) % 7 + 1; // Ajusta para 1 (segunda-feira) a 7 (domingo)
+
+}
+
+void ajustar_data(int* ano, int* mes, int* dia) {
+    while (*dia <= 0) { // Caso o dia seja <= 0, ajusta para o mês anterior
+        *mes -= 1;
+        if (*mes <= 0) { // Se o mês for <= 0, ajusta para o ano anterior
+            *mes = 12;
+            *ano -= 1;
+        }
+        *dia += 31; // Supondo que todos os meses têm 31 dias
+    }
+    while (*dia > 31) { // Caso o dia ultrapasse 31, ajusta para o próximo mês
+        *dia -= 31;
+        *mes += 1;
+        if (*mes > 12) { // Se o mês ultrapassar 12, ajusta para o próximo ano
+            *mes = 1;
+            *ano += 1;
+        }
+    }
+}
+
+char* calcular_domingo_anterior(char* data) {
+    int ano, mes, dia;
+    sscanf(data, "%d/%d/%d", &ano, &mes, &dia);
+
+    int dia_da_semana = calcular_dia_da_semana(ano, mes, dia);
+   // printf("O DIA DA SEMANA É: %d\n", dia_da_semana);
+    int dias_desde_domingo = dia_da_semana % 7;
+    int domingo_dia = dia - dias_desde_domingo;
+
+    ajustar_data(&ano, &mes, &domingo_dia);
+
+    char* resultado = malloc(11 * sizeof(char));
+    if (!resultado) {
+        fprintf(stderr, "Erro ao alocar memória.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    sprintf(resultado, "%04d/%02d/%02d", ano, mes, domingo_dia);
+    return resultado;
+}
