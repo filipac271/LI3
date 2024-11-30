@@ -76,11 +76,14 @@ ArtistsData* artistFeed(char* diretoria) {
     
         char** tokens = getTokens(parserE);
 
+
         if (tokens==NULL) {
 
              // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
-            freeParser(parserE); break;
-        }
+
+              freeParser(parserE); break;
+         }
+
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
         int isValid = validaArtista(tokens[4],tokens[6],linhaE, Erros);

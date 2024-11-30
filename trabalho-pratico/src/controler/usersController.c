@@ -127,10 +127,12 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
             UData->usersByAge= insertGeneros(UData->usersByAge,idade,liked_songs_id,numSongs, musicData);
         
             // Criar o User e inseri-lo na Hash Table
-            User* user= newUser(tokens);
 
-            insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
-            freeArray(liked_songs_id);
+             User* user= newUser(tokens);
+            
+             insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
+             freeArray(liked_songs_id);
+
 
         }
         free(linhaE);

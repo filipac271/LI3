@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include "Entitys/musics.h"
 #include "controler/artistsController.h"
+#include "controler/albumsController.h"
 
 typedef struct musicData MusicData;
 
-MusicData* musicsFeed(char* diretoria,ArtistsData* artistsData);
+MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* albumData);
 
 Music* lookup_musica(MusicData* controller, int music_id);
 
