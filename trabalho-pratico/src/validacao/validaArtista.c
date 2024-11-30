@@ -14,8 +14,11 @@ int validaArtista (char* grupo, char* type, char* linha,Output* erros){
     int typeCorreto = 1;
    
     toLowerCase(type);
-    if (!(strcmp(type,"\"individual\"") == 0  || strcmp(type,"\"group\"") == 0 ))
-    {
+    if (!((strcmp(type,"\"individual\"") == 0)  || (strcmp(type,"\"group\"") == 0) ))
+    {   
+        // sleep(3);
+        // printf("papkdsa%s\n",type);
+
         typeCorreto = 0;
     }
 

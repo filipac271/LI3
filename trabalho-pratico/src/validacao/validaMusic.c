@@ -37,11 +37,13 @@ int validaMusic(char* duracaoAspas, char* music_artists,ArtistsData* artistsCont
       }
 }
 
-  if(lookup_album(albumController,transformaIds(albumId)) == NULL)existeAlbum = 0;
-
+  if(lookup_album(albumController,transformaIds(albumId)) == NULL){
+    existeAlbum = 0;
+  }
 
   if((d & pertence & tembarra & existeAlbum)==0)
   {
+
     outputErros(Erros,linha);
     
   }

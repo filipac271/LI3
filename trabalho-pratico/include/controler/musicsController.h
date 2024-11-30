@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "Entitys/musics.h"
 #include "controler/artistsController.h"
+#include "controler/albumsController.h"
 
 typedef struct musicData MusicData;
 

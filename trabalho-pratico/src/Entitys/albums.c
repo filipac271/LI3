@@ -50,6 +50,7 @@ Album* createAlbum(char** tokens){
 void freeAlbum (Album* album){
     free(album->title);
     free(album->artistsIds);
+    free(album);
 }
 
 

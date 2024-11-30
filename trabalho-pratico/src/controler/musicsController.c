@@ -101,6 +101,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
 
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
+        
         int isValid = validaMusic(tokens[4],tokens[2],artistsData, Erros,linhaE, albumData,tokens[3]);
 
         // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
