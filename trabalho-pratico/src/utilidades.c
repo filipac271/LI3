@@ -385,7 +385,7 @@ void toLowerCase(char *str) {
         *str = tolower((unsigned char)*str); // Converte o caractere para minúscula
         str++;
     }
-
+}
 
 
 

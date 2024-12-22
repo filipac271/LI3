@@ -19,7 +19,6 @@
 
 
 struct musicData {
-
   GHashTable* musicsTable;
 
 };

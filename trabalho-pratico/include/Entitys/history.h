@@ -20,6 +20,8 @@ void new_or_add(Domingo* domingo, char**tokens, MusicData* musicController);
 
 void freeDomingo(Domingo* domingo);
 
+void freeUmArtista (UmArtista* artista);
+
 
 void print_artisthistory (UmArtista* artista);
 

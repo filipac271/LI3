@@ -64,63 +64,6 @@ struct domingo{
   GHashTable* artistahistory;
 };
 
-void print_artisthistory (UmArtista* artista) {
-    if (artista) {
-        printf("ARTIST_ID: %d\n", artista->artist_id);
-        printf("TOTAL_SEGUNDOS: %d\n", artista->totalsemanalsegundos);
-    } else {
-        fprintf(stderr, "Erro: ESTE UMARTISTA NAO EXISTE\n");
-    }
-}
-
-
-void printf_domingo (Domingo* domingo) {
-    if (domingo) {
-        if (domingo->data) {
-            printf("DATA: %s\n", domingo->data);
-        } else {
-            fprintf(stderr, "Erro: DATA do Domingo é NULL\n");
-        }
-    } else {
-        fprintf(stderr, "Erro: ESTA DOMINGO NAO EXISTE\n");
-    }
-}
-
-
-void print_artisthistory_entry(gpointer key, gpointer value, gpointer user_data) {
-    if (key == NULL || value == NULL) {
-        fprintf(stderr, "Erro: Chave ou valor nulo encontrado.\n");
-        return;
-    }
-
-    (void)user_data; // Ignora user_data, se não for usado
-
-    printf("Processando artista com chave: %p\n", key); // Log da chave
-    UmArtista* artista = (UmArtista*)value;
-
-    print_artisthistory(artista);
-}
-
-
-void print_semana_completa(Domingo* domingo) {
-    if (domingo == NULL) {
-        fprintf(stderr, "Erro: Domingo é NULL.\n");
-        return;
-    }
-
-    if (get_artisthistorido_dedomingo(domingo)== NULL) {
-        fprintf(stderr, "Erro: Hash Table artistahistory é NULL.\n");
-        return;
-    }
-
-
-    printf("----- Hash Table DOMINGO da semana %s -----\n", domingo->data);
-
-    g_hash_table_foreach(get_artisthistorido_dedomingo(domingo), print_artisthistory_entry, NULL);
-
-    printf("----- Fim da Hash Table DOMINGO da semana %s -----\n", domingo->data);
-}
-
 
 
 
@@ -231,27 +174,16 @@ UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
 
 // Função para adicionar um artista ao Domingo
 void new_or_add(Domingo* domingo, char** tokens, MusicData* musicController) {
-  //  printf("ENTROUUUUUUUUUUU!\n");
-    //printf("O TOKEN AQUI NO NEW OR ADD é %s\n", tokens[2]);
+  //transforma o char music_id em int para conseguir encontrar a estrutura Music 
     int music_id = transformaIds(tokens[2]);
-   // printf("O ID DA MUSICA É %d\n", music_id);
 
     Music* musicadoartista = lookup_musica(musicController, music_id);
-    if (!musicadoartista) {
-        fprintf(stderr, "Erro: Música com ID %d não encontrada.\n", music_id);
-        return;
-    }
-
-   // print_musicas(musicadoartista);
 
     int numartistas = get_numArtistsId(musicadoartista);
-    //printf("Número de artistas: %d\n", numartistas);
 
+    //array de artistas que constituem essa musica
     int* arrayartistas = getArtistIDfromMuiscID(musicadoartista);
-    if (!arrayartistas) {
-        fprintf(stderr, "Erro: arrayartistas é NULL.\n");
-        return;
-    }
+    
 
     GHashTable* artistahistory = domingo->artistahistory;
     if (!artistahistory) {
@@ -264,24 +196,23 @@ void new_or_add(Domingo* domingo, char** tokens, MusicData* musicController) {
 
     int segundos = duration_to_seconds(segundosparaadicionar);
 
-    //printf("Segundos para adicionar: %d\n", segundos);
-
+    //É PRECISO ALTERAR PARA QUANDO O NUMARTISTA É 0 ISTO É QUANDO NAO É UM GRUPO
+    if(numartistas > 0){
     for (int i = 0; i < numartistas; i++) {
-       // printf("Iteração %d de %d\n", i + 1, numartistas);
 
         int artist_id = arrayartistas[i];
-       // printf("Artista ID: %d\n", artist_id);
+
         UmArtista* artist_data = lookup_artista_historico(artistahistory, artist_id);
-       // printf("DEPOIS!\n");
+
         if (!artist_data) {
-          //  printf("Artista com ID %d não encontrado. Criando novo.\n", artist_id);
+
             UmArtista* novo_artista = new_umArtista(artist_id, segundos);
             inserir_umartista_na_semana(artistahistory, novo_artista, artist_id);
         } else {
-          //  printf("Atualizando artista com ID %d.\n", artist_id);
+
             artist_data->totalsemanalsegundos += segundos;
         }
-          //  print_artisthistory(artist_data);
+    }
 
     }
     free(arrayartistas);
@@ -323,3 +254,65 @@ GHashTable* getArtistHistory(Domingo* domingo){
 //   }
 //   //free(music_id);
 // }
+
+
+
+
+
+//FUNCOES PRINTS QUE NAO FUNCIONAM
+void print_artisthistory (UmArtista* artista) {
+    if (artista) {
+        printf("ARTIST_ID: %d\n", artista->artist_id);
+        printf("TOTAL_SEGUNDOS: %d\n", artista->totalsemanalsegundos);
+    } else {
+        fprintf(stderr, "Erro: ESTE UMARTISTA NAO EXISTE\n");
+    }
+}
+
+
+void printf_domingo (Domingo* domingo) {
+    if (domingo) {
+        if (domingo->data) {
+            printf("DATA: %s\n", domingo->data);
+        } else {
+            fprintf(stderr, "Erro: DATA do Domingo é NULL\n");
+        }
+    } else {
+        fprintf(stderr, "Erro: ESTA DOMINGO NAO EXISTE\n");
+    }
+}
+
+
+void print_artisthistory_entry(gpointer key, gpointer value, gpointer user_data) {
+    if (key == NULL || value == NULL) {
+        fprintf(stderr, "Erro: Chave ou valor nulo encontrado.\n");
+        return;
+    }
+
+    (void)user_data; // Ignora user_data, se não for usado
+
+    printf("Processando artista com chave: %p\n", key); // Log da chave
+    UmArtista* artista = (UmArtista*)value;
+
+    print_artisthistory(artista);
+}
+
+
+void print_semana_completa(Domingo* domingo) {
+    if (domingo == NULL) {
+        fprintf(stderr, "Erro: Domingo é NULL.\n");
+        return;
+    }
+
+    if (get_artisthistorido_dedomingo(domingo)== NULL) {
+        fprintf(stderr, "Erro: Hash Table artistahistory é NULL.\n");
+        return;
+    }
+
+
+    printf("----- Hash Table DOMINGO da semana %s -----\n", domingo->data);
+
+    g_hash_table_foreach(get_artisthistorido_dedomingo(domingo), print_artisthistory_entry, NULL);
+
+    printf("----- Fim da Hash Table DOMINGO da semana %s -----\n", domingo->data);
+}
