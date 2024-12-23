@@ -28,18 +28,18 @@ void queries (MainController* data, char* querieFile) {
 
         // Recupera controladores
         UsersData* UserController = getUserController(data);
-        ArtistsData* ArtistContoller = getartistController(data);
+        ArtistsData* ArtistController = getartistController(data);
 
         switch (line[0]) {
             case '1':
                 
-                querie1(UserController, line, i);
+                querie1(UserController, line, i,ArtistController);
                 
                 break;
 
             case '2':
                 
-                querie2(ArtistContoller, line, i);
+                querie2(ArtistController, line, i);
 
                 break;
 

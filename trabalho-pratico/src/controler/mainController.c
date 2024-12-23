@@ -36,13 +36,14 @@ MainController* mainFeed(char* diretoria){
 
     mainData->artistsController =  artistFeed(diretoria);
 
-    mainData->albumsController = albumsFeed(diretoria);
+    mainData->albumsController = albumsFeed(diretoria,mainData->artistsController);
 
     mainData->musicsController = musicsFeed(diretoria,mainData->artistsController,mainData->albumsController);
 
     mainData->usersController = usersFeed(diretoria,mainData->musicsController);
 
-    mainData ->historyController = historyFeed(diretoria, mainData->musicsController);
+    mainData ->historyController = historyFeed(diretoria, mainData->musicsController, mainData->artistsController);
+
 
 
     return mainData;

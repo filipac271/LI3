@@ -21,4 +21,8 @@ void destroyTableArtist(ArtistsData* ArtistData);
 
 void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country);
 
+void put_stream_into_Artist (int numartistas, int* arrayArtistas, ArtistsData* controller);
+
+void atualizaAlbuns (char* arrayAlbuns, ArtistsData* controller);
+
 #endif

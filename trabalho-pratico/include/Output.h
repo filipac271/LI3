@@ -50,7 +50,7 @@ void outputErros(Output* erros, char* linha);
  * @param idade A idade do utilizador.
  * @param userCountry O país do utilizador.
  */
-void output1(Output* output1, char* userEmail, char* userNome, char* userApelido,int idade, char* userCountry,char c);
+void output1(Output* output1, void* arg1, void* arg2, void* arg3,void* arg4, void* arg5, char c,int isArtist);
 
 /**
  * @brief Escreve os dados de uma música num ficheiro de saída.

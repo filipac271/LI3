@@ -18,5 +18,7 @@ void print_all_musics(MusicData* musica);
 
 void destroyMusicTable(MusicData* data);
 
+void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* artistcontroller);
+
 
 #endif

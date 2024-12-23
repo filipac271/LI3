@@ -11,12 +11,14 @@ struct artists
     int id; 
     char* name;
     //char* descriçao;
-    float ganho_por_stream;
+    double ganho_por_stream;
     int* grupo;
     char* country;
     char* type;
     int numMembrosGrupo;
     int total_discography;
+    double profit;
+    int albunsIndividuais;
 };
 
 
@@ -33,7 +35,7 @@ Artist* create_artist(char** tokens) {
     //O remove quotes já manda uma cópia
 
     char* ganhos = remove_quotes(tokens[3]);
-    float clean_ganhos = atof(ganhos);
+    double clean_ganhos = atof(ganhos);
 
     char* grupo = tokens[4];
     int numMembros = calculate_num_members(grupo); 
@@ -54,6 +56,8 @@ Artist* create_artist(char** tokens) {
     new_artist->type = remove_quotes(tokens[6]);
     new_artist->numMembrosGrupo=numMembros;
     new_artist->total_discography = 0;
+    new_artist->albunsIndividuais =0;
+    new_artist->profit = 0;
     free(ganhos);
     freeArray(grupos_id);
 
@@ -114,13 +118,24 @@ char* getArtistName(Artist* artista){
 //     return strdup(artista->descriçao);
 // }
 
-float getArtistGanho(Artist* artista){
+double getArtistGanho(Artist* artista){
     return artista->ganho_por_stream;
 }
 
-// char** getArtistGrupo(Artist* artista){
-//     return artista->grupo;
-// }
+int* getArtistGrupo(Artist* artista){
+    int num_artists = getArtistNumMembros(artista);
+
+    int* novoarray = malloc(num_artists * sizeof(int));
+
+  if(num_artists > 0){
+    int i;
+    for(i = 0; i < num_artists; i++){
+      novoarray[i] = artista->grupo[i];
+    }
+  }
+
+  return novoarray;
+}
 
 char* getArtistCountry(Artist* artista){
     return  strdup(artista->country);
@@ -140,7 +155,27 @@ int getArtistDiscography(Artist* artista){
     return artista->total_discography;
 }
 
+double getArtistProfits (Artist* artista){
+    return artista->profit;
+}
+
+int getArtistAlbunsIndividuais (Artist* artista){
+    return artista->albunsIndividuais;
+}
+
 void setArtistDiscography(Artist* artista, int discography){
     
     artista->total_discography += discography;
+}
+
+void setStreams (Artist* artista,double stream){
+
+    artista->profit += stream;
+
+
+}
+
+void setAlbuns (Artist* artista){
+    artista->albunsIndividuais += 1;
+
 }

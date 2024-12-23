@@ -59,7 +59,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
         //Pega controladores
         UsersData* UserController = getUserController(data);
-        ArtistsData* ArtistContoller = getartistController(data);
+        ArtistsData* ArtistController = getartistController(data);
 
         switch (line[0]) {
             case '1':
@@ -67,7 +67,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
                     clock_gettime(CLOCK_REALTIME, &start);
 
-                    querie1(UserController, line , i);
+                    querie1(UserController, line , i,ArtistController);
                     
                     clock_gettime(CLOCK_REALTIME, &end);
 
@@ -81,7 +81,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
                 clock_gettime(CLOCK_REALTIME, &start);
                 
-                querie2(ArtistContoller, line, i);
+                querie2(ArtistController, line, i);
 
                 clock_gettime(CLOCK_REALTIME, &end);
 
