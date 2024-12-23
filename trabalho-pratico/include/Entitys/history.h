@@ -40,4 +40,15 @@ GHashTable* get_artisthistorido_dedomingo (Domingo* domingo);
 void print_semana_completa (Domingo* domingo);
 
 
+char* get_history_data (Domingo* domingo);
+
+int get_usado_from_artist (UmArtista* artista);
+
+int get_id_from_Umartista (UmArtista* artista);
+
+int get_total_de_segundos_from_Umartista (UmArtista* artista);
+
+void set_usado_to_used (UmArtista* artista);
+
+
 #endif

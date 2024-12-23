@@ -80,3 +80,17 @@ void output3(Output* output3, char* genero, int num, char c)
     }
     
 }
+
+
+//Função de output da Query 4
+//name;type;count_top_10
+void output4(Output* output4, char* name, char* type, int num, char c){
+    if ( c == 'S')
+    {
+        fprintf(output4->file,"%s=%s=%d\n",name, type, num); 
+    }
+    else
+    {
+        fprintf(output4->file,"%s;%s;%d\n",name, type, num);  
+    }
+}

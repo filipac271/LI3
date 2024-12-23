@@ -57,12 +57,13 @@ tivo móvel.
 struct artistahistory{
   int artist_id;
   int totalsemanalsegundos; //passar a duration de hh:mm:ss (funcao defenida nas utilities) 
-};
+  int usado; // 1-usado; 0- por usar
+}; //UmArtista
 
 struct domingo{
   char* data ;
   GHashTable* artistahistory;
-};
+}; //Domingo
 
 
 
@@ -145,6 +146,7 @@ UmArtista* new_umArtista (int artist_id, int segundos){
           // Artista ainda não existe na tabela, crie um novo registro
   n_umart->artist_id = artist_id;
   n_umart->totalsemanalsegundos = segundos; // Inicialize o valor
+  n_umart->usado = 0;
 
   return n_umart;  
 }
@@ -161,15 +163,7 @@ void inserir_umartista_na_semana(GHashTable* artisthistory, UmArtista* novo_arti
 
 }
 
-GHashTable* get_artisthistorido_dedomingo (Domingo* domingo){
-  return domingo->artistahistory;
-}
 
-
-UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
-  return g_hash_table_lookup(Artista, &artist_id);
-
-}
 
 
 // Função para adicionar um artista ao Domingo
@@ -258,6 +252,37 @@ GHashTable* getArtistHistory(Domingo* domingo){
 
 
 
+//Getters e setters
+GHashTable* get_artisthistorido_dedomingo (Domingo* domingo){
+  return domingo->artistahistory;
+}
+
+
+UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
+  return g_hash_table_lookup(Artista, &artist_id);
+
+}
+
+char* get_history_data (Domingo* domingo){
+  return stdup(domingo->data);
+}
+
+
+int get_usado_from_artist (UmArtista* artista){
+  return artista->usado;
+}
+
+int get_id_from_Umartista (UmArtista* artista){
+  return artista->artist_id;
+}
+
+int get_total_de_segundos_from_Umartista (UmArtista* artista){
+  return artista->totalsemanalsegundos;
+}
+
+void set_usado_to_used (UmArtista* artista){
+  artista->usado = 1;
+}
 
 //FUNCOES PRINTS QUE NAO FUNCIONAM
 void print_artisthistory (UmArtista* artista) {
