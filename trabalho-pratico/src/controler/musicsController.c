@@ -1,5 +1,6 @@
 #include "controler/musicsController.h"
 #include "controler/artistsController.h"
+#include "controler/albumsController.h"
 #include "utilidades.h"
 #include "validacao/validaMusic.h"
 #include "Entitys/musics.h"
@@ -18,7 +19,6 @@
 
 
 struct musicData {
-
   GHashTable* musicsTable;
 
 };
@@ -60,7 +60,7 @@ void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica, int music_
 
 
 
-MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
+MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* albumData){
 
     MusicData* MData = malloc(sizeof(MusicData));  
 
@@ -100,14 +100,15 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData){
 
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
-        int isValid = validaMusic(tokens[3],tokens[2],artistsData, Erros,linhaE);
+        
+        int isValid = validaMusic(tokens[4],tokens[2],artistsData, Erros,linhaE, albumData,tokens[3]);
 
         // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
         if(isValid){ 
           Music* nova_musica = new_music(tokens);
 
           // Soma o tempo da música à discografia de todos os seus autores
-          inserir_discography_into_artist(artistsData,tokens[3],tokens[2]);
+          inserir_discography_into_artist(artistsData,tokens[4],tokens[2]);
 
           // Inserir os dados na hash table
           inserir_musica_na_htable(MData->musicsTable,nova_musica,transformaIds(tokens[0]));
@@ -139,6 +140,7 @@ void destroyMusicTable(MusicData* data){
 
 // Função para procurar uma música pelo id (chave da hash table)
 Music* lookup_musica(MusicData* controller, int music_id){
+ // printf("CENA %d\n", music_id);
 
   return g_hash_table_lookup(controller->musicsTable, &music_id);
 }
@@ -175,3 +177,22 @@ void print_all_musics(MusicData* musica) {
 }
 
 
+
+
+
+void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* artistcontroller){
+
+  int music_id = transformaIds(idMusica);
+  
+  Music* musicadoartista = lookup_musica(musicController, music_id);
+  
+  int numartistas = get_numArtistsId(musicadoartista);
+
+  int* arrayartistas = getArtistIDfromMuiscID(musicadoartista);
+    
+  put_stream_into_Artist(numartistas,arrayartistas,artistcontroller);
+
+  
+  free(arrayartistas);
+  
+}

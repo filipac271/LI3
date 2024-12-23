@@ -92,7 +92,8 @@ int validaEmail(char* email);
  * @param duracao String representando a duração.
  * @return 1 se válida, 0 caso contrário.
  */
-int validaDuraçao(char* duracao);
+int validaDuracao(char* duracao);
+
 
 /**
  * @brief Calcula o número de membros em um grupo.
@@ -152,5 +153,22 @@ int transformaIds(char* idString);
  * @return Número de linhas iguais.
  */
 int compararFicheirosPorLinha(char *file1, char *file2, int *ocorrenciasCorretas);
+
+
+void toLowerCase(char *str);
+
+
+//FUNCOES NAO COMENTADAS
+
+void pega_data(char* datetime, char* data);
+
+int calcular_dia_da_semana(int ano, int mes, int dia);
+
+void ajustar_data(int* ano, int* mes, int* dia);
+
+char* calcular_domingo_anterior(char* data);
+
+
+
 
 #endif // UTILIDADES_H

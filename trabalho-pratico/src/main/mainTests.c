@@ -52,13 +52,14 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
 
     int i = 0;
-
+    //Esta flag está aqui apenas para as queries 4 5 6 n serem rodadas
+    int flag = 1;
     //For loop que mede os tempos de cada querie
-    for (i = 0; line != NULL ; i++) {
+    for (i = 0; line != NULL && flag ; i++) {
 
         //Pega controladores
         UsersData* UserController = getUserController(data);
-        ArtistsData* ArtistContoller = getartistController(data);
+        ArtistsData* ArtistController = getartistController(data);
 
         switch (line[0]) {
             case '1':
@@ -66,7 +67,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
                     clock_gettime(CLOCK_REALTIME, &start);
 
-                    querie1(UserController, line , i);
+                    querie1(UserController, line , i,ArtistController);
                     
                     clock_gettime(CLOCK_REALTIME, &end);
 
@@ -80,7 +81,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
                 clock_gettime(CLOCK_REALTIME, &start);
                 
-                querie2(ArtistContoller, line, i);
+                querie2(ArtistController, line, i);
 
                 clock_gettime(CLOCK_REALTIME, &end);
 
@@ -101,6 +102,8 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
                 break;
 
             default:
+                flag = 0;
+                i -=1;
                 break;
         }
 
@@ -171,13 +174,13 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
         validLinesM = contar_linhas("resultados/musics_errors.csv");
         validLinesU = contar_linhas("resultados/users_errors.csv");
 
-            if(validLinesA == 151){
+            if(validLinesA == 1501){
                 printf(COLOR_GREEN "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
             }else{
                 printf(COLOR_RED "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
             }
 
-            if(validLinesM == 18882){
+            if(validLinesM == 15648){
                 printf(COLOR_GREEN "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
             }else{
                 printf(COLOR_RED "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);

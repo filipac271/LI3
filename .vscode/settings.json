@@ -30,7 +30,10 @@
     "queriemanager.h": "c",
     "querie3.h": "c",
     "resource.h": "c",
-    "querie2.h": "c"
+    "querie2.h": "c",
+    "albumscontroller.h": "c",
+    "compare": "c",
+    "type_traits": "c"
   }
 }
 

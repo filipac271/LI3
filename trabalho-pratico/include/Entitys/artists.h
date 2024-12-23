@@ -36,7 +36,7 @@ char* getArtistName(Artist* artista);
  * @param artista Pointer para a estrutura Artist.
  * @return Ganho financeiro do artista.
  */
-float getArtistGanho(Artist* artista);
+double getArtistGanho(Artist* artista);
 
 /**
  * @brief Obtém o país do artista.
@@ -99,5 +99,15 @@ void print_artist(Artist* artist);
  * @param artist Pointer para a estrutura Artist que será libertada.
  */
 void free_artist(Artist* artist);
+
+
+void setStreams (Artist* artista,double stream);
+
+void setAlbuns (Artist* artista);
+
+
+double getArtistProfits (Artist* artista);
+int getArtistAlbunsIndividuais (Artist* artista);
+int* getArtistGrupo(Artist* artista);
 
 #endif

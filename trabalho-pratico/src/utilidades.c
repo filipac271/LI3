@@ -196,21 +196,21 @@ int validaEmail(char* emailAspas) {
 
 
 
-int validaDuraçao (char* duracao){
-        int hh, mm, ss;
+int validaDuracao(char* duracao) {
+    int hh, mm, ss;
 
-    // Verificar se a duração tem exatamente 8 caracteres (no formato hh:mm:ss)
-    if (strlen(duracao) != 8) {
+    // Verificar se a string tem exatamente 10 caracteres ("hh:mm:ss")
+    if (strlen(duracao) != 10) {
         return 0;  // Formato inválido
     }
 
-    // Verificar se os separadores são ':'
-    if (duracao[2] != ':' || duracao[5] != ':') {
+    // Verificar se os separadores dentro das aspas são ':'
+    if (duracao[3] != ':' || duracao[6] != ':') {
         return 0;  // Separadores inválidos
     }
 
-    // Usar sscanf para extrair horas, minutos e segundos no formato esperado
-    if (sscanf(duracao, "%2d:%2d:%2d", &hh, &mm, &ss) != 3) {
+    // Usar sscanf para extrair horas, minutos e segundos ignorando as aspas
+    if (sscanf(duracao, "\"%2d:%2d:%2d\"", &hh, &mm, &ss) != 3) {
         return 0;  // Formato inválido
     }
 
@@ -231,6 +231,7 @@ int validaDuraçao (char* duracao){
 
     return 1;  // Duração válida
 }
+
 
 
 
@@ -355,7 +356,11 @@ int transformaIds (char* idString){
     char* id;
     int idINT;
 
-    if (idString[0] == '\"') {
+    //O primeiro if é para o caso de ser um id de um ALbum que tem duas letras
+    if(idString[2] == 'L' && idString[0] == '\"'){
+        id = strndup(&idString[3], strlen(idString) - 4); // Cria uma cópia sem modificar a original
+    }
+    else if (idString[0] == '\"') {
         id = strndup(&idString[2], strlen(idString) - 3); // Cria uma cópia sem modificar a original
     } else {
         //id = strndup(&idString[1], strlen(idString) - 1); // Cria uma cópia sem o primeiro caractere
@@ -370,5 +375,80 @@ int transformaIds (char* idString){
     // printf("%d\n",idINT);
     // sleep(1);
     if (idString[0] == '\"')free(id); // Libera a memória da cópia
+
     return idINT;
+}
+
+
+//Função que poem toda a funçao em lowerCase
+void toLowerCase(char *str) {
+    while (*str) { // Itera sobre cada caractere da string
+        *str = tolower((unsigned char)*str); // Converte o caractere para minúscula
+        str++;
+    }
+}
+
+
+
+
+
+//FUNCOES PARA O HISTORICO
+
+// aaaa/mm/dd hh:mm:ss 
+void pega_data(char* datetime, char* data) {
+    memcpy(data, datetime, 10);
+    data[10] = '\0'; // Adiciona o terminador nulo
+}
+
+int calcular_dia_da_semana(int ano, int mes, int dia) {
+    if (mes < 3) {
+        mes += 12;
+        ano -= 1;
+    }
+    int k = ano % 100;
+    int j = ano / 100;
+    int dia_da_semana = (dia + 13 * (mes + 1) / 5 + k + k / 4 + j / 4 - 2 * j) % 7;
+    return (dia_da_semana + 5) % 7 + 1; // Ajusta para 1 (segunda-feira) a 7 (domingo)
+
+}
+
+void ajustar_data(int* ano, int* mes, int* dia) {
+    while (*dia <= 0) { // Caso o dia seja <= 0, ajusta para o mês anterior
+        *mes -= 1;
+        if (*mes <= 0) { // Se o mês for <= 0, ajusta para o ano anterior
+            *mes = 12;
+            *ano -= 1;
+        }
+        *dia += 31; // Supondo que todos os meses têm 31 dias
+    }
+    while (*dia > 31) { // Caso o dia ultrapasse 31, ajusta para o próximo mês
+        *dia -= 31;
+        *mes += 1;
+        if (*mes > 12) { // Se o mês ultrapassar 12, ajusta para o próximo ano
+            *mes = 1;
+            *ano += 1;
+        }
+    }
+}
+
+char* calcular_domingo_anterior(char* data) {
+    int ano, mes, dia;
+    sscanf(data, "%d/%d/%d", &ano, &mes, &dia);
+
+    int dia_da_semana = calcular_dia_da_semana(ano, mes, dia);
+   // printf("O DIA DA SEMANA É: %d\n", dia_da_semana);
+    int dias_desde_domingo = dia_da_semana % 7;
+    int domingo_dia = dia - dias_desde_domingo;
+
+    ajustar_data(&ano, &mes, &domingo_dia);
+
+    char* resultado = malloc(11 * sizeof(char));
+    if (!resultado) {
+        fprintf(stderr, "Erro ao alocar memória.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    sprintf(resultado, "%04d/%02d/%02d", ano, mes, domingo_dia);
+    return resultado;
+
 }

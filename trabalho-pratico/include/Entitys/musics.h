@@ -92,4 +92,16 @@ char* get_music_genre(Music* music);
  */
 char* get_music_year(Music* music);
 
+
+
+
+//NAO COMENTADO 
+
+int get_numArtistsId (Music* music);
+
+int get_artistID_at_index(Music* song, int index);
+
+int* getArtistIDfromMuiscID(Music* music);
+
+
 #endif

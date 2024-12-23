@@ -4,6 +4,7 @@
 #include "controler/usersController.h"
 #include "controler/artistsController.h"
 #include "controler/musicsController.h"
+#include "controler/albumsController.h"
 
 
 typedef struct mainController MainController;
@@ -16,4 +17,5 @@ void print_all_Data(MainController* data);
 UsersData* getUserController(MainController* data);
 MusicData* getMusicController (MainController* data);
 ArtistsData* getartistController (MainController* data);
+AlbumsData* getalbumController (MainController* data);
 #endif
