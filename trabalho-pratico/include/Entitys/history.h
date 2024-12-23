@@ -8,6 +8,8 @@
 
 typedef struct artistahistory UmArtista;
 
+typedef struct artisthistory_garray ArrayArtistas;
+
 typedef struct domingo Domingo;
 
 Domingo* newDomingo(char* data);
@@ -22,6 +24,7 @@ void freeDomingo(Domingo* domingo);
 
 void freeUmArtista (UmArtista* artista);
 
+void print_artisthistorygarray (ArrayArtistas* artista);
 
 void print_artisthistory (UmArtista* artista);
 
@@ -33,11 +36,12 @@ GHashTable* getArtistHistory(Domingo* domingo);
 
 UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id);
 
-void destroy_history(Domingo* domingo);
 
 GHashTable* get_artisthistorido_dedomingo (Domingo* domingo);
 
 void print_semana_completa (Domingo* domingo);
+
+void passa_Domingo_para_garray(Domingo* domingo);
 
 
 char* get_history_data (Domingo* domingo);
