@@ -170,12 +170,11 @@ void put_stream_into_Artist (int numartistas, int* arrayArtistas, ArtistsData* c
 
         setStreams(artista_atual,1*ganho);
         int* grupoList = getArtistGrupo(artista_atual);
-
         int num_artists = getArtistNumMembros(artista_atual);
      
         for(int i = 0; i<num_artists; i++ ){
             Artist* artistaGrupo = g_hash_table_lookup(controller->artistsTable,&grupoList[i] );
-            if(artistaGrupo != NULL)setStreams(artistaGrupo,(1*ganho)/num_artists);
+            setStreams(artistaGrupo,(1*ganho)/num_artists);
             
         }
         free(grupoList);

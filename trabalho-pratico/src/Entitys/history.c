@@ -178,7 +178,6 @@ void new_or_add(Domingo* domingo, char** tokens, MusicData* musicController) {
     int music_id = transformaIds(tokens[2]);
 
     Music* musicadoartista = lookup_musica(musicController, music_id);
-  if(musicadoartista == NULL)return;
 
     int numartistas = get_numArtistsId(musicadoartista);
 

@@ -109,12 +109,8 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
         newDomingo_orNot(Hdata, tokens, musicData); 
         atualizaStreams(tokens[2], musicData, artistData);
         
-
     }  
-        
-
-        
-
+    
         free(linhaE);
         free(getLine(parserE));  
 

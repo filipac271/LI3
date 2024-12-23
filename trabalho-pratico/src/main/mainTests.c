@@ -174,13 +174,13 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
         validLinesM = contar_linhas("resultados/musics_errors.csv");
         validLinesU = contar_linhas("resultados/users_errors.csv");
 
-            if(validLinesA == 151){
+            if(validLinesA == 1501){
                 printf(COLOR_GREEN "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
             }else{
                 printf(COLOR_RED "\nNumero de linhas do artists_error:%d\n" COLOR_RESET,validLinesA);
             }
 
-            if(validLinesM == 18882){
+            if(validLinesM == 15648){
                 printf(COLOR_GREEN "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
             }else{
                 printf(COLOR_RED "\nNumero de linhas do musics_error:%d\n" COLOR_RESET,validLinesM);
