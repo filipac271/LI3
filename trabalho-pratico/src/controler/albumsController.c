@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Entitys/albums.h"
 #include "controler/albumsController.h"
+#include "controler/artistsController.h"
 
 #include <glib.h>
 #include <stdio.h>
@@ -48,7 +49,7 @@ void insert_albums_into_table(GHashTable* albuns_table,Album* newAlbum ,int id) 
 
 
 
-AlbumsData* albumsFeed(char* diretoria) {
+AlbumsData* albumsFeed(char* diretoria, ArtistsData* artistController) {
 
     AlbumsData* ALData = malloc(sizeof(AlbumsData)); 
     if(ALData == NULL){
@@ -83,11 +84,14 @@ AlbumsData* albumsFeed(char* diretoria) {
         Album* newAlbum = createAlbum(tokens);
         // Insere os dados na hash table
         insert_albums_into_table(ALData->albumsTable, newAlbum , transformaIds(tokens[0]));
+    
+        atualizaAlbuns(tokens[2],artistController);    
 
 
 
         free(getLineError(parserE));
         free(getLine(parserE));
+    
     }     
 
 

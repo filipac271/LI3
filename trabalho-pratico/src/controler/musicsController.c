@@ -177,3 +177,22 @@ void print_all_musics(MusicData* musica) {
 }
 
 
+
+
+
+void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* artistcontroller){
+
+  int music_id = transformaIds(idMusica);
+  
+  Music* musicadoartista = lookup_musica(musicController, music_id);
+  
+  int numartistas = get_numArtistsId(musicadoartista);
+
+  int* arrayartistas = getArtistIDfromMuiscID(musicadoartista);
+    
+  put_stream_into_Artist(numartistas,arrayartistas,artistcontroller);
+
+  
+  free(arrayartistas);
+  
+}

@@ -136,7 +136,7 @@ void inserir_discography_into_artist (ArtistsData* controller, char* music_durat
         
 
             int discography = duration_to_seconds(music_duration);          
-              Artist * artista_atual = lookup_artist(controller, music_artist_id[0]);
+            Artist * artista_atual = lookup_artist(controller, music_artist_id[0]);
             setArtistDiscography(artista_atual, discography); 
 
         }
@@ -146,6 +146,67 @@ void inserir_discography_into_artist (ArtistsData* controller, char* music_durat
     
 
 }
+
+
+
+void put_stream_into_Artist (int numartistas, int* arrayArtistas, ArtistsData* controller){
+
+ 
+  for (int i = 0; i < numartistas; i++) {
+    int artist_id = arrayArtistas[i]; 
+
+
+    Artist * artista_atual = g_hash_table_lookup(controller->artistsTable,&artist_id );
+    char* tipo = getArtistType(artista_atual);
+    
+
+    if(strcmp (tipo,"individual") == 0){
+        double ganho = getArtistGanho(artista_atual);
+
+       setStreams(artista_atual,1*ganho); 
+
+    }else if (strcmp (tipo,"group") == 0){
+        double ganho = getArtistGanho(artista_atual);
+
+        setStreams(artista_atual,1*ganho);
+        int* grupoList = getArtistGrupo(artista_atual);
+        int num_artists = getArtistNumMembros(artista_atual);
+     
+        for(int i = 0; i<num_artists; i++ ){
+            Artist* artistaGrupo = g_hash_table_lookup(controller->artistsTable,&grupoList[i] );
+            setStreams(artistaGrupo,(1*ganho)/num_artists);
+            
+        }
+        free(grupoList);
+    }
+
+    free(tipo);
+
+  }
+
+
+}
+
+void atualizaAlbuns (char* arrayAlbuns, ArtistsData* controller){
+
+int numartistas = calculate_num_members(arrayAlbuns);
+
+int* arrayArtistas = divideArray(arrayAlbuns,numartistas);
+
+for (int i = 0; i < numartistas; i++) {
+    int artist_id = arrayArtistas[i]; 
+    Artist * artista_atual = g_hash_table_lookup(controller->artistsTable,&artist_id );
+
+    if(artista_atual != NULL) setAlbuns(artista_atual);
+
+
+}
+
+free(arrayArtistas);
+
+}
+
+
 
 
 

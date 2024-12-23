@@ -92,7 +92,8 @@ int validaEmail(char* email);
  * @param duracao String representando a duração.
  * @return 1 se válida, 0 caso contrário.
  */
-int validaDuraçao(char* duracao);
+int validaDuracao(char* duracao);
+
 
 /**
  * @brief Calcula o número de membros em um grupo.

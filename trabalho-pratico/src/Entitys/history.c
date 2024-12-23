@@ -193,7 +193,6 @@ void new_or_add(Domingo* domingo, char** tokens, MusicData* musicController) {
     //É PRECISO ALTERAR PARA QUANDO O NUMARTISTA É 0 ISTO É QUANDO NAO É UM GRUPO
     if(numartistas > 0){
     for (int i = 0; i < numartistas; i++) {
-
         int artist_id = arrayartistas[i];
 
         UmArtista* artist_data = lookup_artista_historico(artistahistory, artist_id);
@@ -226,63 +225,6 @@ GHashTable* getArtistHistory(Domingo* domingo){
 
 
 
-
-//FUNCAO PARA O DIOGO, VAI FICAR EM COMENTARIO POR CAUSA DOS WARNINGS
-// void put_stream_into_Artist (char** tokens, MusicData* musicController, ArtistsData* artistcontroller){
-
-//   int music_id = transformaIds(tokens[2]));
-
-//   Music* musicadoartista = lookup_musica(musicController, music_id);
-
-//   int numartistas = get_numArtistsId(musicadoartista);
-
-//   int* arrayartistas = getArtistIDfromMuiscID(musicadoartista);
-
-//   for (int i = 0; i < numartistas; i++) {
-//     int artist_id = arrayartistas[i]; 
-
-//     Artist * artista_atual = lookup_artist(artistcontroller, artist_id);
-
-//     //artista_atual->streams +=1;
-
-//   }
-//   //free(music_id);
-// }
-
-
-
-
-//Getters e setters
-GHashTable* get_artisthistorido_dedomingo (Domingo* domingo){
-  return domingo->artistahistory;
-}
-
-
-UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
-  return g_hash_table_lookup(Artista, &artist_id);
-
-}
-
-char* get_history_data (Domingo* domingo){
-  return stdup(domingo->data);
-}
-
-
-int get_usado_from_artist (UmArtista* artista){
-  return artista->usado;
-}
-
-int get_id_from_Umartista (UmArtista* artista){
-  return artista->artist_id;
-}
-
-int get_total_de_segundos_from_Umartista (UmArtista* artista){
-  return artista->totalsemanalsegundos;
-}
-
-void set_usado_to_used (UmArtista* artista){
-  artista->usado = 1;
-}
 
 //FUNCOES PRINTS QUE NAO FUNCIONAM
 void print_artisthistory (UmArtista* artista) {

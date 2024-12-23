@@ -40,15 +40,22 @@ void outputErros(Output* erros,char* linha)
 }
 
 //Função de output da Querie 1
-void output1(Output* output1, char* userEmail, char* userNome, char* userApelido,int idade, char* userCountry, char c)
+void output1(Output* output1, void* arg1, void* arg2, void* arg3,void* arg4, void* arg5, char c,int isArtist)
 {
-    if (c == 'S') 
-    {
-        fprintf(output1->file,"%s=%s=%s=%d=%s\n",userEmail,userNome,userApelido, idade,userCountry ); 
-    }
-    else
-    {
-        fprintf(output1->file,"%s;%s;%s;%d;%s\n",userEmail,userNome,userApelido, idade,userCountry ); 
+
+     if (isArtist) {
+        if (c == 'S') {
+            fprintf(output1->file, "%s=%s=%s=%d=%.2f\n", (char*)arg1,(char*) arg2, (char*)arg3, *((int*) arg4),*((double*) arg5));
+        } else {
+            fprintf(output1->file, "%s;%s;%s;%d;%.2f\n", (char*)arg1,(char*) arg2, (char*)arg3, *((int*) arg4),*((double*) arg5));
+        }
+    } else {
+        // Output para usuário
+        if (c == 'S') {
+            fprintf(output1->file, "%s=%s=%s=%d=%s\n", (char*)arg1,(char*) arg2, (char*)arg3, *((int*) arg4),(char*) arg5);
+        } else {
+            fprintf(output1->file, "%s;%s;%s;%d;%s\n",(char*) arg1,(char*) arg2,(char*) arg3, *((int*) arg4),(char*) arg5);
+        }
     }
    
 }

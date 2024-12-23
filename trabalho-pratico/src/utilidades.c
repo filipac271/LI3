@@ -196,21 +196,21 @@ int validaEmail(char* emailAspas) {
 
 
 
-int validaDuraçao (char* duracao){
-        int hh, mm, ss;
+int validaDuracao(char* duracao) {
+    int hh, mm, ss;
 
-    // Verificar se a duração tem exatamente 8 caracteres (no formato hh:mm:ss)
-    if (strlen(duracao) != 8) {
+    // Verificar se a string tem exatamente 10 caracteres ("hh:mm:ss")
+    if (strlen(duracao) != 10) {
         return 0;  // Formato inválido
     }
 
-    // Verificar se os separadores são ':'
-    if (duracao[2] != ':' || duracao[5] != ':') {
+    // Verificar se os separadores dentro das aspas são ':'
+    if (duracao[3] != ':' || duracao[6] != ':') {
         return 0;  // Separadores inválidos
     }
 
-    // Usar sscanf para extrair horas, minutos e segundos no formato esperado
-    if (sscanf(duracao, "%2d:%2d:%2d", &hh, &mm, &ss) != 3) {
+    // Usar sscanf para extrair horas, minutos e segundos ignorando as aspas
+    if (sscanf(duracao, "\"%2d:%2d:%2d\"", &hh, &mm, &ss) != 3) {
         return 0;  // Formato inválido
     }
 
@@ -231,6 +231,7 @@ int validaDuraçao (char* duracao){
 
     return 1;  // Duração válida
 }
+
 
 
 

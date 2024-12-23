@@ -1,9 +1,10 @@
 #include "controler/usersController.h"
 #include "controler/musicsController.h"
-#include "validacao/validaUser.h"
+#include "validacao/validaHistory.h"
 #include "utilidades.h"
 #include "Entitys/users.h"
 #include "Input.h"
+#include "Output.h"
 
 
 #include <stdlib.h>
@@ -73,7 +74,7 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
 }
 
 
-HistoryData* historyFeed(char* diretoria, MusicData* musicData) {
+HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData) {
     HistoryData* Hdata = malloc(sizeof(HistoryData));
     if (!Hdata) {
         fprintf(stderr, "Erro: Alocação de memória para HistoryData falhou.\n");
@@ -103,14 +104,13 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData) {
         }
 
     char* linhaE=getLineError(parserE);
-
-    //if(isValid) {   }  
-
-    //é preciso depois acabar esta funcao porque eu nao tenho o artista atualizado
-    //deveria estar no ArtistCOntroller, mas ainda está no history.c MUDAR DEPOIS
-    //put_stream_into_Artist(tokens, musicController, artistCOntroller);
-        newDomingo_orNot(Hdata, tokens, musicData);
-
+    int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
+    if(isValid) {
+        newDomingo_orNot(Hdata, tokens, musicData); 
+        atualizaStreams(tokens[2], musicData, artistData);
+        
+    }  
+    
         free(linhaE);
         free(getLine(parserE));  
 
