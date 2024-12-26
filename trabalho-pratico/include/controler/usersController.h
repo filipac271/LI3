@@ -9,6 +9,8 @@
 
 typedef struct usersData UsersData;
 
+
+
 UsersData* usersFeed(char* diretoria, MusicData* musicData);
 
 void print_all_users(UsersData* data);
@@ -26,5 +28,21 @@ char* getUBAGenero(UsersData * userController,int idade,int i);
 int getUBANSongs(UsersData* userController, int idade, int j);
 
 int getUBANGeneros(UsersData * userController,int idade);
+
+void atualizaPrefsUser(char* generoMusica, char* username, UsersData* userController);
+
+int** getElementosMatrizQ5(UsersData* userController);
+
+char** getLinhasMatrizQ5(UsersData* userController);
+
+char** getColunasMatrizQ5(UsersData* userController);
+
+
+int getNumLinhas(UsersData* userController);
+
+int getNumColunas(UsersData* userController);
+
+int getPosicaoUser(UsersData* userController,char* username);
+
 
 #endif

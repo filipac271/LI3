@@ -74,7 +74,7 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
 }
 
 
-HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData) {
+HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData,UsersData* usersData) {
     HistoryData* Hdata = malloc(sizeof(HistoryData));
     if (!Hdata) {
         fprintf(stderr, "Erro: Alocação de memória para HistoryData falhou.\n");
@@ -106,9 +106,11 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
     char* linhaE=getLineError(parserE);
     int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
     if(isValid) {
-        newDomingo_orNot(Hdata, tokens, musicData); 
-        atualizaStreams(tokens[2], musicData, artistData);
+        //newDomingo_orNot(Hdata, tokens, musicData); 
+         atualizaStreams(tokens[2], musicData, artistData);
         
+        char* genre = getMusicGenre(tokens[2],musicData);
+        atualizaPrefsUser(genre,tokens[1],usersData);
     }  
     
         free(linhaE);

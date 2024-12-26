@@ -20,7 +20,7 @@
 
 struct musicData {
   GHashTable* musicsTable;
-
+  GArray* generosDif;
 };
 
 
@@ -46,6 +46,12 @@ GHashTable* iniciar_hash_musica(){
 
 }
 
+GArray* iniciarDiferentesGeneros(){
+    GArray* difGenerosArray = g_array_new(TRUE, TRUE, sizeof(char*)); 
+
+    return difGenerosArray;
+}
+
 
 //Inserir música na Hash Table
 void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica, int music_id) {
@@ -56,6 +62,26 @@ void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica, int music_
 }
 
 
+void isNewGenre(char* genero, GArray* arrayDifGeneros) {
+    char* generoSemAspas = remove_quotes(genero); // Remove as aspas do gênero
+    int genreFound = 0;
+
+    // Percorrer o GArray de gêneros para verificar se o gênero já existe
+    for (guint i = 0; i < arrayDifGeneros->len; i++) {
+        char* existingGenero = g_array_index(arrayDifGeneros, char*, i);
+        if (strcmp(existingGenero, generoSemAspas) == 0) {
+            genreFound = 1; // Gênero já existe
+            break;
+        }
+    }
+
+    if (!genreFound) {
+        // Adiciona o gênero ao final do GArray
+        g_array_append_val(arrayDifGeneros, generoSemAspas); 
+    } else {
+        free(generoSemAspas); // Libera memória se o gênero já existe
+    }
+}
 
 
 
@@ -74,12 +100,13 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
     Output* Erros= iniciaOutput("resultados/musics_errors.csv");
   
     MData->musicsTable = iniciar_hash_musica();
+    MData->generosDif = iniciarDiferentesGeneros();
 
     //Inicia o Parser e abre o ficheiro "musics.csv" do dataset
     Parser* parserE= newParser(diretoria,"musics.csv");
 
     // Ler a primeira linha do ficheiro 
-    char * line= pegaLinha(parserE);
+    char* line= pegaLinha(parserE);
 
     //Enviar a linha para o ficheiro musics_erros.csv, esta não será inserida hashTable
     outputErros(Erros,line);
@@ -105,8 +132,8 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
 
         // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
         if(isValid){ 
+          isNewGenre(tokens[5],MData->generosDif);
           Music* nova_musica = new_music(tokens);
-
           // Soma o tempo da música à discografia de todos os seus autores
           inserir_discography_into_artist(artistsData,tokens[4],tokens[2]);
 
@@ -127,14 +154,21 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
 }
 
 
-void destroyMusicTable(MusicData* data){
+void destroyMusicData(MusicData* data){
 
   g_hash_table_destroy(data->musicsTable);
+  for (guint i = 0; i < data->generosDif->len; i++) {
+        free(g_array_index(data->generosDif, char*, i));  
+    }
+  g_array_free(data->generosDif, TRUE); 
   printf("Tabela das musicas destruida\n");
 
 }
 
-
+int getnumGenerosDif (MusicData* musicController){
+  int tamanho = musicController->generosDif->len;
+  return tamanho;
+}
 
 
 
@@ -188,11 +222,19 @@ void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* a
   
   int numartistas = get_numArtistsId(musicadoartista);
 
-  int* arrayartistas = getArtistIDfromMuiscID(musicadoartista);
+  int* arrayartistas = getArtistIDfromMuiscID(musicadoartista,numartistas);
     
   put_stream_into_Artist(numartistas,arrayartistas,artistcontroller);
 
   
   free(arrayartistas);
   
+}
+
+
+char* getMusicGenre(char* idMusic, MusicData* musicController){
+  Music* musica = lookup_musica(musicController,transformaIds(idMusic));
+  char* genero = get_music_genre(musica);
+
+  return genero;
 }

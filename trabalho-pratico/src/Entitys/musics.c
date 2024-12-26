@@ -142,9 +142,8 @@ int get_numArtistsId (Music* music){
 // }
 
 //É PRECISO DAR FREEEEEE
-int* getArtistIDfromMuiscID(Music* music){
+int* getArtistIDfromMuiscID(Music* music,int num_artists){
 
-  int num_artists = get_numArtistsId(music);
 
   //acho que funciona, mas caso não funcionar usar um malloc e depois dar free
     int* novoarray = malloc(num_artists * sizeof(int));
