@@ -8,9 +8,15 @@
 
 typedef struct artistahistory UmArtista;
 
-typedef struct artisthistory_garray ArrayArtistas;
-
 typedef struct domingo Domingo;
+
+
+void freeUmArtista (UmArtista* artista);
+
+void free_garray_with_data(GArray* array);
+
+void freeDomingo(Domingo* domingo);
+
 
 Domingo* newDomingo(char* data);
 
@@ -18,41 +24,43 @@ UmArtista* new_umArtista (int artist_id, int segundos);
 
 void inserir_umartista_na_semana(GHashTable* artisthistory, UmArtista* novo_artista, int artist_id);
 
-void new_or_add(Domingo* domingo, char**tokens, MusicData* musicController);
+void new_or_add(Domingo* domingo, char** tokens, MusicData* musicController);
 
-void freeDomingo(Domingo* domingo);
+void passa_Domingo_para_garray(Domingo* domingo);
 
-void freeUmArtista (UmArtista* artista);
+gint compare_seconds(gconstpointer a, gconstpointer b);
 
-void print_artisthistorygarray (ArrayArtistas* artista);
+
+
+
+
+
+
+GHashTable* get_artisthistorido_dedomingo (Domingo* domingo);
+
+UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id);
+
+GHashTable* getArtistHistory(Domingo* domingo);
+
+GArray* get_garray_from_domingo (Domingo* domingo);
+
+int get_garray_len (Domingo* domingo);
+
+int get_artist_id_from_garray (UmArtista* artista);
+
+int get_seconds_from_garray (UmArtista* artista);
+
 
 void print_artisthistory (UmArtista* artista);
+
+void print_garray(GArray* array);
 
 void printf_domingo (Domingo* domingo);
 
 void print_artisthistory_entry(gpointer key, gpointer value, gpointer user_data);
 
-GHashTable* getArtistHistory(Domingo* domingo);
+void print_semana_completa(Domingo* domingo);
 
-UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id);
-
-
-GHashTable* get_artisthistorido_dedomingo (Domingo* domingo);
-
-void print_semana_completa (Domingo* domingo);
-
-void passa_Domingo_para_garray(Domingo* domingo);
-
-
-char* get_history_data (Domingo* domingo);
-
-int get_usado_from_artist (UmArtista* artista);
-
-int get_id_from_Umartista (UmArtista* artista);
-
-int get_total_de_segundos_from_Umartista (UmArtista* artista);
-
-void set_usado_to_used (UmArtista* artista);
 
 
 #endif

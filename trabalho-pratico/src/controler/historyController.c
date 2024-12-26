@@ -7,6 +7,7 @@
 #include "Output.h"
 
 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -21,6 +22,10 @@ struct historyData{
     GHashTable* Domingo;
   //  GHashTable* Anos;
 };
+
+GHashTable* get_Domingo_from_HD (HistoryData* data){
+    return data->Domingo;
+}
 
 
 GHashTable* createHistoryTable() {
@@ -50,14 +55,18 @@ Domingo* lookup_domingo(GHashTable* domingo, char* data) {
 void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicController) {
 
     char* data = malloc(11 * sizeof(char));
-
+    //tira as horas a que a musica foi ouvida
     strncpy(data, tokens[3]+1, 10);
     data[10] = '\0'; 
 
-    char* domingo_anterior = calcular_domingo_anterior(data);
+    char* domingo_anterior = malloc(11 * sizeof(char));
+
+    //calcula o domingo dessa semana para usar como key da hash table externa
+    calcularDomingoAnterior(data, domingo_anterior);
+
+    //liberta-se a data original já que não vai ser mais usada
     free(data);
-
-
+    //verifica se já eiste uma hashtable com domingo_anterior como key
     if (g_hash_table_contains(controller->Domingo, domingo_anterior)) {
         // Se já existe, adiciona à hash table interna
         Domingo* domingo_atual = lookup_domingo(controller->Domingo, domingo_anterior);
@@ -65,29 +74,28 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
             new_or_add((domingo_atual), tokens, musicController);
         }
     } else {
-        // Cria um novo domingo
+        // se nao existir essa data então cria um novo domingo
         Domingo* n_domingo = newDomingo(domingo_anterior);
         g_hash_table_insert(controller->Domingo, strdup(domingo_anterior), n_domingo);
     }
 
-    free(domingo_anterior);  
+    free(domingo_anterior);  //liberta a data
 }
 
 
 //Basicamente a ideia desta função é passar todas as hashtables para garrays de 10 já ordenados e apagar a hashtable 
-void passa_hastable_para_garray (GHashTable* domingo){
-   // printf("AQUI!\n");
+void passa_hastable_para_garray (HistoryData* data){
+
     GHashTableIter iter;
     gpointer key, value;
-      // Itera sobre a GHashTable e transfere os dados para o GArray
-     // printf("APoato\n");
-    g_hash_table_iter_init(&iter, domingo);
-  //  printf("Chegou aqui!\n");
-    while (g_hash_table_iter_next(&iter, &key, &value)){
-     //   printf("Entrou no while\n");
 
-        GHashTable* domingo_atual = (Domingo*)value;
-       // printf("Aposto que o erro esta aqui!\n");
+    // Itera sobre a GHashTable e transfere os dados para o GArray
+    g_hash_table_iter_init(&iter, data->Domingo);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)){
+
+        GHashTable* domingo_atual = value;
+
         passa_Domingo_para_garray(domingo_atual);
     } 
 }
@@ -130,14 +138,15 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
         atualizaStreams(tokens[2], musicData, artistData);
         
     }  
-    
+
         free(linhaE);
         free(getLine(parserE));  
 
     }
     freeOutput(Erros);
-    printf("HISTORYCONTROLER\n");
-    passa_hastable_para_garray(Hdata->Domingo);
+
+    passa_hastable_para_garray(Hdata);
+
     return Hdata;
 }
 
