@@ -150,7 +150,6 @@ int getArtistNumMembros(Artist* artista){
 }
 
 
-//Adicionado ao .h
 int getArtistDiscography(Artist* artista){
     return artista->total_discography;
 }

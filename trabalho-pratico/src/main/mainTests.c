@@ -5,6 +5,7 @@
 #include "querie/querie1.h"
 #include "querie/querie2.h"
 #include "querie/querie3.h"
+#include "querie/query5.h"
 #include "utilidades.h"
 
 
@@ -35,10 +36,12 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     float timeQ1 = 0;
     float timeQ2 = 0;
     float timeQ3 = 0;
+    float timeQ5 = 0;
 
     int q1 = 0;
     int q2 = 0;
     int q3 = 0;
+    int q5 = 0;
 
 
     Parser* parserT = newParser(queriesFile,"");
@@ -50,6 +53,13 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     char* line = NULL;  
     line = pegaLinha(parserT);
 
+    //Pega controladores
+    UsersData* UserController = getUserController(data);
+    ArtistsData* ArtistController = getartistController(data);
+    
+    int** elementosMatriz = getElementosMatrizQ5(UserController);
+    char** idsUsers = getLinhasMatrizQ5(UserController);
+    char** nomesGeneros = getColunasMatrizQ5(UserController);
 
     int i = 0;
     //Esta flag está aqui apenas para as queries 4 5 6 n serem rodadas
@@ -57,9 +67,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     //For loop que mede os tempos de cada querie
     for (i = 0; line != NULL && flag ; i++) {
 
-        //Pega controladores
-        UsersData* UserController = getUserController(data);
-        ArtistsData* ArtistController = getartistController(data);
+
 
         switch (line[0]) {
             case '1':
@@ -101,9 +109,20 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
                 q3++;
                 break;
 
+            case '5':
+                clock_gettime(CLOCK_REALTIME, &start);
+
+                query5(line,i,UserController,elementosMatriz,idsUsers,nomesGeneros);
+                clock_gettime(CLOCK_REALTIME, &end);
+
+                //Tempo unico desta chamada da querie3
+                timeQ5 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
+                q5++;
+                break;
+
             default:
-                flag = 0;
-                i -=1;
+                // flag = 0;
+                // i -=1;
                 break;
         }
 
@@ -112,7 +131,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
     }
 
-
+    freeQ5Matrizes(elementosMatriz,idsUsers,nomesGeneros,UserController);
     freeParser(parserT);
 
 
@@ -158,12 +177,15 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     printf("\nTempo médio da querie 1: %.6f ms\n",timeQ1/q1 * 1e3 );
     printf("Tempo médio da querie 2: %.6f ms\n",timeQ2/q2 * 1e3 );
     printf("Tempo médio da querie 3: %.6f ms\n",timeQ3/q3 * 1e3 );
+    printf("Tempo médio da querie 5: %.6f ms\n",timeQ5/q5 * 1e3 );
     printf("\nA Querie 1 demorou na totalidade: %.6fms\n",timeQ1* 1e3);
     printf("A Querie 2 demorou na totalidade: %.6fms\n",timeQ2* 1e3);
     printf("A Querie 3 demorou na totalidade: %.6fms\n",timeQ3* 1e3);
+    printf("A Querie 5 demorou na totalidade: %.6fms\n",timeQ5* 1e3);
     printf("\nForam executadas %d queries 1\n",q1);
     printf("Foram executadas %d queries 2\n",q2);
     printf("Foram executadas %d queries 3\n",q3);
+    printf("Foram executadas %d queries 5\n",q5);
 
     int validLinesA = 1;
     int validLinesM = 1;
@@ -218,7 +240,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     
     
 
-    if (correctLine == (q1 + q2 + q3)) {
+    if (correctLine == (q1 + q2 + q3 + q5)) {
         printf(COLOR_GREEN "\nNão houve erros em nenhuma querie\n\n" COLOR_RESET);
     } else {
         printf(COLOR_RED "\nHouve erros em uma ou mais queries\n\n" COLOR_RESET);

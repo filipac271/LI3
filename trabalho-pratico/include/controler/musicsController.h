@@ -16,9 +16,11 @@ void print_music_entry (gpointer key, gpointer value, gpointer user_data);
 
 void print_all_musics(MusicData* musica);
 
-void destroyMusicTable(MusicData* data);
+void destroyMusicData(MusicData* data);
+
+int getnumGenerosDif (MusicData* musicController);
 
 void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* artistcontroller);
 
-
+char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type);
 #endif

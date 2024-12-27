@@ -107,6 +107,35 @@ int calculate_num_members(char* grupo) {
 
 
 
+void* resize(void* array, int oldSize, int newSize, size_t elementSize, char type) {
+    //ElementSize vai ser tipo sizeof(char*) ou sizeof(int*) 
+
+    void* newArray = realloc(array, newSize * elementSize);
+
+
+    if (type == 'c') { 
+        char** stringArray = (char**)newArray;
+
+        for (int i = oldSize; i < newSize; i++) {
+            stringArray[i] = NULL;
+        }
+
+    } else if (type == 'i') { 
+        int** intPointerArray = (int**)newArray;
+
+        for (int i = oldSize; i < newSize; i++) {
+            intPointerArray[i] = NULL;  // Inicializa novos ponteiros de int* como NULL
+        }
+
+    } else {
+        printf("Tipo inválido para inicialização\n");
+        free(newArray);
+    }
+
+    return newArray;
+}
+
+
 
 int validaData(char* date) {
     int year, month, day;
@@ -312,17 +341,20 @@ int* divideArray(char* inputArray, int numElementos) {
 
 
 
-
-// Função para comparar linha a linha dois arquivos e contar ocorrências corretas
-int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas) {
+int compararFicheirosPorLinha(char *file1, char *file2, int *ocorrenciasCorretas) {
     FILE *f1 = fopen(file1, "r");
     FILE *f2 = fopen(file2, "r");
 
-    if (f1 == NULL || f2 == NULL) {
-        printf("Erro ao abrir um dos arquivos para comparação%s",file2);
-        return -1;  // Erro ao abrir arquivos
+    if (f1 == NULL) {
+        printf("Erro ao abrir o arquivo %s para comparação\n", file1);
+        if (f2 != NULL) fclose(f2); // Fecha f2 se foi aberto
+        return -1;  // Erro ao abrir f1
     }
-
+    if (f2 == NULL) {
+        printf("Erro ao abrir o arquivo %s para comparação\n", file2);
+        fclose(f1);  // Fecha f1 se foi aberto
+        return -1;  // Erro ao abrir f2
+    }
 
     char linha1[1024], linha2[1024];
     int linhaNumero = 1;
@@ -332,7 +364,6 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
         // Remover quebra de linha para evitar diferenças acidentais
         linha1[strcspn(linha1, "\n")] = '\0';
         linha2[strcspn(linha2, "\n")] = '\0';
-
 
         if (strcmp(linha1, linha2) == 0) {            
             (*ocorrenciasCorretas)++;  // Incrementa ocorrências corretas
@@ -344,12 +375,12 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
         }
         linhaNumero++;
     }
-    
 
     fclose(f1);
     fclose(f2);
     return 1;  // Arquivos são iguais
 }
+
 
 //Funciona apenas se a string já vier sem aspas o que é o caso dos arrays mas não dos ids individuais
 int transformaIds (char* idString){

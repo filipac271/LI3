@@ -42,7 +42,7 @@ MainController* mainFeed(char* diretoria){
 
     mainData->usersController = usersFeed(diretoria,mainData->musicsController);
 
-    mainData ->historyController = historyFeed(diretoria, mainData->musicsController, mainData->artistsController);
+    mainData ->historyController = historyFeed(diretoria, mainData->musicsController, mainData->artistsController,mainData->usersController);
 
 
 
@@ -66,7 +66,7 @@ void print_all_Data(MainController* data){
 void destroyData(MainController* data){
     destroyTableArtist(data->artistsController);
     destroyTableAlbum(data->albumsController);
-    destroyMusicTable(data->musicsController);
+    destroyMusicData(data->musicsController);
     destroyUsersData(data->usersController);
     destroyHistoryData(data->historyController);
     free(data->usersController);

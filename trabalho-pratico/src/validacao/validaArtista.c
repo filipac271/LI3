@@ -8,24 +8,20 @@
 
 int validaArtista (char* grupo, char* type, char* linha,Output* erros){
 
-    int terGrupo = 1;
-    int tembarra = 1;
-    int typeCorreto = 1;
    
     toLowerCase(type);
     if (!((strcmp(type,"\"individual\"") == 0)  || (strcmp(type,"\"group\"") == 0) ))
     {   
-        // sleep(3);
-        // printf("papkdsa%s\n",type);
-
-        typeCorreto = 0;
+        outputErros(erros,linha);
+        return 0;
     }
 
 
     if(strcmp(type,"\"individual\"") == 0){
-        if(!(strcmp(grupo,"\"[]\"") == 0)){
-                      
-           terGrupo = 0;
+        if(!(strcmp(grupo,"\"[]\"") == 0))
+        {
+            outputErros(erros,linha);
+            return 0;
         } 
     }
 
@@ -33,10 +29,12 @@ int validaArtista (char* grupo, char* type, char* linha,Output* erros){
     
 
     int tamanho = strlen(grupo);   
-    if (grupo[1] != '[' || grupo[tamanho-2] != ']'){tembarra = 0;}
+    if (grupo[1] != '[' || grupo[tamanho-2] != ']'){
+        outputErros(erros,linha);
+        return 0;
+    }
 
 
-    if(!(terGrupo & tembarra & typeCorreto)) outputErros(erros,linha);
 
-    return (terGrupo & tembarra & typeCorreto);
+    return 1;
 }
