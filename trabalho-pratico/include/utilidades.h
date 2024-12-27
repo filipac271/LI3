@@ -137,10 +137,10 @@ int* divideGroup(char* group, int numMembros);
 int* divideArray(char* arrayString, int numElements);
 
 /**
- * @brief Transforma uma string de IDs em uma lista de inteiros.
+ * @brief Transforma um Id em String em um Id em Inteiro.
  * 
- * @param idString String contendo os IDs separados por delimitadores.
- * @return Número de IDs processados.
+ * @param idString Id em string.
+ * @return Id em inteiro.
  */
 int transformaIds(char* idString);
 
