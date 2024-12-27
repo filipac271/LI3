@@ -53,3 +53,5 @@ dkms.conf
 
 # Ignore CSV files
 *.csv
+
+!recomendador-linux-x86_64.o
