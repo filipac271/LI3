@@ -74,7 +74,29 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
 }
 
 
+
+//Basicamente a ideia desta função é passar todas as hashtables para garrays de 10 já ordenados e apagar a hashtable 
+void passa_hastable_para_garray (GHashTable* domingo){
+   // printf("AQUI!\n");
+    GHashTableIter iter;
+    gpointer key, value;
+      // Itera sobre a GHashTable e transfere os dados para o GArray
+     // printf("APoato\n");
+    g_hash_table_iter_init(&iter, domingo);
+  //  printf("Chegou aqui!\n");
+    while (g_hash_table_iter_next(&iter, &key, &value)){
+     //   printf("Entrou no while\n");
+
+        GHashTable* domingo_atual = (Domingo*)value;
+       // printf("Aposto que o erro esta aqui!\n");
+        passa_Domingo_para_garray(domingo_atual);
+    } 
+}
+
+
+
 HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData,UsersData* usersData) {
+
     HistoryData* Hdata = malloc(sizeof(HistoryData));
     if (!Hdata) {
         fprintf(stderr, "Erro: Alocação de memória para HistoryData falhou.\n");
@@ -118,8 +140,8 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
 
     }
     freeOutput(Erros);
-
-
+    printf("HISTORYCONTROLER\n");
+    passa_hastable_para_garray(Hdata->Domingo);
     return Hdata;
 }
 

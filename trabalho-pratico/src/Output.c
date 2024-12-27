@@ -96,5 +96,17 @@ void output5(Output* output5, char** usernames,int numrecomendacoes)
         {
             fprintf(output5->file,"%s\n",usernames[i]); 
         }
+}
 
+//Função de output da Query 4
+//name;type;count_top_10
+void output4(Output* output4, char* name, char* type, int num, char c){
+    if ( c == 'S')
+    {
+        fprintf(output4->file,"%s=%s=%d\n",name, type, num); 
+    }
+    else
+    {
+        fprintf(output4->file,"%s;%s;%d\n",name, type, num);  
+    }
 }

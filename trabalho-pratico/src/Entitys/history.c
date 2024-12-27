@@ -59,9 +59,16 @@ struct artistahistory{
   int totalsemanalsegundos; //passar a duration de hh:mm:ss (funcao defenida nas utilities) 
 };
 
+struct artisthistory_garray{
+  int artist_id;
+  int totalsemanalsegundos; //passar a duration de hh:mm:ss (funcao defenida nas utilities) 
+};
+
+
 struct domingo{
   char* data ;
-  GHashTable* artistahistory;
+  GHashTable* artistahistory; //mudar para garray
+  GArray* artistahistory_garray;
 };
 
 
@@ -74,36 +81,40 @@ void freeUmArtista (UmArtista* artista){
   free(artista);
 }
 
+// Função para liberar a memória de cada UmArtista
+void free_um_artista(ArrayArtistas* artista) {
+    if (artista != NULL) {
+        free(artista);  // Liberar a memória do UmArtista
+    }
+}
+
+// Função para liberar o GArray e seus dados
+void free_garray_with_data(GArray* array) {
+    if (array != NULL) {
+        // Itera sobre o GArray e libera cada elemento
+        guint i;
+        for (i = 0; i < array->len; i++) {
+            ArrayArtistas* artista = g_array_index(array, ArrayArtistas*, i);
+            free_um_artista(artista);  // Liberar os dados (cada UmArtista)
+        }
+
+        // Agora, libera o GArray em si
+        g_array_free(array, FALSE);  // Não precisa liberar os dados novamente, pois já fizemos isso
+    }
+}
+
+
 
 void freeDomingo(Domingo* domingo) {
     free(domingo->data);  
         
-        g_hash_table_destroy(domingo->artistahistory); 
+        //g_hash_table_destroy(domingo->artistahistory); 
+        g_array_free(domingo->artistahistory_garray, TRUE);
+        //free_garray_with_data(domingo->artistahistory_garray);
+
 
     free(domingo);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-void destroy_history(Domingo* domingo) {
-  
-        free(domingo->data);  
-        
-        g_hash_table_destroy(domingo->artistahistory); 
-    
-}
-
-
-
 
 
 
@@ -120,7 +131,9 @@ Domingo* newDomingo(char* data){
   //GHashTable* Domingo =g_hash_table_new_full(g_int_hash, g_int_equal, free, (GDestroyNotify)freeUser);
 
     // Cria a hash table para armazenar o histórico dos artistas
-    novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, free, (GDestroyNotify)freeUmArtista);
+    novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, NULL, NULL);
+
+    novo_domingo->artistahistory_garray = g_array_new(FALSE, FALSE, sizeof(ArrayArtistas));
 
     return novo_domingo;
 }
@@ -135,7 +148,7 @@ token[5] = platafomra
 */
 
 UmArtista* new_umArtista (int artist_id, int segundos){
-  UmArtista* n_umart = malloc(sizeof(UmArtista));
+  UmArtista* n_umart = malloc(sizeof(UmArtista)); //this is line 151
   
   if (n_umart == NULL) {
         fprintf(stderr, "Memory allocation failed for novo UMArtista\n");
@@ -153,12 +166,12 @@ UmArtista* new_umArtista (int artist_id, int segundos){
 void inserir_umartista_na_semana(GHashTable* artisthistory, UmArtista* novo_artista, int artist_id){
    // printf("INSERIR ARTISTA NA SEMANA!");
     
-    
+
     int* key = malloc(sizeof(int));  // Aloca memória para a chave
     *key = artist_id;
 
     g_hash_table_insert(artisthistory, key, novo_artista);
-
+    //free(key);
 }
 
 GHashTable* get_artisthistorido_dedomingo (Domingo* domingo){
@@ -225,15 +238,67 @@ GHashTable* getArtistHistory(Domingo* domingo){
   return(domingo->artistahistory);
 }
 
+int compare_artistas(const void* a, const void* b) {
+    ArrayArtistas* art_a = (ArrayArtistas*)a;
+    ArrayArtistas* art_b = (ArrayArtistas*)b;
+    return art_b->totalsemanalsegundos - art_a->totalsemanalsegundos; // Decrescente
+}
 
 
+void passa_Domingo_para_garray(Domingo* domingo) {
+    if (domingo == NULL || domingo->artistahistory == NULL || domingo->artistahistory_garray == NULL) {
+        return; // Valida os parâmetros de entrada
+    }
 
+    GHashTableIter iter;
+    gpointer key, value;
+    // Limpa o GArray antes de preenchê-lo novamente, se necessário
+    g_array_set_size(domingo->artistahistory_garray, 0);
+
+    // Itera sobre a GHashTable e transfere os dados para o GArray
+    g_hash_table_iter_init(&iter, domingo->artistahistory);
+           // printf("ESTOU AQUI\n");
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        ArrayArtistas* artist_to_filter = (ArrayArtistas*)value;
+       // printf("ESTOU AQUI\n");
+        //print_artisthistorygarray(artist_to_filter);
+        g_array_append_val(domingo->artistahistory_garray, artist_to_filter);
+
+        
+        // Ver se isto funciona 
+        free(key);  // só deus sabe porque é que sito funciona
+        freeUmArtista((UmArtista*)value);
+    }
+
+    // Destrói a estrutura interna da GHashTable
+    g_hash_table_destroy(domingo->artistahistory);
+    domingo->artistahistory = NULL; // Marca como NULL para evitar acessos futuros
+
+    // Ordena o GArray usando a função de comparação
+    g_array_sort(domingo->artistahistory_garray, compare_artistas);
+
+    // Trunca o GArray para manter apenas os 10 primeiros elementos
+    guint length = domingo->artistahistory_garray->len;
+    if (length > 10) {
+        g_array_remove_range(domingo->artistahistory_garray, 10, length - 10);
+    }
+}
 
 
 
 
 //FUNCOES PRINTS QUE NAO FUNCIONAM
 void print_artisthistory (UmArtista* artista) {
+    if (artista) {
+        printf("ARTIST_ID: %d\n", artista->artist_id);
+        printf("TOTAL_SEGUNDOS: %d\n", artista->totalsemanalsegundos);
+    } else {
+        fprintf(stderr, "Erro: ESTE UMARTISTA NAO EXISTE\n");
+    }
+}
+
+void print_artisthistorygarray (ArrayArtistas* artista) {
     if (artista) {
         printf("ARTIST_ID: %d\n", artista->artist_id);
         printf("TOTAL_SEGUNDOS: %d\n", artista->totalsemanalsegundos);
