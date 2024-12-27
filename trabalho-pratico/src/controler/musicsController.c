@@ -232,9 +232,18 @@ void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* a
 }
 
 
-char* getMusicGenre(char* idMusic, MusicData* musicController){
-  Music* musica = lookup_musica(musicController,transformaIds(idMusic));
-  char* genero = get_music_genre(musica);
+char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type){
+  char* genero = NULL;
+  if(type == 's'){
+      Music* musica = lookup_musica(musicController,transformaIds((char*)idMusic));
+      genero = get_music_genre(musica);
+  }
+
+  if(type == 'i'){
+      Music* musica = lookup_musica(musicController,*(int*)idMusic);
+      genero = get_music_genre(musica);
+  }
+
 
   return genero;
 }

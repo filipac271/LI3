@@ -62,6 +62,9 @@ void query5(char* line, int i, UsersData* userControllador, int** elementosMatri
     int numLinhas = getNumLinhas(userControllador);
     int numColunas = getNumColunas(userControllador);
     int posicao = getPosicaoUser(userControllador, userID);
+
+
+
     if (posicao == -1) {
         outputNULL(output);
         freeOutput(output);
@@ -75,6 +78,7 @@ void query5(char* line, int i, UsersData* userControllador, int** elementosMatri
 
 
     output5(output, usersSugeridos, numrecomendacoes);
+
 
     free(usersSugeridos);
     free(filename);

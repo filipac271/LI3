@@ -56,14 +56,11 @@ void insertUser(GHashTable* table, User* user,int id)
 Age* insertGeneros(Age* usersByAge, int idade,int* liked_songs_id,int SongCount, MusicData* musicController)
 {
 
-
    for(int i=0;i<SongCount;i++)
     {
-        Music* song= lookup_musica(musicController,liked_songs_id[i]);
-        char* genero=get_music_genre(song);
+        char* genero = getMusicGenreControl(&liked_songs_id[i],musicController,'i');
         usersByAge= insertGenero(usersByAge,idade,genero);
         free(genero);
-       
     }
 
 
@@ -195,25 +192,16 @@ void destroyUsersData(UsersData* data){
 }
 
 
-Age* getUsersByAge(UsersData* data){
-    return data->usersByAge;
-}
-
-Query5* getusersMatrizQ5(UsersData* data){
-    return data->usersMatrizQ5;
-}
 
 
 // Procura o género no array usersByAge de uma dada idade na posição i
 char* getUBAGenero(UsersData * userController,int idade,int i) {
 
-    Age* usersByAge= getUsersByAge(userController);
-    char* genero= getGenero(usersByAge,idade,i);
+    char* genero= getGenero(userController->usersByAge,idade,i);
     char* copiaGenero = strdup(genero);
     free(genero);
 
     return copiaGenero;
-
 }
 
 
@@ -251,20 +239,20 @@ void atualizaPrefsUser(char* generoMusica, char* username, UsersData* userContro
 
 
 int** getElementosMatrizQ5(UsersData* userController){
-
-    return getPreferenciasQ5(userController->usersMatrizQ5);
+    
+    return getPreferenciasQ5(userController->usersMatrizQ5);//Manda copia da estrutura da Q5
 }
 
 
 char** getLinhasMatrizQ5(UsersData* userController){
 
-    return getUsersId(userController->usersMatrizQ5);
+    return getUsersId(userController->usersMatrizQ5);//Manda copia da estrutura da Q5
 
 }
 
 char** getColunasMatrizQ5(UsersData* userController){
      
-    return getGenerosNomes(userController->usersMatrizQ5);
+    return getGenerosNomes(userController->usersMatrizQ5);//Manda copia da estrutura da Q5
 }
 
 
@@ -286,4 +274,51 @@ int getPosicaoUser(UsersData* userController,char* username){
     if(user == NULL) return -1;
     int posicao = getPosicaoChegada(user);
     return posicao;
+}
+
+
+
+
+// Retorna a data de nascimento
+ char* getUserBirthDateControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserBirthDate(user);
+}
+
+// Retorna o email
+ char* getUserEmailControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserEmail(user);
+}
+
+// Retorna o nome
+ char* getUserNomeControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserNome(user);
+}
+
+// Retorna o apelido
+ char* getUserApelidoControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserApelido(user);
+}
+
+// Retorna o país
+ char* getUserCountryControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserCountry(user);
+}
+
+// Retorna o SubscryptionType
+ char* getUserSubscryptionTypeControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserSubscryptionType(user);
+}
+
+
+int isUserValid(UsersData* controlador, int userName){
+    User* user = fetchUser(controlador,userName);
+    if(user == NULL) return 1;
+    return 0;
+
 }

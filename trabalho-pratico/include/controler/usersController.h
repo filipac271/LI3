@@ -21,8 +21,6 @@ User* fetchUser(UsersData* controlador, int username);
 
 void destroyUsersData(UsersData* data);
 
-Age* getUsersByAge(UsersData* data);
-
 char* getUBAGenero(UsersData * userController,int idade,int i);
 
 int getUBANSongs(UsersData* userController, int idade, int j);
@@ -44,5 +42,18 @@ int getNumColunas(UsersData* userController);
 
 int getPosicaoUser(UsersData* userController,char* username);
 
+char* getUserBirthDateControl(UsersData* controlador, int username);
+
+char* getUserEmailControl(UsersData* controlador, int username);
+
+char* getUserNomeControl(UsersData* controlador, int username);
+
+char* getUserApelidoControl(UsersData* controlador, int username);
+
+char* getUserCountryControl(UsersData* controlador, int username);
+
+char* getUserSubscryptionTypeControl(UsersData* controlador, int username) ;
+
+int isUserValid(UsersData* controlador, int userName);
 
 #endif

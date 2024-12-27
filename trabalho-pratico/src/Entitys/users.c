@@ -410,3 +410,4 @@ int getnumGeneros (Query5* q5){
 int getPosicaoChegada (User* user){
     return user->posicaoChegada;
 }
+

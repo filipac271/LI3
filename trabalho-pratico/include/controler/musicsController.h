@@ -22,5 +22,5 @@ int getnumGenerosDif (MusicData* musicController);
 
 void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* artistcontroller);
 
-char* getMusicGenre(char* idMusic, MusicData* musicController);
+char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type);
 #endif

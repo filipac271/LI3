@@ -25,4 +25,22 @@ void put_stream_into_Artist (int numartistas, int* arrayArtistas, ArtistsData* c
 
 void atualizaAlbuns (char* arrayAlbuns, ArtistsData* controller);
 
+
+char* getArtistNameControl(ArtistsData* controlador, int id);
+
+char* getArtistCountryControl(ArtistsData* controlador, int id);
+
+char* getArtistTypeControl(ArtistsData* controlador, int id);
+
+
+int getArtistAlbunsIndividuaisControl(ArtistsData* controlador, int id);
+
+
+double getArtistProfitsControl(ArtistsData* controlador, int id);
+
+int getArtistDiscographyControl(ArtistsData* controlador, int id);
+
+int isArtistValid (ArtistsData* controlador , int id);
+
+
 #endif
