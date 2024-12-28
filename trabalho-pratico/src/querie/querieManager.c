@@ -27,6 +27,7 @@ void queries (MainController* data, char* querieFile) {
     // Recupera controladores
     UsersData* UserController = getUserController(data);
     ArtistsData* ArtistController = getartistController(data);
+    HistoryData* HistoryConctoller = gethistoryController(data);
 
     int** elementosMatriz = getElementosMatrizQ5(UserController);
     char** idsUsers = getLinhasMatrizQ5(UserController);
@@ -34,12 +35,6 @@ void queries (MainController* data, char* querieFile) {
     
     int i = 0;
     for (i = 0; line != NULL; i++) {
-
-
-        // Recupera controladores
-        UsersData* UserController = getUserController(data);
-        ArtistsData* ArtistController = getartistController(data);
-        HistoryData* HistoryConctoller = gethistoryController(data);
 
         switch (line[0]) {
             case '1':

@@ -60,7 +60,8 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     //Pega controladores
     UsersData* UserController = getUserController(data);
     ArtistsData* ArtistController = getartistController(data);
-    
+    HistoryData* HistoryConctoller = gethistoryController(data);
+
     int** elementosMatriz = getElementosMatrizQ5(UserController);
     char** idsUsers = getLinhasMatrizQ5(UserController);
     char** nomesGeneros = getColunasMatrizQ5(UserController);
@@ -70,11 +71,6 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     int flag = 1;
     //For loop que mede os tempos de cada querie
     for (i = 0; line != NULL && flag ; i++) {
-
-        //Pega controladores
-        UsersData* UserController = getUserController(data);
-        ArtistsData* ArtistController = getartistController(data);
-        HistoryData* HistoryConctoller = gethistoryController(data);
 
 
         switch (line[0]) {
