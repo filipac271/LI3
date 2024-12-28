@@ -164,7 +164,6 @@ void query4 (HistoryData* HistoryController, ArtistsData* ArtistController, char
     int artist_id = 0;
     int ocorrencias = 0;
 
-
     if(query4_result < 2){
         artist_id = id_maiores_ocorrencias((get_Domingo_from_HD(HistoryController)),&ocorrencias);
 

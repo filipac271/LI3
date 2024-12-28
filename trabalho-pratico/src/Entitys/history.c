@@ -117,7 +117,7 @@ Domingo* newDomingo(char* data){
     // Cria a hash table para armazenar o histórico dos artistas   (GDestroyNotify)freeUmArtista
     novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, NULL, (GDestroyNotify)freeUmArtista);
 
-    novo_domingo->artistahistory_garray = g_array_new(FALSE, FALSE, sizeof(UmArtista));
+    novo_domingo->artistahistory_garray = g_array_new(FALSE, FALSE, sizeof(UmArtista*));
 
     return novo_domingo;
 }
@@ -130,7 +130,6 @@ UmArtista* new_umArtista (int artist_id, int segundos){
         fprintf(stderr, "Memory allocation failed for novo UMArtista\n"); //this is line 123
         exit(1);
     }
-
     // Artista ainda não existe na tabela, cria um novo registro
     n_umart->artist_id = artist_id;
     n_umart->totalsemanalsegundos = segundos;
@@ -235,6 +234,10 @@ void passa_Domingo_para_garray(Domingo* domingo) {
     // Remove elementos excedentes, mantendo apenas os 10 primeiros
     guint length = domingo->artistahistory_garray->len;
     if (length > 10) {    
+        for (guint i = 10; i < domingo->artistahistory_garray->len; i++) {
+            UmArtista* artista = g_array_index(domingo->artistahistory_garray, UmArtista*, i);
+            freeUmArtista(artista); // Liberta os elementos excedentes
+        }
     g_array_set_size(domingo->artistahistory_garray, 10);
     }
 }
