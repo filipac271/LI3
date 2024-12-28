@@ -91,8 +91,15 @@ void free_garray_with_data(GArray* array) {
 void freeDomingo(Domingo* domingo) {
     free(domingo->data);  
 
-        g_array_free(domingo->artistahistory_garray, TRUE);
+    for (guint i = 0; i < domingo->artistahistory_garray->len; i++) {
+    // Obter o ponteiro para UmArtista no índice i
+    UmArtista* artista = g_array_index(domingo->artistahistory_garray, UmArtista*, i);
 
+    // Libertar a estrutura com a função específica
+    freeUmArtista(artista);
+    }
+    // Libertar o GArray
+    g_array_free(domingo->artistahistory_garray, TRUE);
     free(domingo);
 }
 
@@ -108,7 +115,7 @@ Domingo* newDomingo(char* data){
     novo_domingo->data = strdup(data); // Duplica a string passada como parâmetro
 
     // Cria a hash table para armazenar o histórico dos artistas   (GDestroyNotify)freeUmArtista
-    novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, NULL, NULL);
+    novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, NULL, (GDestroyNotify)freeUmArtista);
 
     novo_domingo->artistahistory_garray = g_array_new(FALSE, FALSE, sizeof(UmArtista));
 
@@ -201,19 +208,22 @@ void passa_Domingo_para_garray(Domingo* domingo) {
 
     while (g_hash_table_iter_next(&iter, &key, &value)) {
 
-        UmArtista* artist_to_filter = value;
+        UmArtista* artist = value; //resolvido
 
-        if(artist_to_filter == NULL){
+        if(artist == NULL){
             free(key); // Liberta a chave se o artista for ignorado
             continue;
         }
 
-        if (artist_to_filter->totalsemanalsegundos == 0) { // se o tempo for 0 o artista é ignorado porque nao vale a pena ele ocupar espaço
+        if (artist->totalsemanalsegundos == 0) { // se o tempo for 0 o artista é ignorado porque nao vale a pena ele ocupar espaço
             free(key); // Liberta a chave se o artista for ignorado
             continue;
         }
+
+        UmArtista* artist_to_filter = new_umArtista(artist->artist_id, artist->totalsemanalsegundos); //novo leak
+
         g_array_append_val(domingo->artistahistory_garray, artist_to_filter);
-       // freeUmArtista(artist_to_filter); nao é solução
+        //freeUmArtista(artist); //nao é solução
         free(key); //liberta a chave para ele ir para o proximo
     }
     g_hash_table_destroy(domingo->artistahistory);
@@ -227,10 +237,6 @@ void passa_Domingo_para_garray(Domingo* domingo) {
     if (length > 10) {    
     g_array_set_size(domingo->artistahistory_garray, 10);
     }
-   // g_hash_table_destroy(domingo->artistahistory);
-    //domingo->artistahistory = NULL;
-
-
 }
 
 

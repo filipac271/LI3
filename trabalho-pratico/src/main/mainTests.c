@@ -126,6 +126,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
                 //Tempo unico desta chamada da querie3
                 timeQ4 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
                 q4++;
+                break;
             case '5':
                 clock_gettime(CLOCK_REALTIME, &start);
 
