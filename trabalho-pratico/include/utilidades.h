@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <glib.h>
+
 #include "Entitys/users.h"
 
 
@@ -162,15 +163,16 @@ void toLowerCase(char *str);
 
 void pega_data(char* datetime, char* data);
 
-int calcular_dia_da_semana(int ano, int mes, int dia);
+int diasNoMes(int ano, int mes);
 
-void ajustar_data(int* ano, int* mes, int* dia);
+int diaDaSemana(int ano, int mes, int dia);
 
-char* calcular_domingo_anterior(char* data);
+void calcularDomingoAnterior(const char *data, char *resultado);
 
 void* resize(void* array, int oldSize, int newSize, size_t elementSize, char type);
 
+void destransforma_IDs(int numero, char *resultado);
 
-
+int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data);
 
 #endif // UTILIDADES_H

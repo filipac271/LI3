@@ -23,5 +23,6 @@ void destroyHistoryData(HistoryData* data);
 
 
 void print_all_history (HistoryData* history);
+GHashTable* get_Domingo_from_HD (HistoryData* data);
 
 #endif

@@ -431,55 +431,90 @@ void pega_data(char* datetime, char* data) {
     data[10] = '\0'; // Adiciona o terminador nulo
 }
 
-int calcular_dia_da_semana(int ano, int mes, int dia) {
-    if (mes < 3) {
-        mes += 12;
-        ano -= 1;
-    }
-    int k = ano % 100;
-    int j = ano / 100;
-    int dia_da_semana = (dia + 13 * (mes + 1) / 5 + k + k / 4 + j / 4 - 2 * j) % 7;
-    return (dia_da_semana + 5) % 7 + 1; // Ajusta para 1 (segunda-feira) a 7 (domingo)
-
-}
-
-void ajustar_data(int* ano, int* mes, int* dia) {
-    while (*dia <= 0) { // Caso o dia seja <= 0, ajusta para o mês anterior
-        *mes -= 1;
-        if (*mes <= 0) { // Se o mês for <= 0, ajusta para o ano anterior
-            *mes = 12;
-            *ano -= 1;
-        }
-        *dia += 31; // Supondo que todos os meses têm 31 dias
-    }
-    while (*dia > 31) { // Caso o dia ultrapasse 31, ajusta para o próximo mês
-        *dia -= 31;
-        *mes += 1;
-        if (*mes > 12) { // Se o mês ultrapassar 12, ajusta para o próximo ano
-            *mes = 1;
-            *ano += 1;
+int diasNoMes(int ano, int mes) {
+    int a = ano;
+    int m = mes;
+    int dias[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (m == 2) {
+        // Verificar se o ano é bissexto
+        if ((a % 4 == 0 && a % 100 != 0) || (a % 400 == 0)) {
+            return 29;
         }
     }
+    return dias[m - 1];
 }
 
-char* calcular_domingo_anterior(char* data) {
+int diaDaSemana(int ano, int mes, int dia) {
+    int m = mes;
+    int y = ano;
+    int d = dia;
+
+    // if (m <=2 || m <=1) { 
+    // m += 12; 
+    // a--;
+    // }
+    
+    // int k = m % 100;
+    // int j = a/ 100;
+    // int h = (d + (13 * (m + 1)) / 5 + k + k / 4 + j / 4 + 5 * j) % 7;
+  if (m < 3) {
+        m += 12;
+        y -= 1;
+    }
+    return (d + (13 * (m + 1)) / 5 + y + (y / 4) - (y / 100) + (y / 400)) % 7;
+}
+
+void calcularDomingoAnterior(const char *data, char *resultado) {
     int ano, mes, dia;
     sscanf(data, "%d/%d/%d", &ano, &mes, &dia);
 
-    int dia_da_semana = calcular_dia_da_semana(ano, mes, dia);
-   // printf("O DIA DA SEMANA É: %d\n", dia_da_semana);
-    int dias_desde_domingo = dia_da_semana % 7;
-    int domingo_dia = dia - dias_desde_domingo;
+    // Obter o dia da semana da data fornecida
+    int diaSemana = diaDaSemana(ano, mes, dia);
 
-    ajustar_data(&ano, &mes, &domingo_dia);
-
-    char* resultado = malloc(11 * sizeof(char));
-    if (!resultado) {
-        fprintf(stderr, "Erro ao alocar memória.\n");
-        exit(EXIT_FAILURE);
+    // Calcula quantos dias deve voltar para o domingo anterior
+    int diasParaVoltar = diaSemana % 7;
+    // Subtrair os dias para obter o domingo anterior
+    dia -= diasParaVoltar;
+    if (dia < 1) {
+        mes--;
+        if (mes < 1) {
+            mes = 12;
+            ano--;
+        }
+        dia += diasNoMes(ano, mes);
     }
 
-    sprintf(resultado, "%04d/%02d/%02d", ano, mes, domingo_dia);
-    return resultado;
+    // Montar a data no formato desejado
+    sprintf(resultado, "%04d/%02d/%02d", ano, mes, dia);
+}
 
+
+void destransforma_IDs(int numero, char *resultado) {
+    // Formata o número e armazena na string resultado
+    sprintf(resultado, "A%07d", numero);
+}
+
+
+
+
+int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data) {
+    int ano_inicial, mes_inicial, dia_inicial;
+    int ano_final, mes_final, dia_final;
+    int ano, mes, dia;
+
+    // Lê as datas inicial, final e a data fornecida
+    sscanf(data_inicial, "%d/%d/%d", &ano_inicial, &mes_inicial, &dia_inicial);
+    sscanf(data_final, "%d/%d/%d", &ano_final, &mes_final, &dia_final);
+    sscanf(data, "%d/%d/%d", &ano, &mes, &dia);
+
+    // Verifica se a data está fora do intervalo
+    if (ano < ano_inicial || (ano == ano_inicial && (mes < mes_inicial || (mes == mes_inicial && dia < dia_inicial)))) {
+        return 0; 
+    }
+
+    if (ano > ano_final || (ano == ano_final && (mes > mes_final || (mes == mes_final && dia > dia_final)))) {
+        return 0; 
+    }
+
+    return 1; 
 }

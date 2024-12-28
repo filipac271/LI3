@@ -6,144 +6,193 @@
 #include "Entitys/history.h"
 #include "Entitys/musics.h"
 #include "Output.h"
+#include "querie/query4.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
 #include <unistd.h>
 
-/* Query 4 ideias
-adicionar um parametro de usado ao  historico -Feito
-transformar os dias em domingos com a funcao que faz isso //fazer isso na funcao de query mesmo
-percorrer a primeira hashtable e colocar ou num array auziliar ou numa hashtable auxiliar, mas provavelmente array
-ir percorrendo todas as hashtables até estar tudo com o parametro usado
-Ordenar o array
 
-PENSAR TALVEZ EM ALGO DIFERENTE PARA QUANDO NAO hOUVER DATA
+int id_maiores_ocorrencias(GHashTable* domingo, int* maior_n_ocorrencias) {
+    //Criamos a hash table auxiliar
+    GHashTable* hash_auxiliar = g_hash_table_new_full(g_int_hash, g_int_equal, free, free);
 
-struct artistahistory{
-  int artist_id;
-  int totalsemanalsegundos; //passar a duration de hh:mm:ss (funcao defenida nas utilities) 
-  int usado; // 1-usado; 0-por usar
-};
+    GHashTableIter iter;
+    gpointer key, value;
 
-struct domingo{
-  char* data ;
-  GHashTable* artistahistory;
-};
-*/
+    int max_ocorrencias = -1;
+    int mais_freq_artist = -1;
 
-// Estrutura para acumular dados de artistas
-// struct artista_total {
-//     int artist_id;
-//     int total_segundos;
-// };
+    //Começamos a ver A hashtable externa
+    g_hash_table_iter_init(&iter, domingo);
 
-// // Função para comparar os artistas pelo total de segundos ouvidos
-// int compare_artistas(const void* a, const void* b) {
-//     struct artista_total* art_a = (struct artista_total*)a;
-//     struct artista_total* art_b = (struct artista_total*)b;
-//     return art_b->total_segundos - art_a->total_segundos; // Decrescente
-// }
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        //hash table externa
+        Domingo* semana_atual = (Domingo*)value;
+        //GArray interno
+        GArray* top_semanal = get_garray_from_domingo(semana_atual);
 
+        for (int i = 0; i < (int)top_semanal->len; i++) {
+            //Vamos iterar o GArray interno
+            UmArtista* artista_atual = g_array_index(top_semanal, UmArtista*, i);
+            
+            int id_atual = get_artist_id_from_garray(artista_atual);
 
-// GHashTable* put_artists_into_auxHT(GHashTable* domingos, const char* inicio, const char* fim) {
-//     GHashTableIter iter;
-//     gpointer key, value;
-//     GHashTable* artistas_acumulados = g_hash_table_new_full(g_int_hash, g_int_equal, free, free);
+            // Aloca memória para a chave para evitar usar algo local 
+            int* id_atual_ptr = g_new(int, 1);
+            *id_atual_ptr = id_atual;
 
-//     // Iterar pelos domingos no intervalo de tempo
-//     g_hash_table_iter_init(&iter, domingos);
-//     while (g_hash_table_iter_next(&iter, &key, &value)) {
-//         Domingo* dom = (Domingo*)value;
+            // Verifica se a chave já existe na hash table
+            int* ocorrencia_atual_ptr = g_hash_table_lookup(hash_auxiliar, id_atual_ptr);
 
-//         // Verificar se o domingo está dentro do intervalo
-//         char* data_domingo_atual = get_history_data(dom);
-//         if (strcmp(data_domingo_atual, inicio) >= 0 && strcmp(data_domingo_atual, fim) <= 0) {
-//             GHashTableIter artist_iter;
-//             gpointer artist_key, artist_value;
+            if (!ocorrencia_atual_ptr) {
+                // Não existe na tabela; inicializa com 1
+                int* nova_ocorrencia = g_new(int, 1);
+                *nova_ocorrencia = 1;
+                g_hash_table_insert(hash_auxiliar, id_atual_ptr, nova_ocorrencia);
+               // g_free(nova_ocorrencia);
+            } else {
+                // Já existe; incrementa
+                (*ocorrencia_atual_ptr)++;
+                g_free(id_atual_ptr); // Libera a chave alocada para evitar duplicação
+            }
 
-//             // Iterar pelos artistas do domingo atual
-//             GHashTable* artistahistorico_atual = get_artisthistorido_dedomingo(dom);
-//             g_hash_table_iter_init(&artist_iter, artistahistorico_atual);
-//             while (g_hash_table_iter_next(&artist_iter, &artist_key, &artist_value)) {
-//                 UmArtista* artista = (UmArtista*)artist_value;
-//                 if (get_usado_from_artist(artista) == 0) {
-
-//                   //coiso do garray
-//                     int id = get_id_from_Umartista(artista);
-
-//                     // Acumular os segundos
-//                     int* total = g_hash_table_lookup(artistas_acumulados, GINT_TO_POINTER(id));
-//                     if (total == NULL) {
-//                         total = malloc(sizeof(int)); //este total pode dar problemas
-//                         *total = 0;
-//                         g_hash_table_insert(artistas_acumulados, GINT_TO_POINTER(id), total);
-//                     }
-//                     *total += get_total_de_segundos_from_Umartista(artista);
-//                     set_usado_to_used(artista); // Marcar como usado
-//                 }
-//             }
-//         }
-// //ver se isto funciona aqui
-//         free(data_domingo_atual);
-//     }  
-//     return artistas_acumulados;
-// }
-
-// GArray* transform_and_ord (GHashTable* artistas_acumulados){
-//   GHashTableIter iter;
-//   gpointer key, value;
-//   GArray* artistas_totais = g_array_new(FALSE, FALSE, sizeof(struct artista_total)); //rever isto
-//     g_hash_table_iter_init(&iter, artistas_acumulados);
-//     while (g_hash_table_iter_next(&iter, &key, &value)) {
-//         struct artista_total artista;
-//         artista.artist_id = *(int*)key;
-//         artista.total_segundos = *(int*)value;
-//         g_array_append_val(artistas_totais, artista);
-//     }
-
-//     g_array_sort(artistas_totais, compare_artistas);
-
-//   return artistas_totais;
-// }
+            // Atualiza o artista mais frequente
+            int ocorrencia_atual = ocorrencia_atual_ptr ? *ocorrencia_atual_ptr : 1;
 
 
 
-// //name;type;count_top_10
-// //4S 2022/12/09 2024/05/02
+            if (ocorrencia_atual > max_ocorrencias || 
+                (ocorrencia_atual == max_ocorrencias && id_atual < mais_freq_artist)) {
+                max_ocorrencias = ocorrencia_atual;
+                mais_freq_artist = id_atual;
+                *maior_n_ocorrencias = max_ocorrencias;
+            }
+        }
+    }
 
-// void query4 (HistoryData* HistoryController, char* line, int i){
-//   char* data_inicio;
-//   char* data_fim;
-
-//   int query4_result = sscanf(line + 2, "%d %d", &data_inicio, &data_fim);  // Lê o intervalo de idades (min e max) a partir da linha de entrada
-
-//   if(query4_result == 0){
-
-//   } 
-//   char* domingo_inicio = calcular_domingo_anterior(data_inicio);
-//   char* domingo_final = calcular_domingo_anterior(data_fim);
-
-//   GHashTable* aux =put_artists_into_auxHT(HistoryController, domingo_inicio, domingo_final);
-
-//   GArray* q4 = transform_and_ord(aux);
-//   guint length = get_garray_length(q4);
-
-//     char* filename = malloc(sizeof(char) * 256);
-//     sprintf(filename, "resultados/command%d_output.txt", i + 1);
-//     Output* output = iniciaOutput(filename);
-
-//   int j = 0;
-//   while(j < 10 && j < (int)length){
-    
-//   }
-// }
+    g_hash_table_destroy(hash_auxiliar);
+    return mais_freq_artist;
+}
 
 
 
 
+//Assume-se que as datas recebidas por esta funcao já sao os domingos 
+int artista_mais_frequente_com_data (GHashTable* semanas, char* data_inicio, char* data_fim, int *ocorrencia_final){
+    int artista_mais_frequente = -1;
+    int max_ocorrencias = 0;
+
+    GHashTable* contador_artistas = g_hash_table_new_full(g_int_hash, g_int_equal, free, free);
+    // Iterar sobre as semanas no intervalo
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, semanas);
+
+if (data_inicio != NULL && data_fim != NULL && strcmp(data_inicio, "") != 0 && strcmp(data_fim, "") != 0) {
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+
+        char data_atual[11]; 
+        calcularDomingoAnterior((char*)key, data_atual);
+        // Verificar se está no intervalo
+        if ( strcmp(data_atual, data_inicio) >=0 && strcmp(data_atual, data_fim) <= 0) {
+        //hash table externa
+        Domingo* semana_atual = (Domingo*)value;
+        //GArray interno
+        GArray* top_semanal = get_garray_from_domingo(semana_atual);
+
+            // Processar o GArray (top 10 artistas)
+            for (int i = 0; i < (int)top_semanal->len; i++) {
+
+                UmArtista* artista_atual = g_array_index(top_semanal, UmArtista*, i);
+
+                int id_atual = get_artist_id_from_garray(artista_atual);
+
+                // Aloca memória para a chave para evitar usar algo local 
+                int* id_atual_ptr = g_new(int, 1); 
+                *id_atual_ptr = id_atual;
+
+                // Verifica se a chave já existe na hash table
+                int* ocorrencia_atual_ptr = g_hash_table_lookup(contador_artistas, id_atual_ptr);
+
+                if (!ocorrencia_atual_ptr) {
+                    // Não existe na tabela; inicializa com 1
+                    int* nova_ocorrencia = g_new(int, 1); 
+                    *nova_ocorrencia = 1;
+                    g_hash_table_insert(contador_artistas, id_atual_ptr, nova_ocorrencia);
+
+                } else {
+                    // Já existe; incrementa
+                    (*ocorrencia_atual_ptr)++;
+                    g_free(id_atual_ptr); // Liberta a chave para nao correr o risco de haver algum tipo de duplicaçao
+                }
+
+                int ocorrencia_atual = ocorrencia_atual_ptr ? *ocorrencia_atual_ptr : 1;
+                
+                if (ocorrencia_atual > max_ocorrencias 
+                || (ocorrencia_atual == max_ocorrencias && id_atual < artista_mais_frequente)){
+                    max_ocorrencias = ocorrencia_atual;
+                    artista_mais_frequente = id_atual;
+                    *ocorrencia_final =  max_ocorrencias;
+
+                }
+            }
+        }
+    }
+}
+    //DEBUG
+    // if (artista_mais_frequente != -1) {
+    //     printf("O artista mais frequente no top 10 foi o ID %d, com %d ocorrências.\n", artista_mais_frequente, max_ocorrencias);
+    // } else {
+    //     printf("Nenhum artista encontrado no intervalo especificado.\n");
+    // }
+
+    g_hash_table_destroy(contador_artistas);
+    return artista_mais_frequente;
+}
 
 
 
+void query4 (HistoryData* HistoryController, ArtistsData* ArtistController, char* line, int i){
 
+    char data_inicio[11] = ""; 
+    char data_fim[11] = "";
+
+    int query4_result = sscanf(line + 2, "%s %s", data_inicio, data_fim);  // Lê o intervalo de idades (min e max) a partir da linha de entrada
+    int artist_id = 0;
+    int ocorrencias = 0;
+
+    if(query4_result < 2){
+        artist_id = id_maiores_ocorrencias((get_Domingo_from_HD(HistoryController)),&ocorrencias);
+
+        } else {
+        char* domingo_inicio = malloc(11 * sizeof(char));
+        calcularDomingoAnterior(data_inicio, domingo_inicio);
+
+        char* domingo_final = malloc(11 * sizeof(char));
+        calcularDomingoAnterior(data_fim, domingo_final);
+
+        artist_id = artista_mais_frequente_com_data((get_Domingo_from_HD(HistoryController)), domingo_inicio, domingo_final, &ocorrencias);
+
+        free(domingo_inicio);
+        free(domingo_final);
+        }
+
+    char* filename = malloc(sizeof(char) * 256);
+    sprintf(filename, "resultados/command%d_output.txt", i + 1);
+    Output* output = iniciaOutput(filename);
+
+    Artist* artista_atual = lookup_artist(ArtistController, artist_id);
+    char id_em_char[10]; // Tamanho suficiente para "A0000000" + '\0'
+    destransforma_IDs(artist_id, id_em_char);
+
+    char* tipo = getArtistType(artista_atual);
+
+    output4(output, id_em_char, tipo, (ocorrencias), line[1]);
+
+    free(tipo);
+    free(filename);
+    freeOutput(output);
+}
