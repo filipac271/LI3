@@ -33,7 +33,9 @@
     "querie2.h": "c",
     "albumscontroller.h": "c",
     "compare": "c",
-    "type_traits": "c"
+    "type_traits": "c",
+    "recomendador.h": "c",
+    "query5.h": "c"
   }
 }
 

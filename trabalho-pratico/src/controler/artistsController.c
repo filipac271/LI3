@@ -285,3 +285,52 @@ void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country
     }
 
 }
+
+
+
+
+int isArtistValid (ArtistsData* controlador , int id){
+    Artist* artista = lookup_artist(controlador,id);
+
+    if(artista == NULL) return 1;
+    
+    return 0;
+}
+
+
+
+
+
+
+char* getArtistNameControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistName(artista);
+}
+
+char* getArtistCountryControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistCountry(artista);
+}
+
+char* getArtistTypeControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistType(artista);
+}
+
+
+int getArtistAlbunsIndividuaisControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistAlbunsIndividuais(artista);
+}
+
+
+double getArtistProfitsControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistProfits(artista);
+}
+
+
+int getArtistDiscographyControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistDiscography(artista);
+}

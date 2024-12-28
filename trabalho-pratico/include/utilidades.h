@@ -138,10 +138,10 @@ int* divideGroup(char* group, int numMembros);
 int* divideArray(char* arrayString, int numElements);
 
 /**
- * @brief Transforma uma string de IDs em uma lista de inteiros.
+ * @brief Transforma um Id em String em um Id em Inteiro.
  * 
- * @param idString String contendo os IDs separados por delimitadores.
- * @return Número de IDs processados.
+ * @param idString Id em string.
+ * @return Id em inteiro.
  */
 int transformaIds(char* idString);
 
@@ -168,6 +168,8 @@ int diasNoMes(int ano, int mes);
 int diaDaSemana(int ano, int mes, int dia);
 
 void calcularDomingoAnterior(const char *data, char *resultado);
+
+void* resize(void* array, int oldSize, int newSize, size_t elementSize, char type);
 
 void destransforma_IDs(int numero, char *resultado);
 

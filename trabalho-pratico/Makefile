@@ -1,11 +1,13 @@
 CC := gcc
 
 EXEC := programa-principal
-CFLAGS := -Wall -g -Og -O3 -flto -std=gnu99 -Wextra -pedantic -Iinclude $(shell pkg-config --cflags glib-2.0) -MMD -MP
+CFLAGS := -Wall -g -Og -O3 -flto -std=gnu99 -Wextra -pedantic -Iinclude $(shell pkg-config --cflags glib-2.0) -MMD -MP 
 LDFLAGS := $(shell pkg-config --libs glib-2.0) -lm 
 
 SRC := $(shell find src/ -name "*.c")
 OBJ := $(SRC:src/%.c=build/%.o)
+
+EXTERNAL_OBJ := recomenda/recomendador-linux-x86_64.o
 
 
 EXEC_TEST := programa-testes
@@ -20,7 +22,7 @@ DEP := $(OBJ:.o=.d)
 all: $(EXEC) $(EXEC_TEST)
 
 $(EXEC): $(OBJ)
-	@$(CC) $(OBJ) $(LDFLAGS) -o $@ ; echo "[Linking] $@"
+	@$(CC) $(OBJ) $(EXTERNAL_OBJ) $(LDFLAGS) -o $@ ; echo "[Linking] $@"
 
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)
@@ -28,7 +30,7 @@ build/%.o: src/%.c
 
 
 $(EXEC_TEST): $(OBJ)
-	@$(CC) $(OBJ) $(LDFLAGS) -o $@ ; echo "[Linking] $@"
+	@$(CC) $(OBJ) $(EXTERNAL_OBJ) $(LDFLAGS) -o $@ ; echo "[Linking] $@"
 
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)

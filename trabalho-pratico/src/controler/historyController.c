@@ -83,6 +83,7 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
 }
 
 
+
 //Basicamente a ideia desta função é passar todas as hashtables para garrays de 10 já ordenados e apagar a hashtable 
 void passa_hastable_para_garray (HistoryData* data){
 
@@ -118,7 +119,8 @@ void passa_hastable_para_garray (HistoryData* data){
 
 
 
-HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData) {
+HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData,UsersData* usersData) {
+
     HistoryData* Hdata = malloc(sizeof(HistoryData));
     if (!Hdata) {
         fprintf(stderr, "Erro: Alocação de memória para HistoryData falhou.\n");
@@ -150,9 +152,11 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
     char* linhaE=getLineError(parserE);
     int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
     if(isValid) {
-        newDomingo_orNot(Hdata, tokens, musicData); 
-        atualizaStreams(tokens[2], musicData, artistData);
+         newDomingo_orNot(Hdata, tokens, musicData); 
+         atualizaStreams(tokens[2], musicData, artistData);
         
+        char* genre = getMusicGenreControl(tokens[2],musicData,'s');
+        atualizaPrefsUser(genre,tokens[1],usersData);
     }  
 
         free(linhaE);

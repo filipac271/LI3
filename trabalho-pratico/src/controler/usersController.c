@@ -19,6 +19,7 @@ struct usersData
 {
     GHashTable* usersTable;
     Age* usersByAge;
+    Query5* usersMatrizQ5;
 };
 
 
@@ -55,14 +56,11 @@ void insertUser(GHashTable* table, User* user,int id)
 Age* insertGeneros(Age* usersByAge, int idade,int* liked_songs_id,int SongCount, MusicData* musicController)
 {
 
-
    for(int i=0;i<SongCount;i++)
     {
-        Music* song= lookup_musica(musicController,liked_songs_id[i]);
-        char* genero=get_music_genre(song);
+        char* genero = getMusicGenreControl(&liked_songs_id[i],musicController,'i');
         usersByAge= insertGenero(usersByAge,idade,genero);
         free(genero);
-       
     }
 
 
@@ -86,19 +84,18 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     //Abre o ficheiro  "users_errors.csv" e aloca memória para o respetivo pointer 
     Output* Erros= iniciaOutput("resultados/users_errors.csv");
 
-    
     UData->usersTable = createTable();
     UData->usersByAge=createUsersAge();
-
+    UData->usersMatrizQ5 = createQ5Struct(musicData);
      //Inicia o Parser e abre o ficheiro "users.csv" do dataset
     Parser* parserE= newParser(diretoria,"users.csv");
 
     // Ignorar a primeira linha
-        char* line = pegaLinha(parserE);
-     //Enviar a linha para o ficheiro users_erros.csv, esta não será inserida hashTable
+    char* line = pegaLinha(parserE);
+    //Enviar a linha para o ficheiro users_erros.csv, esta não será inserida hashTable
     outputErros(Erros,line);
     free(line);
-
+    int posicaoChegada = 0;
     while (1) {
 
         parserE= parser(parserE); 
@@ -117,7 +114,6 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
         int numSongs=calculate_num_members(tokens[7]);
 
         int isValid = validaUser(tokens[1],tokens[4],tokens[6],musicData,tokens[7],numSongs,Erros,linhaE);
-
         if(isValid){  
             
             int idade= calcular_idade(tokens[4]); 
@@ -127,13 +123,13 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
             UData->usersByAge= insertGeneros(UData->usersByAge,idade,liked_songs_id,numSongs, musicData);
         
             // Criar o User e inseri-lo na Hash Table
+            User* user= newUser(tokens,posicaoChegada);
+            insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
+            freeArray(liked_songs_id);
 
-             User* user= newUser(tokens);
-            
-             insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
-             freeArray(liked_songs_id);
-
-
+            inserirUserQ5(tokens[0],UData->usersMatrizQ5);  
+            criaLinhaPreferencia(posicaoChegada,UData->usersMatrizQ5);
+            posicaoChegada++;     
         }
         free(linhaE);
         free(getLine(parserE));
@@ -190,13 +186,9 @@ void destroyUsersData(UsersData* data){
 
     g_hash_table_destroy(data->usersTable);
     freeUsersByAge(data->usersByAge);
+    freeQ5struct(data->usersMatrizQ5);
     printf("Tabela dos users destruida\n");
 
-}
-
-
-Age* getUsersByAge(UsersData* data){
-    return data->usersByAge;
 }
 
 
@@ -205,13 +197,11 @@ Age* getUsersByAge(UsersData* data){
 // Procura o género no array usersByAge de uma dada idade na posição i
 char* getUBAGenero(UsersData * userController,int idade,int i) {
 
-    Age* usersByAge= getUsersByAge(userController);
-    char* genero= getGenero(usersByAge,idade,i);
+    char* genero= getGenero(userController->usersByAge,idade,i);
     char* copiaGenero = strdup(genero);
     free(genero);
 
     return copiaGenero;
-
 }
 
 
@@ -234,4 +224,101 @@ int getUBANGeneros(UsersData * userController,int idade)
     int nGeneros= getNGeneros(usersByAge, idade);
 
     return nGeneros;
+}
+
+
+
+void atualizaPrefsUser(char* generoMusica, char* username, UsersData* userController){
+
+    User* user = fetchUser(userController,transformaIds(username));
+
+    atualizaGeneros(generoMusica,userController->usersMatrizQ5,user);
+    
+}
+
+
+
+int** getElementosMatrizQ5(UsersData* userController){
+    
+    return getPreferenciasQ5(userController->usersMatrizQ5);//Manda copia da estrutura da Q5
+}
+
+
+char** getLinhasMatrizQ5(UsersData* userController){
+
+    return getUsersId(userController->usersMatrizQ5);//Manda copia da estrutura da Q5
+
+}
+
+char** getColunasMatrizQ5(UsersData* userController){
+     
+    return getGenerosNomes(userController->usersMatrizQ5);//Manda copia da estrutura da Q5
+}
+
+
+int getNumLinhas(UsersData* userController){
+    int numLinhas = getnumUsers(userController->usersMatrizQ5);
+
+    return numLinhas;
+}
+
+int getNumColunas(UsersData* userController){
+    int numColunas = getnumGeneros(userController->usersMatrizQ5);
+
+    return numColunas;
+}
+
+
+int getPosicaoUser(UsersData* userController,char* username){
+    User* user = fetchUser(userController,transformaIds(username));
+    if(user == NULL) return -1;
+    int posicao = getPosicaoChegada(user);
+    return posicao;
+}
+
+
+
+
+// Retorna a data de nascimento
+ char* getUserBirthDateControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserBirthDate(user);
+}
+
+// Retorna o email
+ char* getUserEmailControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserEmail(user);
+}
+
+// Retorna o nome
+ char* getUserNomeControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserNome(user);
+}
+
+// Retorna o apelido
+ char* getUserApelidoControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserApelido(user);
+}
+
+// Retorna o país
+ char* getUserCountryControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserCountry(user);
+}
+
+// Retorna o SubscryptionType
+ char* getUserSubscryptionTypeControl(UsersData* controlador, int username) {
+    User* user = fetchUser(controlador,username);
+    return getUserSubscryptionType(user);
+}
+
+
+int isUserValid(UsersData* controlador, int userName){
+    User* user = fetchUser(controlador,userName);
+    if(user == NULL) return 1;
+    return 0;
+
 }

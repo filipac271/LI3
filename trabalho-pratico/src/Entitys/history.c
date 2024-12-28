@@ -152,7 +152,7 @@ void new_or_add(Domingo* domingo, char** tokens, MusicData* musicController) {
     int numartistas = get_numArtistsId(musicadoartista);
 
     //array de artistas que constituem essa musica
-    int* arrayartistas = getArtistIDfromMuiscID(musicadoartista);
+    int* arrayartistas = getArtistIDfromMuiscID(musicadoartista,numartistas);
 
     GHashTable* artistahistory = domingo->artistahistory;
     if (!artistahistory) {

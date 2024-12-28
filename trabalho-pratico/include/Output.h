@@ -72,6 +72,8 @@ void output2(Output* output2, char* nome, char* tipo, char* time,char* pais, cha
  */
 void output3(Output* output3, char* genero, int num, char c);
 
+void output5(Output* output5, char** usernames, int numrecomendacoes);
+
 
 void output4(Output* output4, char* name, char* type, int num, char c);
 
