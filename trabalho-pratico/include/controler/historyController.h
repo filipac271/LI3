@@ -10,7 +10,6 @@
 
 typedef struct historyData HistoryData;
 
-GHashTable* createHistoryTable();
 
 Domingo* lookup_domingo(GHashTable* domingo, char* data);
 
