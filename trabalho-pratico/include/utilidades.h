@@ -169,7 +169,8 @@ int diaDaSemana(int ano, int mes, int dia);
 
 void calcularDomingoAnterior(const char *data, char *resultado);
 
-void calcularDomingoSeguinte(const char *data, char *resultado);
+void destransforma_IDs(int numero, char *resultado);
 
+int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data);
 
 #endif // UTILIDADES_H

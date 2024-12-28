@@ -4,5 +4,7 @@
 #include "controler/artistsController.h"
 #include "utilidades.h"
 
+void query4 (HistoryData* HistoryController, ArtistsData* ArtistController, char* line, int i);
+
 
 #endif

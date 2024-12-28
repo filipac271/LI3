@@ -51,6 +51,8 @@ int get_artist_id_from_garray (UmArtista* artista);
 int get_seconds_from_garray (UmArtista* artista);
 
 
+
+
 void print_artisthistory (UmArtista* artista);
 
 void print_garray(GArray* array);
@@ -59,7 +61,7 @@ void printf_domingo (Domingo* domingo);
 
 void print_artisthistory_entry(gpointer key, gpointer value, gpointer user_data);
 
-void print_semana_completa(Domingo* domingo);
+void print_semana_completa(gpointer key, gpointer value, gpointer user_data);
 
 
 

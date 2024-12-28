@@ -94,11 +94,27 @@ void passa_hastable_para_garray (HistoryData* data){
 
     while (g_hash_table_iter_next(&iter, &key, &value)){
 
-        GHashTable* domingo_atual = value;
+        Domingo* domingo_atual = value;
 
         passa_Domingo_para_garray(domingo_atual);
     } 
+    
 }
+
+// void free_da_hashtable_interna (HistoryData* data){
+//         GHashTableIter iter;
+//     gpointer key, value;
+
+//     // Itera sobre a GHashTable e transfere os dados para o GArray
+//     g_hash_table_iter_init(&iter, data->Domingo);
+
+//     while (g_hash_table_iter_next(&iter, &key, &value)){
+
+//         GHashTable* domingo_atual = value;
+
+//         tentativa_free_hashtable(domingo_atual);
+//     } 
+// }
 
 
 
@@ -147,6 +163,8 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
 
     passa_hastable_para_garray(Hdata);
 
+    //free_da_hashtable_interna(Hdata);
+
     return Hdata;
 }
 
@@ -158,7 +176,7 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
 void print_all_history (HistoryData* history){
     printf("----- Hash Table do HISTORICO -----\n");
     sleep(3);
-    g_hash_table_foreach(history->Domingo, print_semana_completa, NULL);
+g_hash_table_foreach(history->Domingo, print_semana_completa, NULL);
     printf("----- Fim da Hash Table do HISTORICO-----\n");
 }
 

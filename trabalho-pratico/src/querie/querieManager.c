@@ -52,11 +52,11 @@ void queries (MainController* data, char* querieFile) {
 
                 break;
 
-            // case '4':
+            case '4':
             
-            //     query4(HistoryConctoller, ArtistController, line, i );
+                query4(HistoryConctoller, ArtistController, line, i );
 
-            //     break;
+                break;
 
             default:
                 break;
