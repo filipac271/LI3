@@ -185,6 +185,9 @@ void query4 (HistoryData* HistoryController, ArtistsData* ArtistController, char
     Output* output = iniciaOutput(filename);
 
     Artist* artista_atual = lookup_artist(ArtistController, artist_id);
+    if(artista_atual == NULL){
+        outputNULL(output);
+    } else{
     char id_em_char[10]; // Tamanho suficiente para "A0000000" + '\0'
     destransforma_IDs(artist_id, id_em_char);
 
@@ -192,7 +195,10 @@ void query4 (HistoryData* HistoryController, ArtistsData* ArtistController, char
 
     output4(output, id_em_char, tipo, (ocorrencias), line[1]);
 
-    free(tipo);
+        free(tipo);
+
+    }
+    
     free(filename);
     freeOutput(output);
 }
