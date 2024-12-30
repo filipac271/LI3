@@ -1,5 +1,6 @@
 #include "main/mainMode.h"
 #include "main/mainTests.h"
+#include "main/maininterativo.h"
 
 #include <stdio.h> 
 #include <stdlib.h>
@@ -28,6 +29,9 @@ int main(int argc, char **argv){
     }
     else if (argc == 4){
         teste(argv[1],argv[2],argv[3]);
+    }
+    else if (argc == 1){
+        interativo();
     }
 
 

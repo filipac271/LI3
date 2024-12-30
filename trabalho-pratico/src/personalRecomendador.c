@@ -25,6 +25,8 @@ char **recomendaUtilizadoresP(
     int numRecomendacoes
 ) {
     
+    (void)nomesGeneros;//Esquisito não ter necessidade de usar
+    
     int indiceUtilizadorAlvo = -1;
     for (int i = 0; i < numUtilizadores; i++) {
         if (strcmp(idsUtilizadores[i], idUtilizadorAlvo) == 0) {

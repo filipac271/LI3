@@ -36,7 +36,8 @@
     "type_traits": "c",
     "recomendador.h": "c",
     "query5.h": "c",
-    "personalrecomendador.h": "c"
+    "personalrecomendador.h": "c",
+    "historycontroller.h": "c"
   }
 }
 

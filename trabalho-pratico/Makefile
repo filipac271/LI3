@@ -2,7 +2,7 @@ CC := gcc
 
 EXEC := programa-principal
 CFLAGS := -Wall -g -Og -O3 -flto -std=gnu99 -Wextra -pedantic -Iinclude $(shell pkg-config --cflags glib-2.0) -MMD -MP 
-LDFLAGS := $(shell pkg-config --libs glib-2.0) -lm 
+LDFLAGS := $(shell pkg-config --libs glib-2.0) -lm -lncurses
 
 SRC := $(shell find src/ -name "*.c")
 OBJ := $(SRC:src/%.c=build/%.o)
