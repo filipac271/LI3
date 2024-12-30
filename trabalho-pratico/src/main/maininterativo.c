@@ -58,7 +58,7 @@ void interativo() {
     wattroff(full_window, A_BOLD | A_UNDERLINE | COLOR_PAIR(1));
 
 
-    capturarEntrada(full_window,2,1,"Diretoria: ",diretoriaDataset,sizeof(diretoriaDataset)-1);
+    capturarEntrada(full_window,2,1,"Diretoria: ",diretoriaDataset,sizeof(diretoriaDataset));
 
 
     wattron(full_window, A_BOLD);
@@ -79,9 +79,9 @@ void interativo() {
     close(saved_stdout); //Fecha a copia
     fclose(devnull);
 
-    capturarEntrada(full_window,5,1,"Dados processados com sucesso! Insira qual query deseja executar: ",queryInput,sizeof(queryInput)-1);
+    capturarEntrada(full_window,5,1,"Dados processados com sucesso! Insira qual query deseja executar: ",queryInput,sizeof(queryInput));
 
-    capturarEntrada(full_window,6,1,"Insira os argumentos para a query ",argumentosQuery,sizeof(argumentosQuery)-1);
+    capturarEntrada(full_window,6,1,"Insira os argumentos para a query ",argumentosQuery,sizeof(argumentosQuery));
 
 
     wgetch(full_window);  // Espera o usuário pressionar uma tecla antes de sair
