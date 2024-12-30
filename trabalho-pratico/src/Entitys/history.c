@@ -309,11 +309,14 @@ char* DataMaisMusicas(History* userHistory,int anoP)
 
 int procuraAno(History* userHistory, int ano)
 {
-int i;
- for(i=0;userHistory->anos[i].ano!=ano && i<userHistory->nAnos;i++){}
- printf("%d  %d\n",  ano, i);
- if(i==userHistory->nAnos) return -1;
- return i;
+int anoP=-1;
+ for(int i=0; i<userHistory->nAnos && ano==-1;i++){
+  if(userHistory->anos[i].ano==ano )
+  {
+    anoP=i;
+  }
+ }
+ return anoP;
 }
 
 
@@ -593,7 +596,7 @@ History* adicionaUserHistory(History* userHistory,MusicData* musicData,int music
     else
     { 
       
-        int anoPosicao=procuraAno(userHistory, ano); //Devolve a posicao do array do ano
+        int anoPosicao=procuraAno(userHistory, ano); printf("AP%d\n",anoPosicao);
          int tamanhoArray= userHistory->tamanhoArray;
          int nAnos=userHistory->nAnos;
         if(anoPosicao>=tamanhoArray)
@@ -602,9 +605,10 @@ History* adicionaUserHistory(History* userHistory,MusicData* musicData,int music
            userHistory->tamanhoArray*=2;
         }
 
-        if(anoPosicao>=nAnos)
+        if(anoPosicao==-1)
         {printf("NOVO ANO\n");
-           userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,anoPosicao,1);
+           userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,nAnos,1);
+           userHistory->nAnos++;
              
         }
         else
