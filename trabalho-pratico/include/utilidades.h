@@ -168,7 +168,7 @@ void ajustar_data(int* ano, int* mes, int* dia);
 
 char* calcular_domingo_anterior(char* data);
 
-
+void* resize(void* array, int oldSize, char type);
 
 
 #endif // UTILIDADES_H

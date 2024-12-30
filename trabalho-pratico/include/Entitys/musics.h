@@ -96,6 +96,7 @@ char* get_music_year(Music* music);
 
 
 //NAO COMENTADO 
+int get_music_album(Music* music);
 
 int get_numArtistsId (Music* music);
 

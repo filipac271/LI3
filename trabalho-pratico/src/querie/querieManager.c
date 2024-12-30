@@ -1,9 +1,12 @@
 #include "controler/usersController.h"
 #include "controler/artistsController.h"
+#include "controler/albumsController.h"
+#include "controler/historyController.h"
 #include "controler/mainController.h"
 #include "querie/querie1.h"
 #include  "querie/querie2.h"
 #include  "querie/querie3.h"
+#include  "querie/querie6.h"
 #include "utilidades.h"
 #include "Input.h"
 
@@ -29,6 +32,8 @@ void queries (MainController* data, char* querieFile) {
         // Recupera controladores
         UsersData* UserController = getUserController(data);
         ArtistsData* ArtistController = getartistController(data);
+        HistoryData* historyController= gethistoryController (data); 
+        AlbumsData* albumController=getalbumController(data);
 
         switch (line[0]) {
             case '1':
@@ -48,6 +53,10 @@ void queries (MainController* data, char* querieFile) {
                 querie3(i, line, UserController);
 
                 break;
+                
+            case '6':
+
+                querie6(i,line, historyController,albumController);
 
             default:
                 break;

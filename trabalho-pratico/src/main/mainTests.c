@@ -5,6 +5,7 @@
 #include "querie/querie1.h"
 #include "querie/querie2.h"
 #include "querie/querie3.h"
+#include "querie/querie6.h"
 #include "utilidades.h"
 
 
@@ -60,7 +61,8 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
         //Pega controladores
         UsersData* UserController = getUserController(data);
         ArtistsData* ArtistController = getartistController(data);
-
+        HistoryData* historyController= gethistoryController (data); 
+        AlbumsData* albumController=getalbumController(data);
         switch (line[0]) {
             case '1':
                 
@@ -94,6 +96,17 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
                 clock_gettime(CLOCK_REALTIME, &start);
 
                 querie3(i, line, UserController);
+                clock_gettime(CLOCK_REALTIME, &end);
+
+                //Tempo unico desta chamada da querie3
+                timeQ3 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
+                q3++;
+                break;
+
+            case '6':
+                clock_gettime(CLOCK_REALTIME, &start);
+
+                querie6(i,line, historyController,albumController);
                 clock_gettime(CLOCK_REALTIME, &end);
 
                 //Tempo unico desta chamada da querie3

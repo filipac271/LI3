@@ -133,6 +133,10 @@ int get_numArtistsId (Music* music){
   return (music->num_artistId);
 }
 
+int get_music_album(Music* music)
+{
+  return (music->albumId);
+}
 
 // int get_artistID_at_index(Music* song, int index) {
 //     if (!song || index < 0 || index >= song->num_artistId) {

@@ -4,6 +4,7 @@
 #include "controler/usersController.h"
 #include "controler/artistsController.h"
 #include "controler/musicsController.h"
+#include "controler/historyController.h"
 #include "controler/albumsController.h"
 
 
@@ -17,5 +18,6 @@ void print_all_Data(MainController* data);
 UsersData* getUserController(MainController* data);
 MusicData* getMusicController (MainController* data);
 ArtistsData* getartistController (MainController* data);
+HistoryData* gethistoryController (MainController* data);
 AlbumsData* getalbumController (MainController* data);
 #endif

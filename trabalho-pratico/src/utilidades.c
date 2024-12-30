@@ -8,6 +8,7 @@
 
 #include "utilidades.h"
 #include "controler/musicsController.h"
+#include "Entitys/history.h"
 
 
 
@@ -450,5 +451,74 @@ char* calcular_domingo_anterior(char* data) {
 
     sprintf(resultado, "%04d/%02d/%02d", ano, mes, domingo_dia);
     return resultado;
+
+}
+
+
+void* resize(void* array, int oldSize, char type)
+{
+    int newSize= 2* oldSize;
+    if (type== 'i')
+    {
+        int* temp=realloc(array, newSize * sizeof(int));
+        array =temp;
+        // Verifica se a realocação foi bem-sucedida
+        if (array == NULL) { 
+            printf("Erro ao realocar memória.\n");
+        }
+
+    }
+    else if(type=='c')
+    {
+        char* temp= realloc( array, newSize* sizeof(char*));
+         array =temp;
+
+        // Verifica se a realocação foi bem-sucedida
+        if (array == NULL) { 
+            printf("Erro ao realocar memória.\n");
+        }
+    }
+    else if (type== 'g')
+    {
+         Generos* temp= realloc( array, newSize*  sizeof(Generos*));
+         array =temp;
+        // Verifica se a realocação foi bem-sucedida
+        if (array == NULL) { 
+            printf("Erro ao realocar memória.\n");
+        }
+          
+    }
+    else if(type== 'd')
+    {
+        Dia* temp = realloc( array, newSize* sizeof(Dia*));
+        array =temp;
+         if (array == NULL) { 
+            printf("Erro ao realocar memória.\n");
+        }
+          
+    }
+    else if (type== 'a')
+    {
+        Albuns* temp= realloc( array, newSize*  sizeof(Albuns*));
+         array =temp;
+         if (array == NULL) { 
+            printf("Erro ao realocar memória.\n");
+        }
+    }
+     else if (type== 'A')
+    {
+        Ano* temp= realloc( array, newSize* sizeof(Ano*));
+         array =temp;
+         if (array == NULL) { 
+            printf("Erro ao realocar memória.\n");
+        }
+    }
+    else
+    {
+         printf("Tipo Inválido.\n");
+    }
+    
+
+    return array;
 
 }

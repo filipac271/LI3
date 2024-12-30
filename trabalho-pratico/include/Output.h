@@ -73,4 +73,7 @@ void output2(Output* output2, char* nome, char* tipo, char* time,char* pais, cha
 void output3(Output* output3, char* genero, int num, char c);
 
 
+void output6(char c, Output* output6, char* tempoAudicao,int nMusicas,char* artistId,char* data,char* genero,char* album, char* hora,int N);
+
+
 #endif

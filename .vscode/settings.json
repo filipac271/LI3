@@ -33,7 +33,9 @@
     "querie2.h": "c",
     "albumscontroller.h": "c",
     "compare": "c",
-    "type_traits": "c"
+    "type_traits": "c",
+    "history.h": "c",
+    "historycontroller.h": "c"
   }
 }
 

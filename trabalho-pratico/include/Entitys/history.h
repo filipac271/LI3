@@ -10,6 +10,46 @@ typedef struct artistahistory UmArtista;
 
 typedef struct domingo Domingo;
 
+
+typedef struct genero Generos;
+typedef struct album Albuns;
+typedef struct artista Artistas;
+typedef struct dia Dia;
+
+typedef struct ano Ano;
+typedef struct userHistory History;
+
+int IdArtista(History* userHistory, int ano, int i);
+
+int TempoArtista(History* userHistory, int ano, int i);
+
+int nMusicasArtista(History* userHistory, int ano, int i);
+
+int* NartistasMaisOuvidos(History* userHistory,int pAno, int N);
+
+char* ArtistaMaisOuvido(History* userHistory,int anoP);
+
+char* HoraMaisAudicoes(History* userHistory,int anoP);
+
+int AlbumFavorito(History* userHistory,int anoP, AlbumsData* albumController);
+
+char* GeneroMaisOuvido(History* userHistory, int anoP);
+
+char* DataMaisMusicas(History* userHistory,int anoP);
+
+int procuraAno(History* history, int ano);
+
+History* adicionaUserHistory(History* userHistory, MusicData* musicData,int musicId,int ano,int mes,int dia,int hora,int duration);
+
+History* inicializaUserHistory(int userId,MusicData* musicData,int musicId,int ano,int mes, int dia,int hora,int duration);
+
+History * lookup_UserHistory(GHashTable* history,int userId);
+
+
+void freeArtistas( Artistas* artista);
+
+void freeUserHistory(History* history);
+
 Domingo* newDomingo(char* data);
 
 UmArtista* new_umArtista (int artist_id, int segundos);
