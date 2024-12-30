@@ -21,4 +21,16 @@ void destroyMusicTable(MusicData* data);
 void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* artistcontroller);
 
 
+
+int get_musicAlbum(MusicData* musicController , int musicId);
+
+int get_numArtists(MusicData* musicController,int musicId);
+
+int* getArtistIdMusic(MusicData* musicController,int musicId);
+
+char* get_musicGenre(MusicData* musicController, int musicId);
+
+
+
+
 #endif

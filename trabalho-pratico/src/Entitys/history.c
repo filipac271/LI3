@@ -1,4 +1,5 @@
 #include "Entitys/musics.h" 
+#include "controler/musicsController.h"
 #include "utilidades.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -116,6 +117,60 @@ struct userHistory
   int tamanhoArray;
 
 };
+
+
+void printUserHistory(History* userHistory) {
+    if (userHistory == NULL) {
+        printf("Histórico de utilizador não encontrado.\n");
+        return;
+    }
+
+    printf("ID do utilizador: %d\n", userHistory->id);
+    printf("Número de anos registrados: %d\n", userHistory->nAnos);
+
+    for (int i = 0; i < userHistory->nAnos; i++) {
+        Ano* ano = &userHistory->anos[i];
+        printf("\nAno: %d\n", ano->ano);
+
+        printf("Número de artistas: %d\n", ano->nArtistas);
+        for (int j = 0; j < ano->nArtistas; j++) {
+            Artistas* artista = &ano->artistas[j];
+            printf("  Artista ID: %d, Tempo de audição: %d, Número de músicas: %d\n", 
+                   artista->artista, artista->tempoAudicao, artista->nMusicas);
+            printf("  Músicas: ");
+            for (int k = 0; k < artista->tamanhoArray; k++) {
+                printf("%d ", artista->musicas[k]);
+            }
+            printf("\n");
+        }
+
+        printf("\nNúmero de géneros: %d\n", ano->nGeneros);
+        for (int j = 0; j < ano->nGeneros; j++) {
+            Generos* genero = &ano->genero[j];
+            printf("  Género: %s, Tempo de audição: %d\n", 
+                   genero->genero, genero->tempoAudicao);
+        }
+
+        printf("\nNúmero de álbuns: %d\n", ano->nAlbuns);
+        for (int j = 0; j < ano->nAlbuns; j++) {
+            Albuns* album = &ano->album[j];
+            printf("  Álbum ID: %d, Tempo de audição: %d\n", 
+                   album->album, album->tempoAudicao);
+        }
+
+        printf("\nHoras por ano:\n");
+        for (int j = 0; j < 12; j++) { // Supondo que o array `horas` tem tamanho 12 para os meses do ano
+            printf("  Mês %d: %d horas\n", j + 1, ano->horas[j]);
+        }
+
+        printf("\nNúmero de dias: %d\n", ano->nDias);
+        for (int j = 0; j < ano->nDias; j++) {
+            Dia* dia = &ano->dia[j];
+            printf("  Dia: %d/%d, Número de músicas: %d\n", 
+                   dia->dia, dia->mes, dia->nMusicas);
+        }
+    }
+}
 
 int IdArtista(History* userHistory, int ano, int i)
 {
@@ -534,7 +589,7 @@ Ano* adicionaArtista(Ano* ANO, int* artistId,int numArtistas, int duracao,int mu
   return ANO;
 }
 
-Ano* adicionarAno(MusicData* musicData ,Ano* anos, int musicId, int ano,int mes,int dia,int hora,int duracao,int nAno, int novo )
+Ano* adicionarAno(MusicData* musicController ,Ano* anos, int musicId, int ano,int mes,int dia,int hora,int duracao,int nAno, int novo )
 {
 
   if(novo==1)
@@ -549,20 +604,15 @@ Ano* adicionarAno(MusicData* musicData ,Ano* anos, int musicId, int ano,int mes,
       }
   }
 
-  Music* music=lookup_musica(musicData, musicId);
-  
-  int numartistas= get_numArtistsId(music);
-  int* artistId=getArtistIDfromMuiscID(music); 
-if(ano==2022)
-  {
-    printf(" N Artistas:%d\n",numartistas);
-  }
+
+  int numartistas=get_numArtists(musicController ,musicId);
+  int* artistId=getArtistIdMusic(musicController ,musicId); 
 
   anos=adicionaArtista(anos,artistId, numartistas,duracao, musicId, nAno,novo);
   
-  char* genero= get_music_genre(music);
+  char* genero= get_musicGenre(musicController ,musicId);
   anos=insereGenero(genero,anos,duracao,nAno,novo);
-  int albumId= get_music_album(music);
+  int albumId= get_musicAlbum(musicController ,musicId);
   anos=insereAlbum(albumId,anos,duracao,nAno,novo);
   anos[nAno].horas[hora]+=1; 
   anos=insereDia(mes,dia,anos ,nAno,novo);
@@ -575,28 +625,28 @@ History* inicializaUserHistory(int userId,MusicData* musicData,int musicId,int a
 {
   History* userHistory= malloc(sizeof(History));
   userHistory->anos=calloc(4 , sizeof(Ano));
-  userHistory->anos= adicionarAno(musicData , userHistory->anos,  musicId,  ano,mes, dia, hora, duration,0,1);
   userHistory->id=userId; 
   userHistory->nAnos=1;
   userHistory->tamanhoArray=4;   
-  
+  userHistory->anos= adicionarAno(musicData , userHistory->anos,  musicId,  ano,mes, dia, hora, duration,0,1);
+
   return userHistory;
 
 }
 
 
-History* adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,int ano,int dia,int mes, int hora,int duration)
+void adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,int ano,int dia,int mes, int hora,int duration)
 { 
 
-   if(userHistory->anos==NULL)
-    { printf("INICIALIZA 1\n");
+   if(userHistory->anos == NULL)
+    { 
         userHistory->anos=adicionarAno(musicData,userHistory->anos, musicId,ano,mes,dia,hora , duration,0,1);
          
     }
     else
     { 
       
-        int anoPosicao=procuraAno(userHistory, ano); printf("AP%d\n",anoPosicao);
+        int anoPosicao=procuraAno(userHistory, ano); 
          int tamanhoArray= userHistory->tamanhoArray;
          int nAnos=userHistory->nAnos;
         if(anoPosicao>=tamanhoArray)
@@ -606,20 +656,20 @@ History* adicionaUserHistory(History* userHistory,MusicData* musicData,int music
         }
 
         if(anoPosicao==-1)
-        {printf("NOVO ANO\n");
+        {
            userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,nAnos,1);
            userHistory->nAnos++;
              
         }
         else
-        {printf("JA EXISTENTE\n");
+        {
             userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,anoPosicao,0);
             
         }
             
        
     }
-    return userHistory;
+    
     }
 
 void freeUserHistory(History* history)

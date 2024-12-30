@@ -196,3 +196,31 @@ void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* a
   free(arrayartistas);
   
 }
+
+int get_musicAlbum(MusicData* musicController , int musicId)
+{
+     Music* music=lookup_musica(musicController, musicId);
+    int album= get_music_album(music);
+     return album;
+}
+
+int get_numArtists(MusicData* musicController,int musicId)
+{
+  Music* music=lookup_musica(musicController, musicId);
+  int numartistas= get_numArtistsId(music);
+  return numartistas; 
+}
+
+ int* getArtistIdMusic(MusicData* musicController,int musicId)
+ {
+     Music* music=lookup_musica(musicController, musicId);
+    int* artistas= getArtistIDfromMuiscID(music);
+   return artistas;
+ } 
+
+ char* get_musicGenre(MusicData* musicController, int musicId)
+ {
+     Music* music=lookup_musica(musicController, musicId);
+     char* genero=get_music_genre(music);
+     return genero;
+ }

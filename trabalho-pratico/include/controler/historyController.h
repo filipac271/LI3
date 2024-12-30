@@ -16,6 +16,7 @@ Domingo* lookup_domingo(GHashTable* domingo, char* data);
 
 void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicController);
 
+History* lookup_UserHistory(HistoryData* historyController,int userId);
 
 HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData);
 

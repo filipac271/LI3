@@ -90,38 +90,50 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
 
 
 
-History * lookup_UserHistory(GHashTable* history,int userId)
+History* lookup_UserHistory(HistoryData* historyController,int userId)
 {
-    return g_hash_table_lookup(history, &userId);
+    return g_hash_table_lookup(historyController->history, &userId);
 }
 
 
-void addhistory(GHashTable* history, MusicData* musicData , char* user_id,char* music_id,char* timestamp,char* duration )
+void addhistory(HistoryData* history, MusicData* musicData , char* user_id,char* music_id,char* timestamp,char* duration )
 {
+
         int ano, mes,dia,hora;
         sscanf(timestamp,"\"%d/%d/%d %d",&ano,&mes,&dia,&hora); 
         int musicId=transformaIds(music_id);
+        printf("music : %d\n",musicId);
         int userId= transformaIds(user_id);
-        printf("%d\n",userId);
+        printf("kk  %d\n",userId);
         int duracao= duration_to_seconds(duration);
         History* userHistory=lookup_UserHistory(history, userId);
 
+
+
       int* key = malloc(sizeof(int));  // Aloca memória para a chave
-         *key = userId;
+      *key = userId;
     if(userHistory==NULL)
     { 
-   
-   userHistory= inicializaUserHistory(userId, musicData, musicId, ano,mes,dia,hora, duracao);
+        userHistory= inicializaUserHistory(userId, musicData, musicId, ano,mes,dia,hora, duracao); 
+
      if(userHistory==NULL)printf( "NULL\n");
-      g_hash_table_insert(history,key, userHistory); 
-        History* userHistory=lookup_UserHistory(history, userId);
-        if(userHistory==NULL)printf( "NULL\n");
+      g_hash_table_insert(history->history,key, userHistory); 
+
+
     }
     else
-    {     
-       printf( "HOLA\n");
-         userHistory= adicionaUserHistory(userHistory, musicData, musicId, ano,mes,dia,hora, duracao);
-      g_hash_table_insert(history,key, userHistory);
+    {    
+        //      printUserHistory(userHistory);
+        // printf("......\n");
+        adicionaUserHistory(userHistory, musicData, musicId, ano,mes,dia,hora, duracao);
+        // printUserHistory(userHistory);
+        // printf("********************\n");
+
+
+    //    g_hash_table_insert(history->history,key, userHistory);
+    //     History* userTeste=lookup_UserHistory(history, userId); 
+    //     printf("userrr:%d\n",userId);
+    //     //printUserHistory(userTeste);
     }
   
 
@@ -133,6 +145,7 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
         fprintf(stderr, "Erro: Alocação de memória para HistoryData falhou.\n");
         exit(1);
     }
+    int chagada = 1;
     Output * Erros= iniciaOutput("resultados/history_errors.csv");
 
     Hdata->Domingo = createHistoryTable();
@@ -162,11 +175,13 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
     char* linhaE=getLineError(parserE);
     int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
     if(isValid) {
-        addhistory(Hdata->history,musicData,tokens[1],tokens[2],tokens[3], tokens[4]);
-    
+        printf("%d\n",chagada);
+        printf("%s\n",tokens[1]);
+        addhistory(Hdata,musicData,tokens[1],tokens[2],tokens[3], tokens[4]);
+
        // newDomingo_orNot(Hdata, tokens, musicData); 
         //atualizaStreams(tokens[2], musicData, artistData);
-        
+        chagada++;
     }  
      
         free(linhaE);
@@ -182,27 +197,27 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
 
 int getIdArtista(HistoryData* historyController, int user_id, int ano, int i)
 {
-     History* userHistory= lookup_UserHistory(historyController->history, user_id);
+     History* userHistory= lookup_UserHistory(historyController, user_id);
      int id=IdArtista(userHistory,ano,i);
      return id;
 }
 
 int getTempoArtista(HistoryData* historyController, int user_id, int ano, int i)
 {
-     History* userHistory= lookup_UserHistory(historyController->history, user_id);
+     History* userHistory= lookup_UserHistory(historyController, user_id);
      int tempo=TempoArtista(userHistory,ano,i);
      return tempo;
 }
 int getnMusicasArtista(HistoryData* historyController, int user_id, int ano, int i)
 {
-     History* userHistory= lookup_UserHistory(historyController->history, user_id);
+     History* userHistory= lookup_UserHistory(historyController, user_id);
      int nMusicas=IdArtista(userHistory,ano,i);
      return nMusicas;
 }
 
 int getPosicaoAno(HistoryData* historyController,int user_id, int ano)
 {
-    History* userHistory= lookup_UserHistory(historyController->history, user_id);
+    History* userHistory= lookup_UserHistory(historyController, user_id);
     if(userHistory==NULL) 
     {
         printf("NULL User\n");
@@ -215,7 +230,7 @@ int getPosicaoAno(HistoryData* historyController,int user_id, int ano)
 
 int* getNartistasMaisOuvidos(HistoryData* historyController, int user_id,int  posicaoAno,int N)
 {
-     History* userHistory= lookup_UserHistory(historyController->history, user_id);
+     History* userHistory= lookup_UserHistory(historyController, user_id);
      int* artistas= NartistasMaisOuvidos(userHistory,posicaoAno,N);
      int* artista=  calloc(N, sizeof(int)); 
       for(int i=0;i<N&& artistas[i]!=0;i++)
@@ -229,7 +244,7 @@ int* getNartistasMaisOuvidos(HistoryData* historyController, int user_id,int  po
 
 char* getArtistaMaisOuvido(HistoryData* historyController, int user_id,int  posicaoAno)
 {
-    History* userHistory= lookup_UserHistory(historyController->history, user_id);
+    History* userHistory= lookup_UserHistory(historyController, user_id);
    char* resultados= ArtistaMaisOuvido(userHistory,posicaoAno); //////Falta dar copia
    return resultados;
 }
@@ -237,37 +252,37 @@ char* getArtistaMaisOuvido(HistoryData* historyController, int user_id,int  posi
 
 char* getDia(HistoryData*  historyController,int user_id,int ano)
 {
-    History* userHistory= lookup_UserHistory(historyController->history, user_id);
+    History* userHistory= lookup_UserHistory(historyController, user_id);
     char* data=DataMaisMusicas(userHistory,ano); //////Falta dar copia
     return data;
 }
 
 char* getGeneroMaisOuvido(HistoryData* historyController,int user_id,int ano)
 {
-    History* userHistory= lookup_UserHistory(historyController->history, user_id);
+    History* userHistory= lookup_UserHistory(historyController, user_id);
     char* genero= GeneroMaisOuvido( userHistory, ano); //////Falta dar copia
     return genero;
 }
 
 int getAlbumFavorito(HistoryData* historyController,int user_id,int ano,AlbumsData* albumController)
 {
-    History* userHistory= lookup_UserHistory(historyController->history, user_id); 
+    History* userHistory= lookup_UserHistory(historyController, user_id); 
     int albumId=AlbumFavorito(userHistory,ano, albumController); //////Falta dar copia
     return albumId;
 }
 
 char* getHora(HistoryData* historyController,int user_id,int ano)
 {
-    History* userHistory= lookup_UserHistory(historyController->history, user_id);
+    History* userHistory= lookup_UserHistory(historyController, user_id);
     char* hora= HoraMaisAudicoes(userHistory, ano);//////Falta dar copia
     return hora; 
 }
 
 //FAZER PRINT
-void print_all_history (HistoryData* history){
+void print_all_history (HistoryData* Hdata){
     printf("----- Hash Table do HISTORICO -----\n");
     sleep(3);
-    g_hash_table_foreach(history->Domingo, print_semana_completa, NULL);
+    g_hash_table_foreach(Hdata->Domingo, print_semana_completa, NULL);
     printf("----- Fim da Hash Table do HISTORICO-----\n");
 }
 

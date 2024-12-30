@@ -19,6 +19,8 @@ typedef struct dia Dia;
 typedef struct ano Ano;
 typedef struct userHistory History;
 
+void printUserHistory(History* userHistory);
+
 int IdArtista(History* userHistory, int ano, int i);
 
 int TempoArtista(History* userHistory, int ano, int i);
@@ -39,11 +41,10 @@ char* DataMaisMusicas(History* userHistory,int anoP);
 
 int procuraAno(History* history, int ano);
 
-History* adicionaUserHistory(History* userHistory, MusicData* musicData,int musicId,int ano,int mes,int dia,int hora,int duration);
+void adicionaUserHistory(History* userHistory, MusicData* musicData,int musicId,int ano,int mes,int dia,int hora,int duration);
 
 History* inicializaUserHistory(int userId,MusicData* musicData,int musicId,int ano,int mes, int dia,int hora,int duration);
 
-History * lookup_UserHistory(GHashTable* history,int userId);
 
 
 void freeArtistas( Artistas* artista);
