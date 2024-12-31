@@ -206,7 +206,9 @@ int get_musicAlbum(MusicData* musicController , int musicId)
 
 int get_numArtists(MusicData* musicController,int musicId)
 {
+  
   Music* music=lookup_musica(musicController, musicId);
+  if(music==NULL)printf("%d\n", musicId);
   int numartistas= get_numArtistsId(music);
   return numartistas; 
 }

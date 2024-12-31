@@ -381,15 +381,16 @@ Ano* insereGenero(char* genero,Ano* ano ,int tempo, int nAno, int novo)
 {
   if(novo==1)
   {
-    Generos* generos=calloc(15,sizeof(Generos));
-    generos[0].genero=genero;
-    generos[0].tempoAudicao=tempo;
-     ano[nAno].genero=generos;
-     ano[nAno].tamanhoG=15;
+      ano[nAno].genero=calloc(5,sizeof(Generos));
+      ano[nAno].genero[0].genero=genero;
+      ano[nAno].genero[0].tempoAudicao=tempo;
+      ano[nAno].nGeneros=1;
+      ano[nAno].tamanhoG=5;
   }
   else
   {
-    int i, N=ano[nAno].nGeneros;
+    
+    int i, N=ano[nAno].nGeneros;printf("%d\n",N);
     Generos* generos=ano[nAno].genero;
 
      for( i=0;i<N && strcmp(genero,generos[i].genero)!=0;i++){}
@@ -401,7 +402,8 @@ Ano* insereGenero(char* genero,Ano* ano ,int tempo, int nAno, int novo)
      {
       if(ano[nAno].tamanhoG<= N)
       {
-        ano[nAno].genero=resize(ano[nAno].genero,ano[nAno].tamanhoG,'g');
+        int newSize=ano[nAno].tamanhoG*2;
+        ano[nAno].genero=realloc(ano[nAno].genero, newSize*  sizeof(Generos));
         ano[nAno].tamanhoG*=2;
       }
         generos[i].genero=genero;
@@ -421,6 +423,7 @@ Ano* insereAlbum(int albumID,Ano* ano ,int tempo, int nAno, int novo)
     album[0].album=albumID;
     album[0].tempoAudicao=tempo;
      ano[nAno].album=album;
+     ano[nAno].nAlbuns=1;
   }
   else
   {
@@ -436,7 +439,8 @@ Ano* insereAlbum(int albumID,Ano* ano ,int tempo, int nAno, int novo)
      {
        if(ano[nAno].tamanhoA<=N)
       {
-        ano[nAno].album=resize(ano[nAno].album,ano[nAno].tamanhoA,'a');
+        int newSize=ano[nAno].tamanhoA*2;
+        ano[nAno].album= realloc( ano[nAno].album , newSize*  sizeof(Albuns));
         ano[nAno].tamanhoA*=2;
       }
        album[i].album=albumID;
@@ -458,6 +462,7 @@ Ano* insereDia(int mes, int dia, Ano* ano, int nAno, int novo)
     dias[0].mes=mes;
     dias[0].nMusicas=1;
     ano[nAno].dia=dias;
+    ano[nAno].nDias=1;
     
   }
   else
@@ -475,7 +480,8 @@ Ano* insereDia(int mes, int dia, Ano* ano, int nAno, int novo)
     {
       if(ano[nAno].tamanhoD<=N)
       {
-        ano[nAno].dia =resize(ano[nAno].dia,ano[nAno].tamanhoD,'d');
+        int newSize=ano[nAno].tamanhoD*2;
+        ano[nAno].dia = realloc(ano[nAno].dia , newSize* sizeof(Dia*));
         ano[nAno].tamanhoD*=2;
       }
       ano[nAno].dia[i].dia=dia;
@@ -506,6 +512,7 @@ Artistas* adicionarMusica(Artistas* artista ,int musicId,int aP,int duracao)
 {
     int i;
     for( i=0;i<artista[aP].nMusicas && artista[aP].musicas[i]!=musicId;i++){}
+    
     if(i>artista[aP].nMusicas && artista[aP].tamanhoArray>artista[aP].nMusicas)
     {
       artista[aP].musicas[i]=musicId;
@@ -555,13 +562,13 @@ Ano* adicionaArtista(Ano* ANO, int* artistId,int numArtistas, int duracao,int mu
       }
 
       ANO[nAno].nArtistas=numArtistas;
-      printf("nAno %d %d\n",nAno,numArtistas);
+      
   }
   else
   {
     for (int i=0;i<numArtistas;i++)
     {
-      printf(" n Artistas%d\n",ANO[nAno].nArtistas);
+      
       int artistaP=procura_Artista(ANO[nAno].artistas,ANO[nAno].nArtistas ,artistId[i]);
       
       if(artistaP==-1)
@@ -569,7 +576,7 @@ Ano* adicionaArtista(Ano* ANO, int* artistId,int numArtistas, int duracao,int mu
           
           if(ANO[nAno].nArtistas>=ANO[nAno].tamanhoArtistas)
           {
-            printf("Realloc\n");
+           
               ANO[nAno].artistas=realloc( ANO[nAno].artistas,(2*ANO[nAno].tamanhoArtistas) * sizeof(Artistas));
               ANO[nAno].tamanhoArtistas*=2;
 
@@ -623,13 +630,14 @@ Ano* adicionarAno(MusicData* musicController ,Ano* anos, int musicId, int ano,in
 
 History* inicializaUserHistory(int userId,MusicData* musicData,int musicId,int ano,int mes,int dia,int hora,int duration)
 {
+  
   History* userHistory= malloc(sizeof(History));
   userHistory->anos=calloc(4 , sizeof(Ano));
   userHistory->id=userId; 
   userHistory->nAnos=1;
   userHistory->tamanhoArray=4;   
   userHistory->anos= adicionarAno(musicData , userHistory->anos,  musicId,  ano,mes, dia, hora, duration,0,1);
-
+ 
   return userHistory;
 
 }
@@ -648,21 +656,25 @@ void adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,i
       
         int anoPosicao=procuraAno(userHistory, ano); 
          int tamanhoArray= userHistory->tamanhoArray;
-         int nAnos=userHistory->nAnos;
-        if(anoPosicao>=tamanhoArray)
-        {
-           userHistory->anos=resize(userHistory->anos,userHistory->tamanhoArray,'A');
+         int nAnos=userHistory->nAnos; 
+      
+        if(nAnos>=tamanhoArray && anoPosicao==-1)
+        { 
+          int newSize=  userHistory->tamanhoArray*2;
+          userHistory->anos= realloc(userHistory->anos, newSize* sizeof(Ano));
            userHistory->tamanhoArray*=2;
         }
 
         if(anoPosicao==-1)
         {
+       
            userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,nAnos,1);
            userHistory->nAnos++;
-             
+
         }
         else
         {
+         
             userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,anoPosicao,0);
             
         }
@@ -674,15 +686,34 @@ void adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,i
 
 void freeUserHistory(History* history)
 {
-  for(int i=0;i<history->tamanhoArray;i++)// é o tamanho do array ou aquele que nao estao nulos??
+  for(int i=0;i<history->nAnos;i++)
   {
+
+printf("freeing ");
+    for (int j = 0; j < history->anos[i].nArtistas; j++) {
+            if (history->anos[i].artistas[j].musicas) {
+                free(history->anos[i].artistas[j].musicas);
+            }
+    }
+
     free(history->anos[i].artistas);
-    free(history->anos[i].album);
-    free(history->anos[i].genero);
-     free(history->anos[i].dia);
+
+    if(history->anos[i].album)free(history->anos[i].album);
+  
+    for (int j = 0; j < history->anos[i].nGeneros; j++) {
     
+        if (history->anos[i].genero[j].genero) {
+            free(history->anos[i].genero[j].genero);
+        }
+    }   
+
+    if(history->anos[i].genero)free(history->anos[i].genero);
+    if(history->anos[i].dia)free(history->anos[i].dia);
+    if(history->anos[i].horas)free(history->anos[i].horas);
+
   }
-  free(history->anos);
+  //printf("freed\n");
+  if(history->anos)free(history->anos);
   free(history);
 }
 

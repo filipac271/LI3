@@ -102,9 +102,7 @@ void addhistory(HistoryData* history, MusicData* musicData , char* user_id,char*
         int ano, mes,dia,hora;
         sscanf(timestamp,"\"%d/%d/%d %d",&ano,&mes,&dia,&hora); 
         int musicId=transformaIds(music_id);
-        printf("music : %d\n",musicId);
         int userId= transformaIds(user_id);
-        printf("kk  %d\n",userId);
         int duracao= duration_to_seconds(duration);
         History* userHistory=lookup_UserHistory(history, userId);
 
@@ -115,25 +113,13 @@ void addhistory(HistoryData* history, MusicData* musicData , char* user_id,char*
     if(userHistory==NULL)
     { 
         userHistory= inicializaUserHistory(userId, musicData, musicId, ano,mes,dia,hora, duracao); 
-
-     if(userHistory==NULL)printf( "NULL\n");
       g_hash_table_insert(history->history,key, userHistory); 
 
 
     }
     else
     {    
-        //      printUserHistory(userHistory);
-        // printf("......\n");
         adicionaUserHistory(userHistory, musicData, musicId, ano,mes,dia,hora, duracao);
-        // printUserHistory(userHistory);
-        // printf("********************\n");
-
-
-    //    g_hash_table_insert(history->history,key, userHistory);
-    //     History* userTeste=lookup_UserHistory(history, userId); 
-    //     printf("userrr:%d\n",userId);
-    //     //printUserHistory(userTeste);
     }
   
 
@@ -175,10 +161,7 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
     char* linhaE=getLineError(parserE);
     int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
     if(isValid) {
-        printf("%d\n",chagada);
-        printf("%s\n",tokens[1]);
         addhistory(Hdata,musicData,tokens[1],tokens[2],tokens[3], tokens[4]);
-
        // newDomingo_orNot(Hdata, tokens, musicData); 
         //atualizaStreams(tokens[2], musicData, artistData);
         chagada++;
@@ -220,7 +203,6 @@ int getPosicaoAno(HistoryData* historyController,int user_id, int ano)
     History* userHistory= lookup_UserHistory(historyController, user_id);
     if(userHistory==NULL) 
     {
-        printf("NULL User\n");
         return -1; 
     }
     int i= procuraAno(userHistory,ano);

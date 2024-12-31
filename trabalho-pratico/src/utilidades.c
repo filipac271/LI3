@@ -460,8 +460,8 @@ void* resize(void* array, int oldSize, char type)
     int newSize= 2* oldSize;
     if (type== 'i')
     {
-        int* temp=realloc(array, newSize * sizeof(int));
-        array =temp;
+        array=realloc(array, newSize * sizeof(int));
+        
         // Verifica se a realocação foi bem-sucedida
         if (array == NULL) { 
             printf("Erro ao realocar memória.\n");
@@ -470,46 +470,11 @@ void* resize(void* array, int oldSize, char type)
     }
     else if(type=='c')
     {
-        char* temp= realloc( array, newSize* sizeof(char*));
+        char* temp= realloc( array, newSize* sizeof(char));
          array =temp;
 
         // Verifica se a realocação foi bem-sucedida
         if (array == NULL) { 
-            printf("Erro ao realocar memória.\n");
-        }
-    }
-    else if (type== 'g')
-    {
-         Generos* temp= realloc( array, newSize*  sizeof(Generos*));
-         array =temp;
-        // Verifica se a realocação foi bem-sucedida
-        if (array == NULL) { 
-            printf("Erro ao realocar memória.\n");
-        }
-          
-    }
-    else if(type== 'd')
-    {
-        Dia* temp = realloc( array, newSize* sizeof(Dia*));
-        array =temp;
-         if (array == NULL) { 
-            printf("Erro ao realocar memória.\n");
-        }
-          
-    }
-    else if (type== 'a')
-    {
-        Albuns* temp= realloc( array, newSize*  sizeof(Albuns*));
-         array =temp;
-         if (array == NULL) { 
-            printf("Erro ao realocar memória.\n");
-        }
-    }
-     else if (type== 'A')
-    {
-        Ano* temp= realloc( array, newSize* sizeof(Ano*));
-         array =temp;
-         if (array == NULL) { 
             printf("Erro ao realocar memória.\n");
         }
     }
