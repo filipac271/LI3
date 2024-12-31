@@ -144,8 +144,8 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
         free(linhaE);
         free(getLine(parserE));
 
-   }
-   
+  }
+  
     // Liberta a memória alocada pelo Output Erros e fecha o ficheiro dos erros
     freeOutput(Erros);
   
@@ -246,4 +246,15 @@ char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type){
 
 
   return genero;
+}
+
+
+int getnumartistaMusicControl (MusicData* musicController, int id){
+  Music* musica_atual = lookup_musica(musicController, id);
+  return get_numArtistsId(musica_atual);
+}
+
+int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas){
+  Music* musica_atual = lookup_musica(musicController, id);
+  return getArtistIDfromMuiscID(musica_atual, numartistas);
 }

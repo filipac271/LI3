@@ -444,25 +444,37 @@ int diasNoMes(int ano, int mes) {
     return dias[m - 1];
 }
 
+    //algoritmo de Zeller ou variantes dele
 int diaDaSemana(int ano, int mes, int dia) {
     int m = mes;
     int y = ano;
     int d = dia;
 
-    // if (m <=2 || m <=1) { 
-    // m += 12; 
-    // a--;
-    // }
-    
-    // int k = m % 100;
-    // int j = a/ 100;
-    // int h = (d + (13 * (m + 1)) / 5 + k + k / 4 + j / 4 + 5 * j) % 7;
-  if (m < 3) {
+    if (m < 3) {
         m += 12;
         y -= 1;
     }
-    return (d + (13 * (m + 1)) / 5 + y + (y / 4) - (y / 100) + (y / 400)) % 7;
+
+    // Formula para calcular o dia da semana.
+    int formula = d + 2*m + (3*(m+1)/5) + y + y/4 - y/100 + y/400 + 2;  
+
+    return formula % 7;
 }
+
+int diasParavoltar(int dia_da_semana) {
+    switch (dia_da_semana) {
+        case 0: return 6; // Sabado
+        case 1: return 0; // DOmingo
+        case 2: return 1; // Segunda
+        case 3: return 2; // Terça
+        case 4: return 3; // Quarta
+        case 5: return 4; // Quinta
+        case 6: return 5; // Sexta
+        default: return -1; // default
+    }
+}
+
+
 
 void calcularDomingoAnterior(const char *data, char *resultado) {
     int ano, mes, dia;
@@ -472,9 +484,9 @@ void calcularDomingoAnterior(const char *data, char *resultado) {
     int diaSemana = diaDaSemana(ano, mes, dia);
 
     // Calcula quantos dias deve voltar para o domingo anterior
-    int diasParaVoltar = diaSemana % 7;
+    int diasparavoltar = diasParavoltar(diaSemana);
     // Subtrair os dias para obter o domingo anterior
-    dia -= diasParaVoltar;
+    dia -= diasparavoltar;
     if (dia < 1) {
         mes--;
         if (mes < 1) {
@@ -484,8 +496,8 @@ void calcularDomingoAnterior(const char *data, char *resultado) {
         dia += diasNoMes(ano, mes);
     }
 
-    // Montar a data no formato desejado
     sprintf(resultado, "%04d/%02d/%02d", ano, mes, dia);
+    
 }
 
 
@@ -493,7 +505,6 @@ void destransforma_IDs(int numero, char *resultado) {
     // Formata o número e armazena na string resultado
     sprintf(resultado, "A%07d", numero);
 }
-
 
 
 
@@ -518,3 +529,4 @@ int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data) {
 
     return 1; 
 }
+
