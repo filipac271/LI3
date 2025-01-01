@@ -122,6 +122,7 @@ void printUserHistory(History* userHistory) {
         return;
     }
 
+ printf("Inicio \n");
     printf("ID do utilizador: %d\n", userHistory->id);
     printf("Número de anos registrados: %d\n", userHistory->nAnos);
 
@@ -131,12 +132,12 @@ void printUserHistory(History* userHistory) {
 
         printf("Número de artistas: %d\n", ano->nArtistas);
         for (int j = 0; j < ano->nArtistas; j++) {
-            Artistas* artista = &ano->artistas[j];
+            Artistas* artista = ano->artistas;
             printf("  Artista ID: %d, Tempo de audição: %d, Número de músicas: %d\n", 
-                   artista->artista, artista->tempoAudicao, artista->nMusicas);
+                   artista[j].artista, artista[j].tempoAudicao, artista[j].nMusicas);
             printf("  Músicas: ");
-            for (int k = 0; k < artista->tamanhoArray; k++) {
-                printf("%d ", artista->musicas[k]);
+            for (int k = 0; k < artista[j].nMusicas ;k++) {
+                printf("%d ", artista[j].musicas[k]);
             }
             printf("\n");
         }
@@ -172,10 +173,12 @@ void printUserHistory(History* userHistory) {
                    dia.dia, dia.mes, dia.nMusicas);
         }
     }
+    printf("FIM \n");
 }
 
 int IdArtista(History* userHistory, int ano, int i)
 {
+  printf("%d\n",i);
     return userHistory->anos[ano].artistas[i].artista;
 }
 
@@ -205,6 +208,7 @@ void sort(int* artistas, Artistas* artista, int N)
         tempo2=artista[artistas[j]].tempoAudicao ;
         id1=artista[artistas[i]].artista;
         id2=artista[artistas[j]].artista;
+        
         if (tempo1<tempo2 ||(tempo1==tempo2 && id1>id2) )
          {
                 temp = artistas[i];
@@ -251,10 +255,10 @@ char* ArtistaMaisOuvido(History* userHistory,int anoP)
      tempoTotal+=artistas[i].tempoAudicao;
      nMusicas+=artistas[i].nMusicas;
   }
-  char* resultados=NULL;
-  sprintf(resultados,"%d %d %d",artistaId,nMusicas ,tempoTotal);
+  char resultados[256];
+  snprintf(resultados,256,"%d %d %d",artistaId,nMusicas ,tempoTotal);
 
-  return resultados;
+  return strdup(resultados);
 }
 
 char* HoraMaisAudicoes(History* userHistory,int anoP)
@@ -270,16 +274,16 @@ char* HoraMaisAudicoes(History* userHistory,int anoP)
       hora=i;
     }
   }
-  char* horaMais=NULL;
+  char horaMais[3];
   if(hora<10)
   {
-    sprintf(horaMais,"0%d",hora);
+    snprintf(horaMais,3,"0%d",hora);
   }
   else
   {
-     sprintf(horaMais,"%d",hora);
+    snprintf(horaMais,3,"%d",hora);
   }
-  return horaMais;
+  return strdup(horaMais);
 }
 
 int AlbumFavorito(History* userHistory,int anoP, AlbumsData* albumController)
@@ -323,9 +327,10 @@ char* GeneroMaisOuvido(History* userHistory, int anoP)
   return generofav;
 }
 
-char* DataParaChar(int ano,int mes,int dia)
+
+  char* DataParaChar(int ano,int mes,int dia)
 {
-     char* data=NULL;
+    char data[13];
     if(dia<10 && mes>10)
     { 
       sprintf(data,"%d/%d/0%d",ano,mes,dia); 
@@ -340,10 +345,11 @@ char* DataParaChar(int ano,int mes,int dia)
     }
     else if( dia>=10 && mes>=10)
     {
-       sprintf(data,"%d/%d/%d",ano,mes,dia); 
+       snprintf(data,11,"%d/%d/%d",ano,mes,dia);
     }
-    return data;
+    return strdup(data);
 }
+
 
 char* DataMaisMusicas(History* userHistory,int anoP)
 {
@@ -365,14 +371,16 @@ char* DataMaisMusicas(History* userHistory,int anoP)
     return data;
 }
 
-int procuraAno(History* userHistory, int ano)
+int procuraAno(History* userHistory, int anos)
 {
 int anoP=-1;
 
  for(int i=0; i<userHistory->nAnos ;i++){
-  if(userHistory->anos[i].ano==ano )
+ 
+  if(userHistory->anos[i].ano == anos )
   {
-    return i;
+    
+        return i;
   }
  }
  return anoP;
@@ -618,11 +626,11 @@ History* inicializaUserHistory(int userId,MusicData* musicData,int musicId,int a
   userHistory->tamanhoArray=20;   
   userHistory->anos= adicionarAno(musicData , userHistory->anos,  musicId,  ano,mes, dia, hora, duration,0,1);
   
-  if(userHistory->id==69463){
-           printf("1 \n");
-          printUserHistory(userHistory);
+  // if(userHistory->id==69463){
+  //          printf("1 \n");
+  //         printUserHistory(userHistory);
          
-         } 
+  //        } 
   return userHistory;
 
 }
@@ -635,16 +643,21 @@ void adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,i
     { 
         userHistory->anos=adicionarAno(musicData,userHistory->anos, musicId,ano,mes,dia,hora , duration,0,1);
          userHistory->nAnos=1;
-         if(userHistory->id==69463)  {
-            printf("34\n");
-            printUserHistory(userHistory);
+        //  if(userHistory->id==69463)  {
+        //    // printf("34\n");
+        //    // printUserHistory(userHistory);
          
-         } 
+        //  } 
     }
     else
     { 
       
         int anoPosicao=procuraAno(userHistory, ano); 
+      //  if(anoPosicao == 1) printf("AnoP %d \n",anoPosicao); 
+      //   if(userHistory->id == 69463) 
+      //   {
+      //     printf(" AnoP%d \n",anoPosicao); 
+      //   }
          int tamanhoArray= userHistory->tamanhoArray;
          int nAnos=userHistory->nAnos; 
       
@@ -654,26 +667,31 @@ void adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,i
           userHistory->anos= realloc(userHistory->anos, newSize* sizeof(Ano));
            userHistory->tamanhoArray+=2;
         }
-
+       
+         if(userHistory->id==69463) printf(" Ano Posicao: %d\n",anoPosicao); 
         if(anoPosicao==-1)
         {
        
            userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,nAnos,1);
            userHistory->nAnos++;
-         if(userHistory->id==69463) 
-          {   printf("2\n");
-              printUserHistory(userHistory);
-          } 
+        //  if(userHistory->id==69463) 
+        //   {   
+        //     printf("2\n");
+        //       printUserHistory(userHistory);
+        //   } 
 
        }
         else
         {
+          // printf("%d \n", userHistory->id);
+          // printf("%d \n", userHistory->nAnos);
             userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,anoPosicao,0);
-             if(userHistory->id==69463) 
-             {
-                printf("3 \n");
-                 printUserHistory(userHistory);
-            } 
+             
+            //  if(userHistory->id==69463) 
+            //  {
+            //     printf("3 \n");
+            //     printUserHistory(userHistory);
+            // } 
            
         }
             

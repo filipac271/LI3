@@ -236,9 +236,7 @@ char* getDia(HistoryData*  historyController,int user_id,int ano)
 {
    
     History* userHistory= lookup_UserHistory(historyController, user_id);
-   printf("Hola\n");
     char* data=DataMaisMusicas(userHistory,ano); //////Falta dar copia 
-    printf("Hola\n");
     return data;
 }
 

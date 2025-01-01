@@ -5,22 +5,18 @@
 #include <stdio.h>
 #include <string.h>
 
-char* normalizaId(int id, char c)
-{
-    //Calcula quantos digitos tem o id
-    int nDigitos = snprintf(NULL, 0, "%d", id);
-    //Calcula quantos zeros sao precisos
-    int nZeros =7 - nDigitos;  
-    char* normalizado=NULL;
+
+
+void normalizaId(int id, char *resultado, char c) {
     if(c=='a')
     {
-        sprintf(normalizado, "AL%0*d", nZeros + nDigitos, id);
+       sprintf(resultado, "AL%07d", id);
     }
     else if( c=='A')
     {
-        sprintf(normalizado, "A%0*d", nZeros + nDigitos, id);
+        sprintf(resultado, "A%07d", id);
     }
-    return normalizado;
+
 }
 
 void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albumController)
@@ -37,7 +33,6 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
     int  ano, N; char user_id[9];
     int count = sscanf(line, " %*[^ ] %s %d %d", user_id, &ano, &N);
     int userId=transformaIds(user_id);
-   
     int posicaoAno=getPosicaoAno(historyController,userId, ano);
  
     if(posicaoAno==-1)
@@ -48,19 +43,21 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
         return;
     }
     else
-    {printf(" COMECA  %d\n",i+1);
-        char* data=getDia(historyController,userId, ano);
-       printf("%s\n",data);
-        char* genero= getGeneroMaisOuvido(historyController,userId, ano);
-        int album=getAlbumFavorito(historyController,userId, ano,albumController);
-        char* albumfav=normalizaId(album,'a');
-        char* hora= getHora(historyController,userId, ano);
-        char* resultados= getArtistaMaisOuvido(historyController,userId, ano);
+    {
+        char* data=getDia(historyController,userId, posicaoAno);
+       printf("%s \n",data);
+        char* genero= getGeneroMaisOuvido(historyController,userId, posicaoAno);
+        int album=getAlbumFavorito(historyController,userId, posicaoAno,albumController);
+        char albumfav[10];
+        normalizaId(album, albumfav,'a');
+        char* hora= getHora(historyController,userId, posicaoAno);
+        char* resultados= getArtistaMaisOuvido(historyController,userId, posicaoAno);
         int artistId, nMusicas, tempoAudicao;
         sscanf(resultados,"%d %d %d",&artistId, &nMusicas, &tempoAudicao);
-        char* artista=normalizaId(artistId, 'A');
-        char* tempo= seconds_to_hhmmss(tempoAudicao);  
-        printf("Holaaaaaaaaaaaaaa\n");
+        char artista[10];
+        normalizaId(artistId,artista, 'A');
+        char* tempo= seconds_to_hhmmss(tempoAudicao); 
+         
         output6(line[1],output,tempo,nMusicas,artista, data,genero, albumfav,hora, 0); 
 
         if( count==3)
@@ -71,12 +68,10 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
             for(int j=0;j<N;j++)
             {
                 artistId=getIdArtista(historyController,userId, ano,artistas[j]);
-                artista=normalizaId(artistId, 'A');
+                normalizaId(artistId,artista, 'A');
                 tempoAudicao=getTempoArtista(historyController,userId, ano,artistas[j]);
                 nMusicas=getnMusicasArtista(historyController,userId, ano,artistas[j]);
-                artista=normalizaId(artistId,'A');
                 char* tempo= seconds_to_hhmmss(tempoAudicao);
-                char* artista=normalizaId(artistId,'A');
 
                 output6(line[1],output,tempo,nMusicas,artista, NULL,NULL, NULL,NULL,1);
             }
