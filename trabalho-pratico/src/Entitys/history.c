@@ -97,16 +97,13 @@ struct ano
   Artistas* artistas; 
   int tamanhoArtistas;
   int nArtistas;
-  Generos* genero;
-  int tamanhoG;
+  GArray* genero;
   int nGeneros;
-  Albuns* album;
+  GArray* album;
   int nAlbuns;
-  int tamanhoA;
   int* horas;
-  Dia* dia;
+  GArray* dia;
   int nDias;
-  int tamanhoD;
 };
 
 struct userHistory
@@ -145,29 +142,34 @@ void printUserHistory(History* userHistory) {
         }
 
         printf("\nNúmero de géneros: %d\n", ano->nGeneros);
+        Generos* generos =( Generos*) ano->genero->data;
+        Generos genero;
         for (int j = 0; j < ano->nGeneros; j++) {
-            Generos* genero = &ano->genero[j];
+           genero= generos[j];
             printf("  Género: %s, Tempo de audição: %d\n", 
-                   genero->genero, genero->tempoAudicao);
+                   genero.genero, genero.tempoAudicao);
         }
-
+            
+            Albuns* albums =(Albuns*) ano->album->data;
+            Albuns album;
         printf("\nNúmero de álbuns: %d\n", ano->nAlbuns);
         for (int j = 0; j < ano->nAlbuns; j++) {
-            Albuns* album = &ano->album[j];
+          album = albums[j];
             printf("  Álbum ID: %d, Tempo de audição: %d\n", 
-                   album->album, album->tempoAudicao);
+                   album.album, album.tempoAudicao);
         }
 
         printf("\nHoras por ano:\n");
-        for (int j = 0; j < 12; j++) { // Supondo que o array `horas` tem tamanho 12 para os meses do ano
-            printf("  Mês %d: %d horas\n", j + 1, ano->horas[j]);
+        for (int j = 0; j < 24; j++) { // Supondo que o array `horas` tem tamanho 12 para os meses do ano
+            printf("  Hora %d: nº :%d \n", j + 1, ano->horas[j]);
         }
-
+         Dia* dias = (Dia*) ano->dia->data;
+        Dia dia;
         printf("\nNúmero de dias: %d\n", ano->nDias);
         for (int j = 0; j < ano->nDias; j++) {
-            Dia* dia = &ano->dia[j];
+           dia=dias[j];
             printf("  Dia: %d/%d, Número de músicas: %d\n", 
-                   dia->dia, dia->mes, dia->nMusicas);
+                   dia.dia, dia.mes, dia.nMusicas);
         }
     }
 }
@@ -282,8 +284,8 @@ char* HoraMaisAudicoes(History* userHistory,int anoP)
 
 int AlbumFavorito(History* userHistory,int anoP, AlbumsData* albumController)
 {
-  Albuns* albuns= userHistory->anos[anoP].album;
-  int N= userHistory->anos[anoP].nAlbuns;
+  Albuns* albuns=(Albuns*) userHistory->anos[anoP].album->data;
+  int N= userHistory->anos[anoP].album->len;
   int max=albuns[0].tempoAudicao;
   Album* albumfav= lookup_album(albumController,albuns[0].album );
   char* albumFavNome=getAlbumName(albumfav);
@@ -306,8 +308,8 @@ int AlbumFavorito(History* userHistory,int anoP, AlbumsData* albumController)
 
 char* GeneroMaisOuvido(History* userHistory, int anoP)
 {
-  Generos* generos= userHistory->anos[anoP].genero;
-  int N= userHistory->anos[anoP].nGeneros;
+  Generos* generos=(Generos*) userHistory->anos[anoP].genero->data;
+  int N= userHistory->anos[anoP].genero->len;
   int max=generos[0].tempoAudicao;
   char* generofav=generos[0].genero;
   for(int i=1;i<N;i++)
@@ -345,10 +347,11 @@ char* DataParaChar(int ano,int mes,int dia)
 
 char* DataMaisMusicas(History* userHistory,int anoP)
 {
-  Dia* dias= userHistory->anos[anoP].dia;
-  int maior=dias[0].nMusicas;
+   Dia* dias=(Dia*) userHistory->anos[anoP].dia->data;
+  int maior=dias[0].nMusicas; 
   int dia=dias[0].dia;
   int mes= dias[0].mes;
+
     for(int i=1;i<userHistory->anos[anoP].nDias;i++)
     {
       if(maior<dias[i].nMusicas || (maior==dias[i].nMusicas && (mes<dias[i].mes ||  (mes==dias[i].mes && dia<dias[i].dia )) ))
@@ -365,10 +368,11 @@ char* DataMaisMusicas(History* userHistory,int anoP)
 int procuraAno(History* userHistory, int ano)
 {
 int anoP=-1;
- for(int i=0; i<userHistory->nAnos && ano==-1;i++){
+
+ for(int i=0; i<userHistory->nAnos ;i++){
   if(userHistory->anos[i].ano==ano )
   {
-    anoP=i;
+    return i;
   }
  }
  return anoP;
@@ -377,127 +381,105 @@ int anoP=-1;
 
 
 
-Ano* insereGenero(char* genero,Ano* ano ,int tempo, int nAno, int novo)
-{
-  if(novo==1)
-  {
-      ano[nAno].genero=calloc(5,sizeof(Generos));
-      ano[nAno].genero[0].genero=genero;
-      ano[nAno].genero[0].tempoAudicao=tempo;
-      ano[nAno].nGeneros=1;
-      ano[nAno].tamanhoG=5;
-  }
-  else
-  {
-    
-    int i, N=ano[nAno].nGeneros;printf("%d\n",N);
-    Generos* generos=ano[nAno].genero;
+Ano* insereGenero(char* genero, Ano* ano, int tempo, int nAno, int novo) {
+    if (novo == 1) {
+        //  GArray para os generos do ano
+        ano[nAno].genero = g_array_new(FALSE, FALSE, sizeof(Generos));
 
-     for( i=0;i<N && strcmp(genero,generos[i].genero)!=0;i++){}
-     if(i<N)
-     {
-      generos[i].tempoAudicao+=tempo;
-     }  
-     else
-     {
-      if(ano[nAno].tamanhoG<= N)
-      {
-        int newSize=ano[nAno].tamanhoG*2;
-        ano[nAno].genero=realloc(ano[nAno].genero, newSize*  sizeof(Generos));
-        ano[nAno].tamanhoG*=2;
-      }
-        generos[i].genero=genero;
-        generos[i].tempoAudicao+=tempo;
-        ano[nAno].nGeneros++;
-     }
-     ano[nAno].genero=generos;
-}
-return ano;
+        // Adicionando o primeiro gênero
+        Generos novoGenero = { .genero = genero, .tempoAudicao = tempo };
+        g_array_append_val(ano[nAno].genero, novoGenero);
+        ano[nAno].nGeneros=1;
+
+    } else {
+        int i;
+        Generos* generos = (Generos*) ano[nAno].genero->data;
+        int N = ano[nAno].genero->len;
+        // Procurando o gênero no array
+        for (i = 0; i < N && strcmp(genero, generos[i].genero) != 0; i++) {}
+
+        if (i < N) {
+            // Gênero encontrado, atualiza o tempo de audição
+            generos[i].tempoAudicao += tempo;
+        } else {
+            // Gênero não encontrado, adiciona um novo
+            Generos novoGenero = { .genero = genero, .tempoAudicao = tempo };
+            g_array_append_val(ano[nAno].genero, novoGenero);
+            ano[nAno].nGeneros++;
+        }
+    }
+    return ano;
 }
 
-Ano* insereAlbum(int albumID,Ano* ano ,int tempo, int nAno, int novo)
-{
-  if(novo==1)
-  {
-    Albuns* album=calloc(4,sizeof(Generos));
-    album[0].album=albumID;
-    album[0].tempoAudicao=tempo;
-     ano[nAno].album=album;
-     ano[nAno].nAlbuns=1;
-  }
-  else
-  {
-    int i, N=ano[nAno].nAlbuns;
-     Albuns* album=ano[nAno].album;
+Ano* insereAlbum(int albumID, Ano* ano, int tempo, int nAno, int novo) {
+    if (novo == 1) {
+        // Criando uma nova GArray para os álbuns
+        ano[nAno].album = g_array_new(FALSE, FALSE, sizeof(Albuns));
 
-     for( i=0;i<N && albumID!=album[i].album;i++){}
-     if(i<N)
-     {
-      album[i].tempoAudicao+=tempo;
-     }  
-     else
-     {
-       if(ano[nAno].tamanhoA<=N)
-      {
-        int newSize=ano[nAno].tamanhoA*2;
-        ano[nAno].album= realloc( ano[nAno].album , newSize*  sizeof(Albuns));
-        ano[nAno].tamanhoA*=2;
-      }
-       album[i].album=albumID;
-       album[i].tempoAudicao+=tempo;
-        ano[nAno].nAlbuns++;
-     }
-     ano[nAno].album=album;
-}
-return ano;
+        // Adicionando o primeiro álbum
+        Albuns novoAlbum = { .album = albumID, .tempoAudicao = tempo };
+        g_array_append_val(ano[nAno].album, novoAlbum);
+        ano[nAno].nAlbuns=1;
+    } else {
+        int i;
+        Albuns* albuns = (Albuns*) ano[nAno].album->data;
+        int N = ano[nAno].album->len;
+
+        // Procurando o álbum no array
+        for (i = 0; i < N && albumID != albuns[i].album; i++) {}
+
+        if (i < N) {
+            // Álbum encontrado, atualiza o tempo de audição
+            albuns[i].tempoAudicao += tempo;
+        } else {
+            // Álbum não encontrado, adiciona um novo
+            Albuns novoAlbum = { .album = albumID, .tempoAudicao = tempo };
+            g_array_append_val(ano[nAno].album, novoAlbum);
+            ano[nAno].nAlbuns++;
+        }
+    }
+    return ano;
 }
 
 
-Ano* insereDia(int mes, int dia, Ano* ano, int nAno, int novo)
-{
-  if(novo==1)
-  {
-    Dia* dias=malloc(4* sizeof(Dia));
-    dias[0].dia=dia;
-    dias[0].mes=mes;
-    dias[0].nMusicas=1;
-    ano[nAno].dia=dias;
-    ano[nAno].nDias=1;
-    
-  }
-  else
-  {
-    int i, N=ano[nAno].nDias;
-    Dia* dias=ano[nAno].dia;
-    for( i=0;i<N && (dia!=dias[i].dia || mes!=dias[i].mes);i++){}
-    if(i<N)
-    {
-      dias->nMusicas++;
-      ano[nAno].dia=dias;
+
+Ano* insereDia(int mes, int dia, Ano* ano, int nAno, int novo) {
+    if (novo == 1) {
+        // Criando uma nova GArray para os dias
+        ano[nAno].dia = g_array_new(FALSE, FALSE, sizeof(Dia));
       
+        // Adicionando o primeiro dia
+        Dia novoDia = { .dia = dia, .mes = mes, .nMusicas = 1 };
+        g_array_append_val(ano[nAno].dia, novoDia);
+        ano[nAno].nDias=1;
+
+    } else {
+        int i;
+        Dia* dias = (Dia*) ano[nAno].dia->data;
+        int N = (int) ano[nAno].dia->len;
+
+        // Procurando o dia no array
+        for (i = 0; i < N && (dia != dias[i].dia || mes != dias[i].mes); i++) {}
+
+        if (i < N) {
+            // Dia encontrado, incrementa o número de músicas
+            dias[i].nMusicas++;
+        } else {
+            // Dia não encontrado, adiciona um novo
+            Dia novoDia = { .dia = dia, .mes = mes, .nMusicas = 1 };
+            g_array_append_val(ano[nAno].dia, novoDia);
+            ano[nAno].nDias++;
+        }
     }
-    else
-    {
-      if(ano[nAno].tamanhoD<=N)
-      {
-        int newSize=ano[nAno].tamanhoD*2;
-        ano[nAno].dia = realloc(ano[nAno].dia , newSize* sizeof(Dia*));
-        ano[nAno].tamanhoD*=2;
-      }
-      ano[nAno].dia[i].dia=dia;
-      ano[nAno].dia[i].mes=mes;
-       ano[nAno].dia[0].nMusicas=1;
-    }
-  }
-  return ano;
+    return ano;
 }
+
 
 int procura_Artista(Artistas* artistas,int N, int artistId)
 {
   int i;
   for(i=0;i<N;i++)
   {
-    printf("%d\n",i);
     if(artistas[i].artista==artistId)
     {
       return i;
@@ -570,19 +552,19 @@ Ano* adicionaArtista(Ano* ANO, int* artistId,int numArtistas, int duracao,int mu
     {
       
       int artistaP=procura_Artista(ANO[nAno].artistas,ANO[nAno].nArtistas ,artistId[i]);
-      
+     
       if(artistaP==-1)
       {
           
           if(ANO[nAno].nArtistas>=ANO[nAno].tamanhoArtistas)
           {
            
-              ANO[nAno].artistas=realloc( ANO[nAno].artistas,(2*ANO[nAno].tamanhoArtistas) * sizeof(Artistas));
-              ANO[nAno].tamanhoArtistas*=2;
+              ANO[nAno].artistas=realloc( ANO[nAno].artistas,(2+ANO[nAno].tamanhoArtistas) * sizeof(Artistas));
+              ANO[nAno].tamanhoArtistas+=2;
 
-          }
+          } 
 
-          ANO[nAno].artistas= novoArtista(ANO[nAno].artistas, artistId[i], musicId,duracao,artistaP);
+          ANO[nAno].artistas= novoArtista(ANO[nAno].artistas, artistId[i], musicId,duracao,ANO[nAno].nArtistas);
           ANO[nAno].nArtistas++;
 
       }
@@ -602,9 +584,7 @@ Ano* adicionarAno(MusicData* musicController ,Ano* anos, int musicId, int ano,in
   if(novo==1)
   {
     anos[nAno].ano=ano;
-    anos[nAno].artistas= (Artistas*)calloc(4,sizeof(Artistas));
     anos[nAno].horas=(int*)calloc(24,sizeof(int));
-    anos[nAno].tamanhoArtistas=4;
     if (anos[nAno].horas == NULL) {
           printf("Erro ao alocar memória.\n");
         
@@ -614,13 +594,13 @@ Ano* adicionarAno(MusicData* musicController ,Ano* anos, int musicId, int ano,in
 
   int numartistas=get_numArtists(musicController ,musicId);
   int* artistId=getArtistIdMusic(musicController ,musicId); 
-
+ 
   anos=adicionaArtista(anos,artistId, numartistas,duracao, musicId, nAno,novo);
-  
+  free(artistId);
   char* genero= get_musicGenre(musicController ,musicId);
   anos=insereGenero(genero,anos,duracao,nAno,novo);
-  int albumId= get_musicAlbum(musicController ,musicId);
-  anos=insereAlbum(albumId,anos,duracao,nAno,novo);
+  int albumId= get_musicAlbum(musicController ,musicId); 
+  anos=insereAlbum(albumId,anos,duracao,nAno,novo); 
   anos[nAno].horas[hora]+=1; 
   anos=insereDia(mes,dia,anos ,nAno,novo);
   return anos;
@@ -632,12 +612,17 @@ History* inicializaUserHistory(int userId,MusicData* musicData,int musicId,int a
 {
   
   History* userHistory= malloc(sizeof(History));
-  userHistory->anos=calloc(4 , sizeof(Ano));
+ userHistory->anos=calloc(20 , sizeof(Ano));
   userHistory->id=userId; 
   userHistory->nAnos=1;
-  userHistory->tamanhoArray=4;   
+  userHistory->tamanhoArray=20;   
   userHistory->anos= adicionarAno(musicData , userHistory->anos,  musicId,  ano,mes, dia, hora, duration,0,1);
- 
+  
+  if(userHistory->id==69463){
+           printf("1 \n");
+          printUserHistory(userHistory);
+         
+         } 
   return userHistory;
 
 }
@@ -649,7 +634,12 @@ void adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,i
    if(userHistory->anos == NULL)
     { 
         userHistory->anos=adicionarAno(musicData,userHistory->anos, musicId,ano,mes,dia,hora , duration,0,1);
+         userHistory->nAnos=1;
+         if(userHistory->id==69463)  {
+            printf("34\n");
+            printUserHistory(userHistory);
          
+         } 
     }
     else
     { 
@@ -659,10 +649,10 @@ void adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,i
          int nAnos=userHistory->nAnos; 
       
         if(nAnos>=tamanhoArray && anoPosicao==-1)
-        { 
-          int newSize=  userHistory->tamanhoArray*2;
+        { printf("Realloc\n");
+          int newSize=  userHistory->tamanhoArray+2;
           userHistory->anos= realloc(userHistory->anos, newSize* sizeof(Ano));
-           userHistory->tamanhoArray*=2;
+           userHistory->tamanhoArray+=2;
         }
 
         if(anoPosicao==-1)
@@ -670,13 +660,21 @@ void adicionaUserHistory(History* userHistory,MusicData* musicData,int musicId,i
        
            userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,nAnos,1);
            userHistory->nAnos++;
+         if(userHistory->id==69463) 
+          {   printf("2\n");
+              printUserHistory(userHistory);
+          } 
 
-        }
+       }
         else
         {
-         
             userHistory->anos=adicionarAno(musicData ,userHistory->anos,  musicId,ano,mes,dia,hora , duration,anoPosicao,0);
-            
+             if(userHistory->id==69463) 
+             {
+                printf("3 \n");
+                 printUserHistory(userHistory);
+            } 
+           
         }
             
        
@@ -689,7 +687,7 @@ void freeUserHistory(History* history)
   for(int i=0;i<history->nAnos;i++)
   {
 
-printf("freeing ");
+
     for (int j = 0; j < history->anos[i].nArtistas; j++) {
             if (history->anos[i].artistas[j].musicas) {
                 free(history->anos[i].artistas[j].musicas);
@@ -700,19 +698,26 @@ printf("freeing ");
 
     if(history->anos[i].album)free(history->anos[i].album);
   
-    for (int j = 0; j < history->anos[i].nGeneros; j++) {
-    
-        if (history->anos[i].genero[j].genero) {
-            free(history->anos[i].genero[j].genero);
+    if (history->anos[i].genero) {
+            Generos* generos = (Generos*) history->anos[i].genero->data;
+            for (guint j = 0; j < history->anos[i].genero->len; j++) {
+                free(generos[j].genero); // Liberar a string (se foi alocada dinamicamente)
+            }
+            g_array_free(history->anos[i].genero, TRUE);
         }
-    }   
 
-    if(history->anos[i].genero)free(history->anos[i].genero);
-    if(history->anos[i].dia)free(history->anos[i].dia);
+   if (history->anos[i].album) {
+            g_array_free(history->anos[i].album, TRUE);
+        }
+
+        // Liberar os dias
+        if (history->anos[i].dia) {
+            g_array_free(history->anos[i].dia, TRUE);
+        }
     if(history->anos[i].horas)free(history->anos[i].horas);
 
   }
-  //printf("freed\n");
+
   if(history->anos)free(history->anos);
   free(history);
 }
@@ -771,14 +776,7 @@ Domingo* newDomingo(char* data){
     return novo_domingo;
 }
 
-/* Tokens:
-TOken[0] = history_id
-token[1] = user_id
-token[2] = music_id
-token[3] = timestramp
-token[4] = duration hh:mm:ss
-token[5] = platafomra
-*/
+
 
 UmArtista* new_umArtista (int artist_id, int segundos){
   UmArtista* n_umart = malloc(sizeof(UmArtista));

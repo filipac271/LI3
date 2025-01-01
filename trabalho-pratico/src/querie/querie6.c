@@ -31,22 +31,24 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
         return;
     }
 
-     sprintf(filename, "resultados/command%d_output.txt", i + 1);
+    sprintf(filename, "resultados/command%d_output.txt", i + 1);
     Output* output = iniciaOutput(filename);
 
     int  ano, N; char user_id[9];
     int count = sscanf(line, " %*[^ ] %s %d %d", user_id, &ano, &N);
     int userId=transformaIds(user_id);
-     
+   
     int posicaoAno=getPosicaoAno(historyController,userId, ano);
-
+ 
     if(posicaoAno==-1)
     {
-         printf("%d\n",i);
         outputNULL(output);
+        freeOutput(output);
+        free(filename);
+        return;
     }
     else
-    {
+    {printf(" COMECA  %d\n",i+1);
         char* data=getDia(historyController,userId, ano);
        printf("%s\n",data);
         char* genero= getGeneroMaisOuvido(historyController,userId, ano);
@@ -83,5 +85,6 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
        }
     }
     
-  
+   freeOutput(output);
+        free(filename);
 }

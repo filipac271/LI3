@@ -107,13 +107,13 @@ void addhistory(HistoryData* history, MusicData* musicData , char* user_id,char*
         History* userHistory=lookup_UserHistory(history, userId);
 
 
-
-      int* key = malloc(sizeof(int));  // Aloca memória para a chave
-      *key = userId;
+      
     if(userHistory==NULL)
-    { 
+    {
+        int* key = malloc(sizeof(int));  // Aloca memória para a chave
+        *key = userId;
         userHistory= inicializaUserHistory(userId, musicData, musicId, ano,mes,dia,hora, duracao); 
-      g_hash_table_insert(history->history,key, userHistory); 
+         g_hash_table_insert(history->history,key, userHistory); 
 
 
     }
@@ -131,7 +131,7 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
         fprintf(stderr, "Erro: Alocação de memória para HistoryData falhou.\n");
         exit(1);
     }
-    int chagada = 1;
+    
     Output * Erros= iniciaOutput("resultados/history_errors.csv");
 
     Hdata->Domingo = createHistoryTable();
@@ -164,7 +164,7 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
         addhistory(Hdata,musicData,tokens[1],tokens[2],tokens[3], tokens[4]);
        // newDomingo_orNot(Hdata, tokens, musicData); 
         //atualizaStreams(tokens[2], musicData, artistData);
-        chagada++;
+       
     }  
      
         free(linhaE);
@@ -234,8 +234,11 @@ char* getArtistaMaisOuvido(HistoryData* historyController, int user_id,int  posi
 
 char* getDia(HistoryData*  historyController,int user_id,int ano)
 {
+   
     History* userHistory= lookup_UserHistory(historyController, user_id);
-    char* data=DataMaisMusicas(userHistory,ano); //////Falta dar copia
+   printf("Hola\n");
+    char* data=DataMaisMusicas(userHistory,ano); //////Falta dar copia 
+    printf("Hola\n");
     return data;
 }
 
@@ -255,7 +258,7 @@ int getAlbumFavorito(HistoryData* historyController,int user_id,int ano,AlbumsDa
 
 char* getHora(HistoryData* historyController,int user_id,int ano)
 {
-    History* userHistory= lookup_UserHistory(historyController, user_id);
+    History* userHistory= lookup_UserHistory(historyController, user_id);printf("Holaaaaaaaaaaaaaa\n");
     char* hora= HoraMaisAudicoes(userHistory, ano);//////Falta dar copia
     return hora; 
 }
