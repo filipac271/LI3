@@ -714,7 +714,7 @@ void freeUserHistory(History* history)
 
     free(history->anos[i].artistas);
 
-    if(history->anos[i].album)free(history->anos[i].album);
+    // if(history->anos[i].album)free(history->anos[i].album);
   
     if (history->anos[i].genero) {
             Generos* generos = (Generos*) history->anos[i].genero->data;

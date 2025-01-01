@@ -180,9 +180,9 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
 
 int getIdArtista(HistoryData* historyController, int user_id, int ano, int i)
 {
-     History* userHistory= lookup_UserHistory(historyController, user_id);
-     int id=IdArtista(userHistory,ano,i);
-     return id;
+    History* userHistory= lookup_UserHistory(historyController, user_id);
+    int id=IdArtista(userHistory,ano,i);
+    return id;
 }
 
 int getTempoArtista(HistoryData* historyController, int user_id, int ano, int i)

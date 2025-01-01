@@ -57,6 +57,7 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
         char artista[10];
         normalizaId(artistId,artista, 'A');
         char* tempo= seconds_to_hhmmss(tempoAudicao); 
+        printf("dasdsadasda%s\n",data);
          
         output6(line[1],output,tempo,nMusicas,artista, data,genero, albumfav,hora, 0); 
 
@@ -67,10 +68,10 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
             
             for(int j=0;j<N;j++)
             {
-                artistId=getIdArtista(historyController,userId, ano,artistas[j]);
+                artistId=getIdArtista(historyController,userId, posicaoAno,artistas[j]);
                 normalizaId(artistId,artista, 'A');
-                tempoAudicao=getTempoArtista(historyController,userId, ano,artistas[j]);
-                nMusicas=getnMusicasArtista(historyController,userId, ano,artistas[j]);
+                tempoAudicao=getTempoArtista(historyController,userId, posicaoAno,artistas[j]);
+                nMusicas=getnMusicasArtista(historyController,userId, posicaoAno,artistas[j]);
                 char* tempo= seconds_to_hhmmss(tempoAudicao);
 
                 output6(line[1],output,tempo,nMusicas,artista, NULL,NULL, NULL,NULL,1);
