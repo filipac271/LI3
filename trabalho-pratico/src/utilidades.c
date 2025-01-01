@@ -137,21 +137,30 @@ void* resize(void* array, int oldSize, int newSize, size_t elementSize, char typ
 
 
 
-int validaData(char* date) {
+int validaData(char *date) {
     int year, month, day;
+    int offset = 0; // Offset para lidar com aspas
 
-    // Verifica o tamanho esperado da string (aaaa/mm/dd = 10 caracteres)
-    if (strlen(date) != 12) {
+    // Verifica se a string está entre aspas
+    if (date[0] == '"' && date[strlen(date) - 1] == '"') {
+        offset = 1; // Ignorar as aspas inicial e final
+    }
+
+    // Calcula o tamanho esperado da string sem aspas
+    size_t expectedLength = offset ? 12 : 10;
+
+    // Verifica o tamanho esperado da string (aaaa/mm/dd = 10 caracteres ou "aaaa/mm/dd" = 12 caracteres)
+    if (strlen(date) != expectedLength) {
         return 0;
     }
 
-    // Verifica o formato: os caracteres nas posições 4 e 7 devem ser '/'
-    if (date[5] != '/' || date[8] != '/') {
+    // Verifica o formato: os caracteres nas posições corretas devem ser '/'
+    if (date[4 + offset] != '/' || date[7 + offset] != '/') {
         return 0;
     }
 
-    // Usa sscanf para extrair ano, mês e dia da string
-    if (sscanf(date, "\"%d/%d/%d\"", &year, &month, &day) != 3) {
+    // Usa sscanf para extrair ano, mês e dia da string, ajustando pelo offset
+    if (sscanf(date + offset, "%d/%d/%d", &year, &month, &day) != 3) {
         return 0;
     }
 
@@ -517,4 +526,26 @@ int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data) {
     }
 
     return 1; 
+}
+
+
+int verificaOrdemDatas(char *data1, char *data2) {
+    int ano1, mes1, dia1;
+    int ano2, mes2, dia2;
+
+    // Parse das datas para seus componentes (ano, mês, dia)
+    if (sscanf(data1, "%d/%d/%d", &ano1, &mes1, &dia1) != 3 ||
+        sscanf(data2, "%d/%d/%d", &ano2, &mes2, &dia2) != 3) {
+        return -1; // Retorna -1 se o formato das datas for inválido
+    }
+
+    // Comparação ano/mês/dia
+    if (ano1 < ano2) return 1;
+    if (ano1 > ano2) return 0;
+
+    if (mes1 < mes2) return 1;
+    if (mes1 > mes2) return 0;
+
+    if (dia1 < dia2) return 1;
+    return 0;
 }

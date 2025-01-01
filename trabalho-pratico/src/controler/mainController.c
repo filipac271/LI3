@@ -11,6 +11,7 @@
 #include "controler/artistsController.h"
 #include "controler/musicsController.h"
 #include "controler/usersController.h"
+#include "Input.h"
 
 #include "controler/albumsController.h"
 
@@ -32,6 +33,11 @@ struct mainController
 
 
 MainController* mainFeed(char* diretoria){
+
+    int diretoriaValida = checkDiretoria(diretoria);
+    if(!diretoriaValida){
+        return NULL;
+    }
     MainController* mainData = malloc(sizeof(MainController));
 
     mainData->artistsController =  artistFeed(diretoria);

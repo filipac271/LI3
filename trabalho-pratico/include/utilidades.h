@@ -175,4 +175,6 @@ void destransforma_IDs(int numero, char *resultado);
 
 int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data);
 
+int verificaOrdemDatas(char *data1, char *data2);
+
 #endif // UTILIDADES_H

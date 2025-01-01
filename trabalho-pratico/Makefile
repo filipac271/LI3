@@ -1,6 +1,9 @@
 CC := gcc
 
 EXEC := programa-principal
+
+EXEC_INTERATIVO := programa-interativo
+
 CFLAGS := -Wall -g -Og -O3 -flto -std=gnu99 -Wextra -pedantic -Iinclude $(shell pkg-config --cflags glib-2.0) -MMD -MP 
 LDFLAGS := $(shell pkg-config --libs glib-2.0) -lm -lncurses
 
@@ -19,9 +22,12 @@ CFLAGS_TEST := $(CFLAGS) -Wno-unused-function
 DEP := $(OBJ:.o=.d)
 
 .PHONY: all
-all: $(EXEC) $(EXEC_TEST)
+all: $(EXEC) $(EXEC_INTERATIVO) $(EXEC_TEST) 
 
 $(EXEC): $(OBJ)
+	@$(CC) $(OBJ) $(EXTERNAL_OBJ) $(LDFLAGS) -o $@ ; echo "[Linking] $@"
+
+$(EXEC_INTERATIVO): $(OBJ)
 	@$(CC) $(OBJ) $(EXTERNAL_OBJ) $(LDFLAGS) -o $@ ; echo "[Linking] $@"
 
 build/%.o: src/%.c
@@ -45,5 +51,6 @@ clean:
 	rm -rf build
 	rm -f $(EXEC)
 	rm -f $(EXEC_TEST)
+	rm -f $(EXEC_INTERATIVO)
 	rm -f resultados/*.txt
 	rm -f resultados/*.csv
