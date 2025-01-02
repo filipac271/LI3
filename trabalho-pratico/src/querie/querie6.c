@@ -79,10 +79,17 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
                 nMusicas=getnMusicasArtista(historyController,userId, posicaoAno,artistas[j]);
                 
                 output6(line[1],output,tempo,nMusicas,artista, NULL,NULL, NULL,NULL,1);
+                free(tempo);
             }
             
             free(artistas);
        }
+
+            free(genero);
+            free(hora);
+            free(resultados);
+            free(data);
+            free(tempo);
     }
     
    freeOutput(output);

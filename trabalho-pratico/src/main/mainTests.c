@@ -36,10 +36,12 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     float timeQ1 = 0;
     float timeQ2 = 0;
     float timeQ3 = 0;
+    float timeQ6 = 0;
 
     int q1 = 0;
     int q2 = 0;
     int q3 = 0;
+    int q6 = 0;
 
 
     Parser* parserT = newParser(queriesFile,"");
@@ -110,13 +112,12 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
                 clock_gettime(CLOCK_REALTIME, &end);
 
                 //Tempo unico desta chamada da querie3
-                timeQ3 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
-                q3++;
+                timeQ6 += (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9 ;
+                q6++;
                 break;
 
             default:
-                flag = 0;
-                i -=1;
+
                 break;
         }
 
@@ -171,12 +172,15 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     printf("\nTempo médio da querie 1: %.6f ms\n",timeQ1/q1 * 1e3 );
     printf("Tempo médio da querie 2: %.6f ms\n",timeQ2/q2 * 1e3 );
     printf("Tempo médio da querie 3: %.6f ms\n",timeQ3/q3 * 1e3 );
+    printf("Tempo médio da querie 6: %.6f ms\n",timeQ6/q6 * 1e3 );
     printf("\nA Querie 1 demorou na totalidade: %.6fms\n",timeQ1* 1e3);
     printf("A Querie 2 demorou na totalidade: %.6fms\n",timeQ2* 1e3);
     printf("A Querie 3 demorou na totalidade: %.6fms\n",timeQ3* 1e3);
+    printf("A Querie 6 demorou na totalidade: %.6fms\n",timeQ6* 1e3);
     printf("\nForam executadas %d queries 1\n",q1);
     printf("Foram executadas %d queries 2\n",q2);
     printf("Foram executadas %d queries 3\n",q3);
+    printf("Foram executadas %d queries 6\n",q6);
 
     int validLinesA = 1;
     int validLinesM = 1;
@@ -231,7 +235,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
     
     
 
-    if (correctLine == (q1 + q2 + q3)) {
+    if (correctLine == (q1 + q2 + q3 + q6)) {
         printf(COLOR_GREEN "\nNão houve erros em nenhuma querie\n\n" COLOR_RESET);
     } else {
         printf(COLOR_RED "\nHouve erros em uma ou mais queries\n\n" COLOR_RESET);

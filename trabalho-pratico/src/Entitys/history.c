@@ -350,7 +350,7 @@ char *GeneroMaisOuvido(History *userHistory, int anoP)
       generofav = generos[i].genero;
     }
   }
-  return generofav;
+  return strdup(generofav);
 }
 
 char *DataParaChar(int ano, int mes, int dia)
@@ -491,7 +491,7 @@ void insereDia(int mes, int dia, GArray* Dias, int novo)
     for (i = 0; i < N ; i++)
     {
       Dia* dias= &g_array_index(Dias,Dia,i);
-      if(dia == dias[i].dia && mes == dias[i].mes)
+      if(dia == dias->dia && mes == dias->mes)
       {
         dias->nMusicas++;
       }

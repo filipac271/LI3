@@ -49,7 +49,7 @@ guint get_garray_length(GArray *array) {
 
 char* seconds_to_hhmmss(int total_seconds) {
     // Aloca memória para a string de saída
-    char *time_string = malloc(16); // hh:mm:ss + \0 = 9 caracteres
+    char time_string[16] ; // hh:mm:ss + \0 = 9 caracteres
     if (time_string == NULL) {
         return NULL; // Verifica se a alocação foi bem-sucedida
     }
@@ -63,7 +63,7 @@ char* seconds_to_hhmmss(int total_seconds) {
     //mudar aqui tambem para 16 caso se queira tirar os warning
     snprintf(time_string, 16, "%02d:%02d:%02d", hours, minutes, seconds);
 
-    return time_string;
+    return strdup(time_string);
 }
 
 
