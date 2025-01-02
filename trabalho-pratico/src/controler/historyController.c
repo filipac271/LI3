@@ -105,9 +105,7 @@ void addhistory(HistoryData* history, MusicData* musicData , char* user_id,char*
         int userId= transformaIds(user_id);
         int duracao= duration_to_seconds(duration);
         History* userHistory=lookup_UserHistory(history, userId);
-
-    printf("Id: %d \n",userId);
-      
+     // printf("userId: %d \n",userId);
     if(userHistory==NULL)
     {
         int* key = malloc(sizeof(int));  // Aloca memória para a chave
@@ -263,7 +261,7 @@ int getAlbumFavorito(HistoryData* historyController,int user_id,int ano,AlbumsDa
 
 char* getHora(HistoryData* historyController,int user_id,int ano)
 {
-    History* userHistory= lookup_UserHistory(historyController, user_id);printf("Holaaaaaaaaaaaaaa\n");
+    History* userHistory= lookup_UserHistory(historyController, user_id);
     char* hora= HoraMaisAudicoes(userHistory, ano);//////Falta dar copia
     return hora; 
 }

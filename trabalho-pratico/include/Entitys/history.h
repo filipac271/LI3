@@ -15,6 +15,7 @@ typedef struct genero Generos;
 typedef struct album Albuns;
 typedef struct artista Artistas;
 typedef struct dia Dia;
+typedef struct hora Hora;
 
 typedef struct ano Ano;
 typedef struct userHistory History;
