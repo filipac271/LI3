@@ -2,6 +2,7 @@
 #include "Output.h"
 #include "controler/usersController.h"
 #include "recomendador.h"
+#include "personalRecomendador.h"
 #include <unistd.h>
 #include <stdlib.h>
 

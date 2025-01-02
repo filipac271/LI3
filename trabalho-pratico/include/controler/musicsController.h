@@ -1,7 +1,5 @@
 #ifndef MUSICSCONTROLLER_H
 #define MUSICSCONTROLLER_H
-#include <glib.h>
-#include <stdio.h>
 #include "Entitys/musics.h"
 #include "controler/artistsController.h"
 #include "controler/albumsController.h"

@@ -1,8 +1,6 @@
 #ifndef USERSCONTROLLER_H
 #define USERSCONTROLLER_H
-#include <glib.h>
-#include <stdio.h>
-#include <stdlib.h>
+
 #include "Entitys/users.h"
 #include "controler/musicsController.h"
 
@@ -15,7 +13,6 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData);
 
 void print_all_users(UsersData* data);
 
-void print_user_entry (gpointer key, gpointer value, gpointer user_data);
 
 User* fetchUser(UsersData* controlador, int username);
 

@@ -2,7 +2,6 @@
 #define VALIDAUSER_H
 
 
-#include <glib.h>
 #include"controler/musicsController.h"
 #include "Output.h"
 
