@@ -50,6 +50,8 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
     Parser* parserT = newParser(queriesFile,"");
     MainController* data = mainFeed(pastaPrincipal);
+    if(data == NULL)return 1;
+
 
 
     print_all_Data(data);

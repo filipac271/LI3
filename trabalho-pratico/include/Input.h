@@ -121,4 +121,6 @@ char* getLine(Parser* parserE);
  */
 int contar_linhas(char* nome_ficheiro);
 
+int checkDiretoria (char* diretoria);
+
 #endif 

@@ -5,6 +5,8 @@
 
 #include "Input.h"
 
+#define MaxTokensSize 8
+
 struct parser{
     FILE* file;
 
@@ -15,9 +17,18 @@ struct parser{
     char** tokens;
 };
 
+int checkDiretoria (char* diretoria){
+    FILE* ficheiro = NULL;
+
+    ficheiro = fopen(diretoria, "r");
+    if (ficheiro == NULL) {
+        return 0;
+    } 
 
 
-#define MaxTokensSize 8
+    return 1;
+}
+
 
 FILE* abrirFILE(char* diretoria, char* subdiretoria){
 

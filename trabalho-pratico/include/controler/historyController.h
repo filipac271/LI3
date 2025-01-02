@@ -14,12 +14,7 @@
  */
 typedef struct historyData HistoryData;
 
-/**
- * @brief Cria uma GHashTable para armazenar os dados do histórico organizados por semanas baseadas no domingo incial de cada uma.
- * 
- * @return Ponteiro para a nova tabela hash criada.
- */
-GHashTable* createHistoryTable();
+
 
 /**
  * @brief Procura um domingo específico na tabela hash externa.
