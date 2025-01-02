@@ -127,6 +127,7 @@ void printaNcursesQ(WINDOW *full_window,int* currentY){
         output = pegaLinha(parser);
         if(output == NULL)break;
         mvwprintw(full_window, (*currentY)++, 1, "Output: %s", output);
+        free(output);
     }
         wmove(full_window,*currentY,1);
     
@@ -169,6 +170,8 @@ void interativo() {
     const char *message = "Programa Interativo";
     int startX = (maxX - strlen(message)) / 2; // Centraliza horizontalmente
     char diretoriaDataset[256];
+    char* diretoriaDefault = "../../dataset/com_erros";
+    char quererDefault[256];
     int processouData = 0;
     int primeiraIteracao = 1;
     int ch = 0;
@@ -191,8 +194,12 @@ void interativo() {
                 break; 
             }
         }
-        
-        capturarEntrada(full_window, &currentY, 1, "Insira a Diretoria para o dataset: ", diretoriaDataset, sizeof(diretoriaDataset));
+
+            capturarEntrada(full_window,&currentY,1,"Quer usar a diretoria default? (y or n) ",quererDefault,sizeof(quererDefault));
+        if(quererDefault[0] == 'n'){
+            capturarEntrada(full_window, &currentY, 1, "Insira a Diretoria para o dataset: ", diretoriaDataset, sizeof(diretoriaDataset));
+        }
+
 
         wattron(full_window, A_BOLD);
         mvwprintw(full_window, currentY++, 1, "Processando os dados, por favor aguarde...");
@@ -204,7 +211,12 @@ void interativo() {
         FILE *devnull = fopen("/dev/null", "w"); // Ficheiro que descarta o output
         dup2(fileno(devnull), fileno(stdout)); // Redirecionar stdout para /dev/null
 
-        data = mainFeed(diretoriaDataset); // Chamar função que usa printf
+        if(quererDefault[0] == 'n'){
+            data = mainFeed(diretoriaDataset); // Chamar função que usa printf
+        }
+        if(quererDefault[0] == 'y'){
+            data = mainFeed(diretoriaDefault); // Chamar função que usa printf
+        }
 
         // Restaurar stdout original
         fflush(stdout); // Volta stdout à normalidade
