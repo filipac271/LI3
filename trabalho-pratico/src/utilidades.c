@@ -107,36 +107,6 @@ int calculate_num_members(char* grupo) {
 
 
 
-void* resize(void* array, int oldSize, int newSize, size_t elementSize, char type) {
-    //ElementSize vai ser tipo sizeof(char*) ou sizeof(int*) 
-
-    void* newArray = realloc(array, newSize * elementSize);
-
-
-    if (type == 'c') { 
-        char** stringArray = (char**)newArray;
-
-        for (int i = oldSize; i < newSize; i++) {
-            stringArray[i] = NULL;
-        }
-
-    } else if (type == 'i') { 
-        int** intPointerArray = (int**)newArray;
-
-        for (int i = oldSize; i < newSize; i++) {
-            intPointerArray[i] = NULL;  // Inicializa novos ponteiros de int* como NULL
-        }
-
-    } else {
-        printf("Tipo inválido para inicialização\n");
-        free(newArray);
-    }
-
-    return newArray;
-}
-
-
-
 int validaData(char *date) {
     int year, month, day;
     int offset = 0; // Offset para lidar com aspas
