@@ -36,9 +36,11 @@ char* getArtistaMaisOuvido(HistoryData* historyController,int user_id,int posica
 
 char* getDia(HistoryData*  historyController,int user_id,int ano);
 
-char* getGeneroMaisOuvido(HistoryData* historyController,int user_id,int ano);
+// char* getGeneroMaisOuvido(HistoryData* historyController,int user_id,int ano);
 
-int getAlbumFavorito(HistoryData* historyController,int user_id,int ano,AlbumsData* albumController);
+// int getAlbumFavorito(HistoryData* historyController,int user_id,int ano,AlbumsData* albumController);
+
+char * getAlbumGenero(HistoryData* historyController,MusicData* musicController, AlbumsData*albumController, int userId,int posicaoAno);
 
 char* getHora(HistoryData* historyController,int user_id,int ano);
 

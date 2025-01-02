@@ -7,6 +7,6 @@
 #include <glib.h>
 #include "controler/artistsController.h"
 
-void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albumController);
+void querie6(int i, char * line, HistoryData* historyController,MusicData* musicController, AlbumsData* albumController);
 
 #endif

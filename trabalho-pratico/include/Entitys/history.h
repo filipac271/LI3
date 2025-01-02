@@ -13,10 +13,11 @@ typedef struct domingo Domingo;
 
 typedef struct genero Generos;
 typedef struct album Albuns;
+
 typedef struct artista Artistas;
 typedef struct dia Dia;
 typedef struct hora Hora;
-
+typedef struct musica Musica;
 typedef struct ano Ano;
 typedef struct userHistory History;
 
@@ -36,9 +37,10 @@ char* ArtistaMaisOuvido(History* userHistory,int anoP);
 
 char* HoraMaisAudicoes(History* userHistory,int anoP);
 
-int AlbumFavorito(History* userHistory,int anoP, AlbumsData* albumController);
+// int AlbumFavorito(History* userHistory,int anoP, AlbumsData* albumController);
 
-char* GeneroMaisOuvido(History* userHistory, int anoP);
+// char* GeneroMaisOuvido(History* userHistory, int anoP);
+char * AlbumGenero(MusicData* musicController,History* userHistory,AlbumsData*albumController, int posicaoAno);
 
 char* DataMaisMusicas(History* userHistory,int anoP);
 

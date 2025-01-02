@@ -33,6 +33,7 @@ void queries (MainController* data, char* querieFile) {
         UsersData* UserController = getUserController(data);
         ArtistsData* ArtistController = getartistController(data);
         HistoryData* historyController= gethistoryController (data); 
+        MusicData* musicController=getMusicController(data);
         AlbumsData* albumController=getalbumController(data);
 
         switch (line[0]) {
@@ -56,7 +57,7 @@ void queries (MainController* data, char* querieFile) {
                 
             case '6':
 
-                querie6(i,line, historyController,albumController);
+                querie6(i,line, historyController,musicController, albumController);
 
             default:
                 break;

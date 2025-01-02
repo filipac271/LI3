@@ -64,6 +64,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
         UsersData* UserController = getUserController(data);
         ArtistsData* ArtistController = getartistController(data);
         HistoryData* historyController= gethistoryController (data); 
+        MusicData* musicController=getMusicController(data);
         AlbumsData* albumController=getalbumController(data);
         switch (line[0]) {
             case '1':
@@ -108,7 +109,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
             case '6':
                 clock_gettime(CLOCK_REALTIME, &start);
 
-                querie6(i,line, historyController,albumController);
+                querie6(i,line, historyController, musicController, albumController);
                 clock_gettime(CLOCK_REALTIME, &end);
 
                 //Tempo unico desta chamada da querie3

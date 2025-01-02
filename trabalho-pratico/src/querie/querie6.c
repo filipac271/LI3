@@ -19,7 +19,7 @@ void normalizaId(int id, char *resultado, char c) {
 
 }
 
-void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albumController)
+void querie6(int i, char * line, HistoryData* historyController,MusicData* musicController, AlbumsData* albumController)
 {
       char* filename = malloc(sizeof(char) * 256);
     if (filename == NULL) {
@@ -34,7 +34,7 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
     int count = sscanf(line, " %*[^ ] %s %d %d", user_id, &ano, &N);
     int userId=transformaIds(user_id);
     int posicaoAno=getPosicaoAno(historyController,userId, ano);
- 
+    
     if(posicaoAno==-1)
     {
         outputNULL(output);
@@ -45,8 +45,13 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
     else
     {
         
-        char* genero= getGeneroMaisOuvido(historyController,userId, posicaoAno);
-        int album=getAlbumFavorito(historyController,userId, posicaoAno,albumController);
+        // char* genero= getGeneroMaisOuvido(historyController,userId, posicaoAno);
+        // int album=getAlbumFavorito(historyController,userId, posicaoAno,albumController);
+       printf("HELLO \n");
+        char* albumGenero= getAlbumGenero(historyController,musicController,albumController, userId, posicaoAno); 
+         char genero[20];int album;
+         sscanf(albumGenero,"%[^0-9]%d", genero, &album);
+       
         char albumfav[9];
         normalizaId(album, albumfav,'a');
         char* hora= getHora(historyController,userId, posicaoAno);
@@ -84,8 +89,8 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
             
             free(artistas);
        }
-
-            free(genero);
+        
+           free(albumGenero);
             free(hora);
             free(resultados);
             free(data);

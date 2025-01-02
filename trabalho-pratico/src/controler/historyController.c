@@ -245,18 +245,25 @@ char* getDia(HistoryData*  historyController,int user_id,int ano)
     return data;
 }
 
-char* getGeneroMaisOuvido(HistoryData* historyController,int user_id,int ano)
-{
-    History* userHistory= lookup_UserHistory(historyController, user_id);
-    char* genero= GeneroMaisOuvido( userHistory, ano); //////Falta dar copia
-    return genero;
-}
+// char* getGeneroMaisOuvido(HistoryData* historyController,int user_id,int ano)
+// {
+//     History* userHistory= lookup_UserHistory(historyController, user_id);
+//     char* genero= GeneroMaisOuvido( userHistory, ano); //////Falta dar copia
+//     return genero;
+// }
 
-int getAlbumFavorito(HistoryData* historyController,int user_id,int ano,AlbumsData* albumController)
+// int getAlbumFavorito(HistoryData* historyController,int user_id,int ano,AlbumsData* albumController)
+// {
+//     History* userHistory= lookup_UserHistory(historyController, user_id); 
+//     int albumId=AlbumFavorito(userHistory,ano, albumController); //////Falta dar copia
+//     return albumId;
+// }
+
+char * getAlbumGenero(HistoryData* historyController,MusicData* musicController, AlbumsData*albumController, int userId,int posicaoAno)
 {
-    History* userHistory= lookup_UserHistory(historyController, user_id); 
-    int albumId=AlbumFavorito(userHistory,ano, albumController); //////Falta dar copia
-    return albumId;
+    History* userHistory= lookup_UserHistory(historyController, userId);
+    char* resultados=   AlbumGenero(musicController, userHistory,albumController, posicaoAno);
+    return resultados;
 }
 
 char* getHora(HistoryData* historyController,int user_id,int ano)
