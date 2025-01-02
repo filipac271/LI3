@@ -10,7 +10,7 @@
 void normalizaId(int id, char *resultado, char c) {
     if(c=='a')
     {
-       sprintf(resultado, "AL%07d", id);
+       sprintf(resultado, "AL%06d", id);
     }
     else if( c=='A')
     {
@@ -44,11 +44,10 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
     }
     else
     {
-        char* data=getDia(historyController,userId, posicaoAno);
-       printf("%s \n",data);
+        
         char* genero= getGeneroMaisOuvido(historyController,userId, posicaoAno);
         int album=getAlbumFavorito(historyController,userId, posicaoAno,albumController);
-        char albumfav[10];
+        char albumfav[9];
         normalizaId(album, albumfav,'a');
         char* hora= getHora(historyController,userId, posicaoAno);
         char* resultados= getArtistaMaisOuvido(historyController,userId, posicaoAno);
@@ -56,24 +55,29 @@ void querie6(int i, char * line, HistoryData* historyController,AlbumsData* albu
         sscanf(resultados,"%d %d %d",&artistId, &nMusicas, &tempoAudicao);
         char artista[10];
         normalizaId(artistId,artista, 'A');
+        char* data=getDia(historyController,userId, posicaoAno);
         char* tempo= seconds_to_hhmmss(tempoAudicao); 
-        printf("dasdsadasda%s\n",data);
          
-        output6(line[1],output,tempo,nMusicas,artista, data,genero, albumfav,hora, 0); 
+        output6(line[1],output,tempo,nMusicas,artista, data, genero, albumfav,hora, 0); 
 
         if( count==3)
       {
-            int* artistas=getNartistasMaisOuvidos(historyController,userId, ano, N);
+             int NumArtistas=getNumArtistas(historyController,userId, posicaoAno);
+             if(NumArtistas<N)
+             {
+                N=NumArtistas;
+             }
+            int* artistas=getNartistasMaisOuvidos(historyController,userId, posicaoAno, N);
             int tempoAudicao, nMusicas;
-            
+           
             for(int j=0;j<N;j++)
             {
                 artistId=getIdArtista(historyController,userId, posicaoAno,artistas[j]);
                 normalizaId(artistId,artista, 'A');
                 tempoAudicao=getTempoArtista(historyController,userId, posicaoAno,artistas[j]);
-                nMusicas=getnMusicasArtista(historyController,userId, posicaoAno,artistas[j]);
                 char* tempo= seconds_to_hhmmss(tempoAudicao);
-
+                nMusicas=getnMusicasArtista(historyController,userId, posicaoAno,artistas[j]);
+                
                 output6(line[1],output,tempo,nMusicas,artista, NULL,NULL, NULL,NULL,1);
             }
             

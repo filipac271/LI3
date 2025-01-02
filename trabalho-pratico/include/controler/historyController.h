@@ -20,6 +20,8 @@ History* lookup_UserHistory(HistoryData* historyController,int userId);
 
 HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData);
 
+int getNumArtistas(HistoryData* historyController,int userId,int posicaoAno);
+
 int getIdArtista(HistoryData* historyController, int user_id, int ano, int i);
 
 int getTempoArtista(HistoryData* historyController, int user_id, int ano, int i);

@@ -106,7 +106,7 @@ void addhistory(HistoryData* history, MusicData* musicData , char* user_id,char*
         int duracao= duration_to_seconds(duration);
         History* userHistory=lookup_UserHistory(history, userId);
 
-
+    printf("Id: %d \n",userId);
       
     if(userHistory==NULL)
     {
@@ -178,6 +178,13 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
     return Hdata;
 }
 
+int getNumArtistas(HistoryData* historyController,int userId,int posicaoAno)
+{
+    History* userHistory= lookup_UserHistory(historyController, userId);
+    int numArtistas=NumArtistas(userHistory,posicaoAno);
+    return numArtistas;
+}
+
 int getIdArtista(HistoryData* historyController, int user_id, int ano, int i)
 {
     History* userHistory= lookup_UserHistory(historyController, user_id);
@@ -194,7 +201,7 @@ int getTempoArtista(HistoryData* historyController, int user_id, int ano, int i)
 int getnMusicasArtista(HistoryData* historyController, int user_id, int ano, int i)
 {
      History* userHistory= lookup_UserHistory(historyController, user_id);
-     int nMusicas=IdArtista(userHistory,ano,i);
+     int nMusicas=nMusicasArtista(userHistory,ano,i);
      return nMusicas;
 }
 

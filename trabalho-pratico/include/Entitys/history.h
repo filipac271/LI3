@@ -19,7 +19,9 @@ typedef struct dia Dia;
 typedef struct ano Ano;
 typedef struct userHistory History;
 
-void printUserHistory(History* userHistory);
+//void printUserHistory(History* userHistory);
+
+int NumArtistas(History* userHistory,int posicaoAno);
 
 int IdArtista(History* userHistory, int ano, int i);
 
