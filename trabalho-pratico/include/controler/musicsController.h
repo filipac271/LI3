@@ -19,4 +19,10 @@ int getnumGenerosDif (MusicData* musicController);
 void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* artistcontroller);
 
 char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type);
+
+int getnumartistaMusicControl (MusicData* musicController, int id);
+
+int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas);
+
+
 #endif

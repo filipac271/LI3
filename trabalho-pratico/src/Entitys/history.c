@@ -59,19 +59,19 @@ struct artistahistory{
 };
 
 struct domingo{
-  char* data ;
-  GHashTable* artistahistory; //mudar para garray
-  GArray* artistahistory_garray;
+    char* data ;
+    GHashTable* artistahistory; //mudar para garray
+    GArray* artistahistory_garray;
 };
 
 
 
 
 void freeUmArtista (UmArtista* artista){
-  if(artista == NULL){
-    return;
-  } 
-  free(artista);
+    if(artista == NULL){
+        return;
+    } 
+    free(artista);
 }
 
 
@@ -153,12 +153,10 @@ void new_or_add(Domingo* domingo, char** tokens, MusicData* musicController) {
   //transforma o char music_id em int para conseguir encontrar a estrutura Music 
     int music_id = transformaIds(tokens[2]);
 
-    Music* musicadoartista = lookup_musica(musicController, music_id);
-
-    int numartistas = get_numArtistsId(musicadoartista);
+    int numartistas = getnumartistaMusicControl(musicController, music_id);
 
     //array de artistas que constituem essa musica
-    int* arrayartistas = getArtistIDfromMuiscID(musicadoartista,numartistas);
+    int* arrayartistas = getarrayArtistasMusicControl(musicController,music_id, numartistas);
 
     GHashTable* artistahistory = domingo->artistahistory;
     if (!artistahistory) {
@@ -263,25 +261,8 @@ gint compare_seconds(gconstpointer a, gconstpointer b) {
     return r;
 }
 
-// void tentativa_free_hashtable (Domingo*domingo){
-//     GHashTableIter iter;
-//     gpointer key, value;
-//     //pega no domingo e vai começar a iterar por ele
-//     g_hash_table_iter_init(&iter, domingo->artistahistory);
-
-//     while (g_hash_table_iter_next(&iter, &key, &value)) {
-//         UmArtista* artist_to_filter = value;
-
-//         freeUmArtista(value);
-//        // free(key); //liberta a chave para ele ir para o proximo
-//     }
-
-// }
-
-
 
 //GETTERS E SETTEERS
-
 GHashTable* get_artisthistorido_dedomingo (Domingo* domingo){
     return domingo->artistahistory;
 }
@@ -293,16 +274,16 @@ UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
 }
 
 GHashTable* getArtistHistory(Domingo* domingo){
-  return(domingo->artistahistory);
+    return(domingo->artistahistory);
 }
 
 GArray* get_garray_from_domingo (Domingo* domingo){
-  return (domingo->artistahistory_garray);
+    return (domingo->artistahistory_garray);
 }
 
 
 int get_garray_len (Domingo* domingo){
-  return(domingo->artistahistory_garray->len);
+    return(domingo->artistahistory_garray->len);
 }
 
 
@@ -315,6 +296,7 @@ int get_artist_id_from_garray (UmArtista* artista){
 int get_seconds_from_garray (UmArtista* artista){
     return artista->totalsemanalsegundos;
 }
+
 
 
 
