@@ -156,23 +156,79 @@ int transformaIds(char* idString);
 int compararFicheirosPorLinha(char *file1, char *file2, int *ocorrenciasCorretas);
 
 
+/**
+ * @brief Converte todos os caracteres de uma string para letras minúsculas.
+ * 
+ * @param str Ponteiro para a string a ser convertida. 
+ *            A conversão é feita in-place, ou seja, a string original é modificada.
+ */
 void toLowerCase(char *str);
 
 
-//FUNCOES NAO COMENTADAS
-
+/**
+ * @brief Extrai a data de uma string de data e hora.
+ * 
+ * @param datetime String que contém a data e hora no formato "yyyy/mm/dd hh:mm:ss".
+ * @param data String de saída onde será armazenada apenas a data no formato "yyyy/mm/dd".
+ */
 void pega_data(char* datetime, char* data);
 
+/**
+ * @brief Calcula o número de dias em um mês específico de um ano.
+ * 
+ * @param ano Ano a ser considerado (para verificar anos bissextos).
+ * @param mes Mês (1-12).
+ * @return Número de dias no mês especificado.
+ */
 int diasNoMes(int ano, int mes);
 
+/**
+ * @brief Determina o dia da semana para uma data específica.
+ * 
+ * @param ano Ano da data.
+ * @param mes Mês da data (1-12).
+ * @param dia Dia da data.
+ * @return Inteiro que representa o o dia da semana (0 = sábado, 1 = domingo, ..., 6 = sexta-feira).
+ */
 int diaDaSemana(int ano, int mes, int dia);
 
+/**
+ * @brief Calcula o domingo anterior a uma data específica.
+ * 
+ * @param data String contendo a data no formato "yyyy/mm/dd".
+ * @param resultado String de saída onde será armazenada a data do domingo anterior no formato "yyyy/mm/dd".
+ */
 void calcularDomingoAnterior(const char *data, char *resultado);
 
+/** REVER ISTO (NENHUMA ALTERAÇAO FOI FEITA A ISTO)
+ * @brief Redimensiona um array alocado dinamicamente.
+ * 
+ * @param array Ponteiro para o array a ser redimensionado.
+ * @param oldSize Tamanho atual do array.
+ * @param newSize Novo tamanho desejado para o array.
+ * @param elementSize Tamanho de cada elemento no array.
+ * @param type Tipo do redimensionamento: 'z' para zerar o espaço adicional ou outro para manter os valores.
+ * @return Ponteiro para o array redimensionado, ou NULL em caso de falha.
+ */
 void* resize(void* array, int oldSize, int newSize, size_t elementSize, char type);
 
+/**
+ * @brief Converte um número em uma string formatada como ID.
+ * 
+ * @param numero Número a ser convertido.
+ * @param resultado String de saída onde será armazenado o ID formatado.
+ */
 void destransforma_IDs(int numero, char *resultado);
 
+/**
+ * @brief Verifica se uma data pertence a um intervalo.
+ * 
+ * @param data_inicial String representando a data inicial no formato "yyyy/mm/dd".
+ * @param data_final String representando a data final no formato "yyyy/mm/dd".
+ * @param data String representando a data a ser verificada.
+ * @return 1 se a data pertence ao intervalo, 0 caso contrário.
+ */
 int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data);
+
 
 #endif // UTILIDADES_H

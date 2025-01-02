@@ -228,8 +228,6 @@ int id_maiores_ocorrencias(GHashTable* domingo, int* maior_n_ocorrencias) {
             // Atualiza o artista mais frequente
             int ocorrencia_atual = ocorrencia_atual_ptr ? *ocorrencia_atual_ptr : 1;
 
-
-
             if (ocorrencia_atual > max_ocorrencias || 
                 (ocorrencia_atual == max_ocorrencias && id_atual < mais_freq_artist)) {
                 max_ocorrencias = ocorrencia_atual;
