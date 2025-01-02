@@ -181,7 +181,9 @@ void destroyHistoryData(HistoryData* data) {
 
 //Q4
 
-int id_maiores_ocorrencias(GHashTable* domingo, int* maior_n_ocorrencias) {
+int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrencias) {
+
+    GHashTable* domingo = get_Domingo_from_HD(HistoryController);
     //Criamos a hash table auxiliar
     GHashTable* hash_auxiliar = g_hash_table_new_full(g_int_hash, g_int_equal, free, free);
 
@@ -245,7 +247,10 @@ int id_maiores_ocorrencias(GHashTable* domingo, int* maior_n_ocorrencias) {
 
 
 //Assume-se que as datas recebidas por esta funcao já sao os domingos 
-int artista_mais_frequente_com_data (GHashTable* semanas, char* data_inicio, char* data_fim, int *ocorrencia_final){
+int artista_mais_frequente_com_data (HistoryData* HistoryController, char* data_inicio, char* data_fim, int *ocorrencia_final){
+
+    GHashTable* semanas = get_Domingo_from_HD(HistoryController);
+
     int artista_mais_frequente = -1;
     int max_ocorrencias = 0;
 

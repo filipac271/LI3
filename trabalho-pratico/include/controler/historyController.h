@@ -107,7 +107,7 @@ GHashTable* get_Domingo_from_HD(HistoryData* data);
  * @param maior_n_ocorrencias Pointer para armazenar o maior número de ocorrências encontrado.
  * @return ID associado ao maior número de ocorrências.
  */
-int id_maiores_ocorrencias(GHashTable* domingo, int* maior_n_ocorrencias);
+int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrencias);
 
 /**
  * @brief Identifica o artista mais frequente entre duas datas específicas.
@@ -128,7 +128,7 @@ int id_maiores_ocorrencias(GHashTable* domingo, int* maior_n_ocorrencias);
  * @param ocorrencia_final Pointer para armazenar o número total de ocorrências do artista mais frequente.
  * @return ID do artista mais frequente entre as datas fornecidas.
  */
-int artista_mais_frequente_com_data(GHashTable* semanas, char* data_inicio, char* data_fim, int* ocorrencia_final);
+int artista_mais_frequente_com_data (HistoryData* HistoryController, char* data_inicio, char* data_fim, int *ocorrencia_final);
 
 
 #endif

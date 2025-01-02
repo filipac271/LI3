@@ -25,7 +25,7 @@ void query4 (HistoryData* HistoryController, ArtistsData* ArtistController, char
     int ocorrencias = 0;
 
     if(query4_result < 2){
-        artist_id = id_maiores_ocorrencias((get_Domingo_from_HD(HistoryController)),&ocorrencias);
+        artist_id = id_maiores_ocorrencias(HistoryController ,&ocorrencias);
 
         } else {
         char* domingo_inicio = malloc(11 * sizeof(char));
@@ -34,7 +34,7 @@ void query4 (HistoryData* HistoryController, ArtistsData* ArtistController, char
         char* domingo_final = malloc(11 * sizeof(char));
         calcularDomingoAnterior(data_fim, domingo_final);
 
-        artist_id = artista_mais_frequente_com_data((get_Domingo_from_HD(HistoryController)), domingo_inicio, domingo_final, &ocorrencias);
+        artist_id = artista_mais_frequente_com_data(HistoryController, domingo_inicio, domingo_final, &ocorrencias);
 
         free(domingo_inicio);
         free(domingo_final);
