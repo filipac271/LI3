@@ -5,6 +5,7 @@
 #include "controler/albumsController.h"
 
 /**
+ * @typedef
  * @brief Estrutura que representa os dados de músicas.
  */
 typedef struct musicData MusicData;
@@ -28,14 +29,6 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
  */
 Music* lookup_musica(MusicData* controller, int music_id);
 
-/**
- * @brief Imprime uma entrada da tabela de músicas.
- * 
- * @param key Chave da entrada (por exemplo, o ID da música).
- * @param value Valor associado à entrada (dados da música).
- * @param user_data Dados adicionais fornecidos pelo utilizador.
- */
-void print_music_entry(gpointer key, gpointer value, gpointer user_data);
 
 /**
  * @brief Imprime todas as músicas armazenadas.

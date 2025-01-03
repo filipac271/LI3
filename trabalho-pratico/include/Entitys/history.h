@@ -94,13 +94,6 @@ void passa_Domingo_para_garray(Domingo* domingo);
  */
 gint compare_seconds(gconstpointer a, gconstpointer b);
 
-/**
- * @brief Obtém a tabela hash de histórico de artistas de um domingo.
- * 
- * @param domingo Ponteiro para a estrutura Domingo.
- * @return Ponteiro para a tabela hash de histórico de artistas.
- */
-GHashTable* get_artisthistorido_dedomingo(Domingo* domingo);
 
 /**
  * @brief Procura um artista específico na tabela hash de histórico de artistas.
@@ -111,13 +104,6 @@ GHashTable* get_artisthistorido_dedomingo(Domingo* domingo);
  */
 UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id);
 
-/**
- * @brief Obtém o histórico de artistas de um domingo.
- * 
- * @param domingo Ponteiro para a estrutura Domingo.
- * @return Ponteiro para a tabela hash de histórico de artistas.
- */
-GHashTable* getArtistHistory(Domingo* domingo);
 
 /**
  * @brief Obtém a GArray de um domingo.
