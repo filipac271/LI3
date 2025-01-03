@@ -81,7 +81,6 @@ ArtistsData* artistFeed(char* diretoria) {
         if (tokens==NULL) {
 
              // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
-
               freeParser(parserE); break;
          }
 
@@ -291,7 +290,6 @@ void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country
 
 
 
-
 int isArtistValid (ArtistsData* controlador , int id){
     Artist* artista = lookup_artist(controlador,id);
 
@@ -302,8 +300,7 @@ int isArtistValid (ArtistsData* controlador , int id){
 
 
 
-
-
+//Getters
 
 char* getArtistNameControl(ArtistsData* controlador, int id){
     Artist* artista = lookup_artist(controlador,id);
@@ -336,4 +333,27 @@ double getArtistProfitsControl(ArtistsData* controlador, int id){
 int getArtistDiscographyControl(ArtistsData* controlador, int id){
     Artist* artista = lookup_artist(controlador,id);
     return getArtistDiscography(artista);
+}
+
+
+
+
+int getArtistNumMembrosControl(ArtistsData* controlador, int id) {
+    Artist* artista = lookup_artist(controlador, id);
+    return getArtistNumMembros(artista);
+}
+
+int* getArtistGrupoControl(ArtistsData* controlador, int id) {
+    Artist* artista = lookup_artist(controlador, id);
+    return getArtistGrupo(artista);
+}
+
+double getArtistGanhoControl(ArtistsData* controlador, int id) {
+    Artist* artista = lookup_artist(controlador, id);
+    return getArtistGanho(artista);
+}
+
+int getArtistIdControl(ArtistsData* controlador, int id) {
+    Artist* artista = lookup_artist(controlador, id);
+    return getArtistId(artista);
 }

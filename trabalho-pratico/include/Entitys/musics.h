@@ -60,13 +60,7 @@ char* get_music_title(Music* music);
  */
 char* get_music_duration(Music* music);
 
-/**
- * @brief Realiza as contas necessárias para passar o campo de music_duration do formato 'hh:mm:ss' para segundos.
- * 
- * @param music_duration String representando a duração da música (formato hh:mm:ss).
- * @return Duração em segundos.
- */
-int duration_to_seconds(char* music_duration);
+
 
 /**
  * @brief Getter para a duração da música em segundos.

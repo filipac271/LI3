@@ -106,7 +106,12 @@ void print_artist(Artist* artist) {
 }
 
 
-int getArtistId(Artist* artista){
+
+
+//Getters
+
+
+int getArtistId(Artist* artista){//
     return artista->id;
 }
 
@@ -114,15 +119,11 @@ char* getArtistName(Artist* artista){
     return strdup(artista->name);
 }
 
-// char* getArtistDescriçao(Artist* artista){
-//     return strdup(artista->descriçao);
-// }
-
-double getArtistGanho(Artist* artista){
+double getArtistGanho(Artist* artista){//
     return artista->ganho_por_stream;
 }
 
-int* getArtistGrupo(Artist* artista){
+int* getArtistGrupo(Artist* artista){//
     int num_artists = getArtistNumMembros(artista);
 
     int* novoarray = malloc(num_artists * sizeof(int));
@@ -145,7 +146,7 @@ char* getArtistType(Artist* artista){
     return strdup(artista->type);
 }
 
-int getArtistNumMembros(Artist* artista){
+int getArtistNumMembros(Artist* artista){//
     return artista->numMembrosGrupo;
 }
 
@@ -162,19 +163,25 @@ int getArtistAlbunsIndividuais (Artist* artista){
     return artista->albunsIndividuais;
 }
 
+//Setters
+
+
 void setArtistDiscography(Artist* artista, int discography){
-    
     artista->total_discography += discography;
 }
 
 void setStreams (Artist* artista,double stream){
-
     artista->profit += stream;
-
 
 }
 
 void setAlbuns (Artist* artista){
     artista->albunsIndividuais += 1;
-
 }
+
+
+
+//Unused
+// char* getArtistDescriçao(Artist* artista){
+//     return strdup(artista->descriçao);
+// }

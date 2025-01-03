@@ -320,5 +320,4 @@ int isUserValid(UsersData* controlador, int userName){
     User* user = fetchUser(controlador,userName);
     if(user == NULL) return 1;
     return 0;
-
 }

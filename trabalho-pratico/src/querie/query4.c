@@ -55,7 +55,7 @@ void query4 (HistoryData* HistoryController, ArtistsData* ArtistController, char
 
     output4(output, id_em_char, tipo, (ocorrencias), line[1]);
 
-        free(tipo);
+    free(tipo);
 
     }
     
