@@ -20,6 +20,14 @@
 int calcular_idade(char* data_nascimento_str);
 
 /**
+ * @brief Realiza as contas necessárias para passar o campo de music_duration do formato 'hh:mm:ss' para segundos.
+ * 
+ * @param music_duration String representando a duração da música (formato hh:mm:ss).
+ * @return Duração em segundos.
+ */
+int duration_to_seconds(char* music_duration);
+
+/**
  * @brief Obtém o tamanho de um GArray.
  * 
  * Esta função é um getter para o tamanho de um GArray. Se o GArray for NULL retorn 0, caso contrário, returna o seu respetivo tamanho.

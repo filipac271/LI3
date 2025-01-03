@@ -37,6 +37,16 @@ int calcular_idade( char* data_nascimento_str) {
     return idade;
 }
 
+int duration_to_seconds(char* music_duration) {
+    int hours, minutes, seconds;
+
+    sscanf(music_duration, "%d:%d:%d", &hours, &minutes, &seconds);
+
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
+
+
 
 guint get_garray_length(GArray *array) {
     if (array == NULL) {
