@@ -103,7 +103,7 @@ GHashTable* get_Domingo_from_HD(HistoryData* data);
  * Á medida que vamos fazendo isto, vamos verificando e atualizando tanto o valor de max_ocorrencias como o mais_freq_artist.
  * No final, libertamos a hashtbale auxiliar para evitar memory leaks e retornamos o id do artista mais frequente.
  * 
- * @param domingo Pointer para a Hash Table externa de domingos.
+ * @param HistoryController Pointer para a estrutura HistoryData.
  * @param maior_n_ocorrencias Pointer para armazenar o maior número de ocorrências encontrado.
  * @return ID associado ao maior número de ocorrências.
  */
@@ -122,7 +122,7 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
  * Á medida que vamos fazendo isto, vamos verificando e atualizando tanto o valor de max_ocorrencias como o mais_freq_artist.
  * No final, libertamos a hashtbale auxiliar para evitar memory leaks e retornamos o id do artista mais frequente.
  * 
- * @param semanas Pointer para a Hash Table externa.
+ * @param  HistoryController Pointer para a estrutura HistoryData.
  * @param data_inicio String que contem a data inicial no formato yyyy/mm/dd.
  * @param data_fim String que contem a data final no formato yyyy/mm/dd.
  * @param ocorrencia_final Pointer para armazenar o número total de ocorrências do artista mais frequente.
