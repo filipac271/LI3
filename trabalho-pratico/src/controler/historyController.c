@@ -96,7 +96,7 @@ History* lookup_UserHistory(HistoryData* historyController,int userId)
 }
 
 
-void addhistory(HistoryData* history, MusicData* musicData , char* user_id,char* music_id,char* timestamp,char* duration )
+void addhistory(HistoryData* history, char* user_id,char* music_id,char* timestamp,char* duration )
 {
 
         int ano, mes,dia,hora;
@@ -105,19 +105,20 @@ void addhistory(HistoryData* history, MusicData* musicData , char* user_id,char*
         int userId= transformaIds(user_id);
         int duracao= duration_to_seconds(duration);
         History* userHistory=lookup_UserHistory(history, userId);
-     // printf("userId: %d \n",userId);
+        
+   //  if(userId== 173609) printf("userId: %d \n",userId);
     if(userHistory==NULL)
     {
         int* key = malloc(sizeof(int));  // Aloca memória para a chave
         *key = userId;
-        userHistory= inicializaUserHistory(userId, musicData, musicId, ano,mes,dia,hora, duracao); 
+        userHistory= inicializaUserHistory(userId, musicId, ano,mes,dia,hora, duracao); 
          g_hash_table_insert(history->history,key, userHistory); 
 
 
     }
     else
     {    
-        adicionaUserHistory(userHistory, musicData, musicId, ano,mes,dia,hora, duracao);
+        adicionaUserHistory(userHistory, musicId, ano,mes,dia,hora, duracao);
     }
   
 
@@ -159,7 +160,7 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
     char* linhaE=getLineError(parserE);
     int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
     if(isValid) {
-        addhistory(Hdata,musicData,tokens[1],tokens[2],tokens[3], tokens[4]);
+        addhistory(Hdata,tokens[1],tokens[2],tokens[3], tokens[4]);
        // newDomingo_orNot(Hdata, tokens, musicData); 
         //atualizaStreams(tokens[2], musicData, artistData);
        
@@ -176,32 +177,32 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData,ArtistsData* arti
     return Hdata;
 }
 
-int getNumArtistas(HistoryData* historyController,int userId,int posicaoAno)
-{
-    History* userHistory= lookup_UserHistory(historyController, userId);
-    int numArtistas=NumArtistas(userHistory,posicaoAno);
-    return numArtistas;
-}
+// int getNumArtistas(HistoryData* historyController,int userId,int posicaoAno)
+// {
+//     History* userHistory= lookup_UserHistory(historyController, userId);
+//     int numArtistas=NumArtistas(userHistory,posicaoAno);
+//     return numArtistas;
+// }
 
-int getIdArtista(HistoryData* historyController, int user_id, int ano, int i)
-{
-    History* userHistory= lookup_UserHistory(historyController, user_id);
-    int id=IdArtista(userHistory,ano,i);
-    return id;
-}
+// int getIdArtista(HistoryData* historyController, int user_id, int ano, int i)
+// {
+//     History* userHistory= lookup_UserHistory(historyController, user_id);
+//     int id=IdArtista(userHistory,ano,i);
+//     return id;
+// }
 
-int getTempoArtista(HistoryData* historyController, int user_id, int ano, int i)
-{
-     History* userHistory= lookup_UserHistory(historyController, user_id);
-     int tempo=TempoArtista(userHistory,ano,i);
-     return tempo;
-}
-int getnMusicasArtista(HistoryData* historyController, int user_id, int ano, int i)
-{
-     History* userHistory= lookup_UserHistory(historyController, user_id);
-     int nMusicas=nMusicasArtista(userHistory,ano,i);
-     return nMusicas;
-}
+// int getTempoArtista(HistoryData* historyController, int user_id, int ano, int i)
+// {
+//      History* userHistory= lookup_UserHistory(historyController, user_id);
+//      int tempo=TempoArtista(userHistory,ano,i);
+//      return tempo;
+// }
+// int getnMusicasArtista(HistoryData* historyController, int user_id, int ano, int i)
+// {
+//      History* userHistory= lookup_UserHistory(historyController, user_id);
+//      int nMusicas=nMusicasArtista(userHistory,ano,i);
+//      return nMusicas;
+// }
 
 int getPosicaoAno(HistoryData* historyController,int user_id, int ano)
 {
@@ -215,26 +216,40 @@ int getPosicaoAno(HistoryData* historyController,int user_id, int ano)
    
 }
 
-int* getNartistasMaisOuvidos(HistoryData* historyController, int user_id,int  posicaoAno,int N)
+// int* getNartistasMaisOuvidos(HistoryData* historyController, int user_id,int  posicaoAno,int N)
+// {
+//      History* userHistory= lookup_UserHistory(historyController, user_id);
+//      int* artistas= NartistasMaisOuvidos(userHistory,posicaoAno,N);
+//      int* artista=  calloc(N, sizeof(int)); 
+//       for(int i=0;i<N&& artistas[i]!=0;i++)
+//     {
+//          artista[i]=artistas[i];
+//     }
+//     free(artistas);
+//     return artista;
+
+// }
+
+
+char** getNartistasMaisOuvidos(HistoryData* historyController, MusicData*musicController, int user_id,int  posicaoAno,int N)
 {
      History* userHistory= lookup_UserHistory(historyController, user_id);
-     int* artistas= NartistasMaisOuvidos(userHistory,posicaoAno,N);
-     int* artista=  calloc(N, sizeof(int)); 
-      for(int i=0;i<N&& artistas[i]!=0;i++)
-    {
-         artista[i]=artistas[i];
-    }
-    free(artistas);
-    return artista;
+     char** resultados= NartistasMaisOuvidos(userHistory,musicController, posicaoAno,N);
+    //  int* artista=  calloc(N, sizeof(int)); 
+    //   for(int i=0;i<N&& artistas[i]!=0;i++)
+    // {
+    //      artista[i]=artistas[i];
+    // }
+    // free(artistas);
+    return resultados;
 
 }
-
-char* getArtistaMaisOuvido(HistoryData* historyController, int user_id,int  posicaoAno)
-{
-    History* userHistory= lookup_UserHistory(historyController, user_id);
-   char* resultados= ArtistaMaisOuvido(userHistory,posicaoAno); //////Falta dar copia
-   return resultados;
-}
+// char* getArtistaMaisOuvido(HistoryData* historyController, int user_id,int  posicaoAno)
+// {
+//     History* userHistory= lookup_UserHistory(historyController, user_id);
+//    char* resultados= ArtistaMaisOuvido(userHistory,posicaoAno); //////Falta dar copia
+//    return resultados;
+// }
 
 
 char* getDia(HistoryData*  historyController,int user_id,int ano)

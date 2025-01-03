@@ -26,11 +26,11 @@ int get_musicAlbum(MusicData* musicController , int musicId);
 
 int get_numArtists(MusicData* musicController,int musicId);
 
-int* getArtistIdMusic(MusicData* musicController,int musicId);
+//int* getArtistIdMusic(MusicData* musicController,int musicId);
 
 char* get_musicGenre(MusicData* musicController, int musicId);
 
+int getnumartistaMusicControl (MusicData* musicController, int id);
 
-
-
+int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas);
 #endif

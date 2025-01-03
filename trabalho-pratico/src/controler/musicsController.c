@@ -188,7 +188,7 @@ void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* a
   
   int numartistas = get_numArtistsId(musicadoartista);
 
-  int* arrayartistas = getArtistIDfromMuiscID(musicadoartista);
+  int* arrayartistas = getArtistIDfromMusicID(musicadoartista,numartistas);
     
   put_stream_into_Artist(numartistas,arrayartistas,artistcontroller);
 
@@ -213,12 +213,12 @@ int get_numArtists(MusicData* musicController,int musicId)
   return numartistas; 
 }
 
- int* getArtistIdMusic(MusicData* musicController,int musicId)
- {
-     Music* music=lookup_musica(musicController, musicId);
-    int* artistas= getArtistIDfromMuiscID(music);
-   return artistas;
- } 
+//  int* getArtistIdMusic(MusicData* musicController,int musicId)
+//  {
+//      Music* music=lookup_musica(musicController, musicId);
+//     int* artistas= getArtistIDfromMuiscID(music);
+//    return artistas;
+//  } 
 
  char* get_musicGenre(MusicData* musicController, int musicId)
  {
@@ -226,3 +226,12 @@ int get_numArtists(MusicData* musicController,int musicId)
      char* genero=get_music_genre(music);
      return genero;
  }
+
+ int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas){
+  Music* musica_atual = lookup_musica(musicController, id);
+  return getArtistIDfromMusicID(musica_atual, numartistas);
+}
+int getnumartistaMusicControl (MusicData* musicController, int id){
+  Music* musica_atual = lookup_musica(musicController, id);
+  return get_numArtistsId(musica_atual);
+}

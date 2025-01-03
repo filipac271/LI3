@@ -23,36 +23,37 @@ typedef struct userHistory History;
 
 //void printUserHistory(History* userHistory);
 
-int NumArtistas(History* userHistory,int posicaoAno);
+// int NumArtistas(History* userHistory,int posicaoAno);
 
-int IdArtista(History* userHistory, int ano, int i);
+// int IdArtista(History* userHistory, int ano, int i);
 
-int TempoArtista(History* userHistory, int ano, int i);
+// int TempoArtista(History* userHistory, int ano, int i);
 
-int nMusicasArtista(History* userHistory, int ano, int i);
+// int nMusicasArtista(History* userHistory, int ano, int i);
 
-int* NartistasMaisOuvidos(History* userHistory,int pAno, int N);
+// int* NartistasMaisOuvidos(History* userHistory, int pAno, int N);
 
-char* ArtistaMaisOuvido(History* userHistory,int anoP);
+// char* ArtistaMaisOuvido(History* userHistory,int anoP);
 
 char* HoraMaisAudicoes(History* userHistory,int anoP);
 
 // int AlbumFavorito(History* userHistory,int anoP, AlbumsData* albumController);
 
 // char* GeneroMaisOuvido(History* userHistory, int anoP);
+char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int pAno, int N);
 char * AlbumGenero(MusicData* musicController,History* userHistory,AlbumsData*albumController, int posicaoAno);
 
 char* DataMaisMusicas(History* userHistory,int anoP);
 
 int procuraAno(History* history, int ano);
 
-void adicionaUserHistory(History* userHistory, MusicData* musicData,int musicId,int ano,int mes,int dia,int hora,int duration);
+void adicionaUserHistory(History* userHistory,int musicId,int ano,int mes,int dia,int hora,int duration);
 
-History* inicializaUserHistory(int userId,MusicData* musicData,int musicId,int ano,int mes, int dia,int hora,int duration);
+History* inicializaUserHistory(int userId,int musicId,int ano,int mes, int dia,int hora,int duration);
 
 
 
-void freeArtistas( Artistas* artista);
+// void freeArtistas( Artistas* artista);
 
 void freeUserHistory(History* history);
 

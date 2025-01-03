@@ -30,7 +30,7 @@ int getnMusicasArtista(HistoryData* historyController, int user_id, int ano, int
 
 int getPosicaoAno(HistoryData* historyController,int user_id, int ano);
 
-int* getNartistasMaisOuvidos(HistoryData* historyController,int user_id,int posicaoAno, int N);
+char** getNartistasMaisOuvidos(HistoryData* historyController, MusicData*musicController, int user_id,int  posicaoAno,int N);
 
 char* getArtistaMaisOuvido(HistoryData* historyController,int user_id,int posicaoAno);
 

@@ -100,9 +100,10 @@ int get_music_album(Music* music);
 
 int get_numArtistsId (Music* music);
 
-int get_artistID_at_index(Music* song, int index);
+//int get_artistID_at_index(Music* song, int index);
 
-int* getArtistIDfromMuiscID(Music* music);
-
+//int* getArtistIDfromMuiscID(Music* music, int numArtistas);
+int* getArtistIDfromMusicID(Music* music,int num_artists);
+int get_numArtistsId (Music* music);
 
 #endif
