@@ -99,8 +99,6 @@ char* get_music_year(Music* music);
 
 int get_numArtistsId (Music* music);
 
-int get_artistID_at_index(Music* song, int index);
-
 int* getArtistIDfromMuiscID(Music* music,int num_artists);
 
 

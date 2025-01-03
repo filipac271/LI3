@@ -37,7 +37,8 @@
     "recomendador.h": "c",
     "query5.h": "c",
     "personalrecomendador.h": "c",
-    "historycontroller.h": "c"
+    "historycontroller.h": "c",
+    "albums.h": "c"
   }
 }
 

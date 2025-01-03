@@ -10,16 +10,11 @@
 
 /**
  * @typedef 
- * @brief 
+ * @brief Estrutura do Controller dos historys
  */
 typedef struct historyData HistoryData;
 
-/**
- * @brief Cria uma GHashTable para armazenar os dados do histórico organizados por semanas baseadas no domingo incial de cada uma.
- * 
- * @return Pointer para a nova Hash Table criada.
- */
-GHashTable* createHistoryTable();
+
 
 /**
  * @brief Procura um domingo específico na Hash Table externa.
@@ -83,13 +78,6 @@ void destroyHistoryData(HistoryData* data);
  */
 void print_all_history(HistoryData* history);
 
-/**
- * @brief Obtém a Hash table externa a partir de uma estrutura HistoryData.
- * 
- * @param data Pointer para a estrutura HistoryData.
- * @return Pointer para a GHashTable de domingos.
- */
-GHashTable* get_Domingo_from_HD(HistoryData* data);
 
 /**
  * @brief Determina o ID associado ao maior número de ocorrências em uma Hash Table de domingos quando a data não é um parâmetro.

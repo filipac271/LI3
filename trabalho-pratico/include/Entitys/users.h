@@ -179,10 +179,10 @@ void freeQ5struct (Query5* q5);
 
 void atualizaGeneros(char* genero,Query5* q5,User* user);
 
-//int* getUserFavoriteGenres(User* user,Query5* q5);
-void printUserFavorites(int* favoriteGenres, Query5* q5,char* username);
 int** getPreferenciasQ5(Query5* q5);
+
 char** getUsersId(Query5* q5);
+
 char** getGenerosNomes(Query5* q5);
 
 int getnumUsers (Query5* q5);
