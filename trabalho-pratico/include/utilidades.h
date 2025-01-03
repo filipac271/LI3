@@ -8,7 +8,6 @@
 #include "Entitys/users.h"
 
 
-//FALTA A DESCRIÇÃO GRANDE DO TRANSFORMAiDS E DOS DIVIDIR GROUPS E PENSAR EM COMO ESCREVER O DO COMPARAR
 /**
  * @brief Calcula a idade com base na data de nascimento.
  * 
@@ -129,7 +128,7 @@ void freeArray(int* array);
 int* divideGroup(char* group, int numMembros);
 
 /**
- * @brief Divide uma string de array em elementos individuais.
+ * @brief Divide uma string de array em elementos individuais em inteiros.
  * 
  * @param arrayString String representando o array.
  * @param numElements Número de elementos no array.
@@ -200,17 +199,6 @@ int diaDaSemana(int ano, int mes, int dia);
  */
 void calcularDomingoAnterior(const char *data, char *resultado);
 
-/** REVER ISTO (NENHUMA ALTERAÇAO FOI FEITA A ISTO)
- * @brief Redimensiona um array alocado dinamicamente.
- * 
- * @param array Ponteiro para o array a ser redimensionado.
- * @param oldSize Tamanho atual do array.
- * @param newSize Novo tamanho desejado para o array.
- * @param elementSize Tamanho de cada elemento no array.
- * @param type Tipo do redimensionamento: 'z' para zerar o espaço adicional ou outro para manter os valores.
- * @return Ponteiro para o array redimensionado, ou NULL em caso de falha.
- */
-void* resize(void* array, int oldSize, int newSize, size_t elementSize, char type);
 
 /**
  * @brief Converte um número em uma string formatada como ID.
@@ -230,6 +218,20 @@ void destransforma_IDs(int numero, char *resultado);
  */
 int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data);
 
+
+/**
+ * @brief Verifica a ordem cronológica entre duas datas.
+ * 
+ * A função recebe duas datas no formato "dd/mm/aaaa" e compara qual é mais antiga. 
+ * Se a primeira data for anterior à segunda, a função retorna 1. Se a segunda data for anterior, retorna 0.
+ * Caso o formato das datas seja inválido, a função retorna -1.
+ * 
+ * @param data1 A primeira data a ser comparada no formato "dd/mm/aaaa".
+ * @param data2 A segunda data a ser comparada no formato "dd/mm/aaaa".
+ * 
+ * @return 1 se a primeira data for anterior à segunda, 0 se a segunda for anterior, e -1 se o formato das datas for inválido.
+ */
 int verificaOrdemDatas(char *data1, char *data2);
+
 
 #endif // UTILIDADES_H

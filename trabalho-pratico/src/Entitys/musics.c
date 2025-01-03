@@ -142,7 +142,7 @@ int get_numArtistsId (Music* music){
 // }
 
 //É PRECISO DAR FREEEEEE
-int* getArtistIDfromMuiscID(Music* music,int num_artists){
+int* getArtistIDfromMusicID(Music* music,int num_artists){
 
 
   //acho que funciona, mas caso não funcionar usar um malloc e depois dar free
