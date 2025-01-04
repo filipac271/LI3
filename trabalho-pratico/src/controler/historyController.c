@@ -197,12 +197,13 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
     int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
     if(isValid) {
 
+        char* genre = getMusicGenreControl(tokens[2],musicData,'s');
+        atualizaPrefsUser(genre,tokens[1],usersData);
+
         addhistory(Hdata,tokens[1],tokens[2],tokens[3], tokens[4]);
         newDomingo_orNot(Hdata, tokens, musicData); 
         atualizaStreams(tokens[2], musicData, artistData);
         
-        char* genre = getMusicGenreControl(tokens[2],musicData,'s');
-        atualizaPrefsUser(genre,tokens[1],usersData);
     }  
 
 

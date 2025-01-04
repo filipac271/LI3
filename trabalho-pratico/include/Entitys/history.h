@@ -25,7 +25,7 @@ typedef struct dia Dia;
 typedef struct hora Hora;
 typedef struct musica Musica;
 typedef struct ano Ano;
-typedef struct userHistory History
+typedef struct userHistory History;
 
 char* HoraMaisAudicoes(History* userHistory,int anoP);
 

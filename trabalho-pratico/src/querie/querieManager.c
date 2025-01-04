@@ -175,7 +175,7 @@ void queries(MainController *data, char *querieFile)
     // Recupera controladores
     UsersData *UserController = getUserController(data);
     ArtistsData *ArtistController = getartistController(data);
-    HistoryData *HistoryConctoller = gethistoryController(data);
+    HistoryData *HistoryController = gethistoryController(data);
     MusicData* musicController=getMusicController(data);
      AlbumsData* albumController=getalbumController(data);
     int **elementosMatriz = getElementosMatrizQ5(UserController);
@@ -208,7 +208,7 @@ void queries(MainController *data, char *querieFile)
 
         case '4':
 
-            query4(HistoryConctoller, ArtistController, line, i);
+            query4(HistoryController, ArtistController, line, i);
 
             break;
 
@@ -220,7 +220,7 @@ void queries(MainController *data, char *querieFile)
             
         case '6':
 
-            querie6(i,line, historyController,musicController, albumController);
+            querie6(i,line, HistoryController,musicController, albumController);
 
             break;
             
