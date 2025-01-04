@@ -34,6 +34,7 @@
     "albumscontroller.h": "c",
     "compare": "c",
     "type_traits": "c",
+    "history.h": "c",
     "recomendador.h": "c",
     "query5.h": "c",
     "personalrecomendador.h": "c",

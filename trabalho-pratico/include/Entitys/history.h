@@ -16,6 +16,33 @@ typedef struct artistahistory UmArtista;
  */
 typedef struct domingo Domingo;
 
+
+typedef struct genero Generos;
+typedef struct album Albuns;
+
+typedef struct artista Artistas;
+typedef struct dia Dia;
+typedef struct hora Hora;
+typedef struct musica Musica;
+typedef struct ano Ano;
+typedef struct userHistory History
+
+char* HoraMaisAudicoes(History* userHistory,int anoP);
+
+char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int pAno, int N);
+
+char * AlbumGenero(MusicData* musicController,History* userHistory,AlbumsData*albumController, int posicaoAno);
+
+char* DataMaisMusicas(History* userHistory,int anoP);
+
+int procuraAno(History* history, int ano);
+
+void adicionaUserHistory(History* userHistory,int musicId,int ano,int mes,int dia,int hora,int duration);
+
+History* inicializaUserHistory(int userId,int musicId,int ano,int mes, int dia,int hora,int duration);
+
+void freeUserHistory(History* history);
+
 /**
  * @brief Liberta a memória associada a um artista.
  * 
@@ -35,6 +62,7 @@ void free_garray_with_data(GArray* array);
  * 
  * @param domingo Ponteiro para a estrutura Domingo a ser libertada.
  */
+
 void freeDomingo(Domingo* domingo);
 
 /**

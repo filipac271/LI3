@@ -4,6 +4,7 @@
 #include "controler/usersController.h"
 #include "controler/artistsController.h"
 #include "controler/musicsController.h"
+#include "controler/historyController.h"
 #include "controler/albumsController.h"
 #include "controler/historyController.h"
 
@@ -68,6 +69,7 @@ ArtistsData* getartistController (MainController* data);
  * @param data Ponteiro para o MainController.
  * @return Ponteiro para a estrutura AlbumsData.
  */
+
 AlbumsData* getalbumController (MainController* data);
 
 /**

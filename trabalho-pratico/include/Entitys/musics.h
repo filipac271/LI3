@@ -89,6 +89,11 @@ char* get_music_year(Music* music);
 
 
 
+
+//NAO COMENTADO 
+int get_music_album(Music* music);
+
+
 /**
  * @brief Obtém os IDs dos artistas associados a uma música.
  * 
@@ -107,5 +112,6 @@ int* getArtistIDfromMusicID(Music* music, int num_artists);
  * @return Número de IDs de artistas associados à música.
  */
 int get_numArtistsId(Music* music);
+
 
 #endif

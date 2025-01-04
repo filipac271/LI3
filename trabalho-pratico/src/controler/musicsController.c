@@ -232,6 +232,33 @@ void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* a
 }
 
 
+int get_musicAlbum(MusicData* musicController , int musicId)
+{
+     Music* music=lookup_musica(musicController, musicId);
+    int album= get_music_album(music);
+     return album;
+}
+
+//Igual 1
+int get_numArtists(MusicData* musicController,int musicId)
+{
+  
+  Music* music=lookup_musica(musicController, musicId);
+  if(music==NULL)printf("%d\n", musicId);
+  int numartistas= get_numArtistsId(music);
+  return numartistas; 
+}
+
+// igual 2
+ char* get_musicGenre(MusicData* musicController, int musicId)
+ {
+     Music* music=lookup_musica(musicController, musicId);
+     char* genero=get_music_genre(music);
+     return genero;
+ }
+
+
+//igual 2
 char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type){
   char* genero = NULL;
   if(type == 's'){
@@ -248,11 +275,12 @@ char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type){
   return genero;
 }
 
-
+//Igual 1
 int getnumartistaMusicControl (MusicData* musicController, int id){
   Music* musica_atual = lookup_musica(musicController, id);
   return get_numArtistsId(musica_atual);
 }
+
 
 int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas){
   Music* musica_atual = lookup_musica(musicController, id);
@@ -283,3 +311,4 @@ char* get_music_year_control(MusicData* musicController, int id) {
     Music* musica_atual = lookup_musica(musicController, id);
     return get_music_year(musica_atual);
 }
+

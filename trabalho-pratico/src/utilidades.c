@@ -8,6 +8,7 @@
 
 #include "utilidades.h"
 #include "controler/musicsController.h"
+#include "Entitys/history.h"
 
 
 
@@ -58,7 +59,7 @@ guint get_garray_length(GArray *array) {
 
 char* seconds_to_hhmmss(int total_seconds) {
     // Aloca memória para a string de saída
-    char *time_string = malloc(16); // hh:mm:ss + \0 = 9 caracteres
+    char time_string[16] ; // hh:mm:ss + \0 = 9 caracteres
     if (time_string == NULL) {
         return NULL; // Verifica se a alocação foi bem-sucedida
     }
@@ -72,7 +73,7 @@ char* seconds_to_hhmmss(int total_seconds) {
     //mudar aqui tambem para 16 caso se queira tirar os warning
     snprintf(time_string, 16, "%02d:%02d:%02d", hours, minutes, seconds);
 
-    return time_string;
+    return strdup(time_string);
 }
 
 
@@ -540,5 +541,38 @@ int verificaOrdemDatas(char *data1, char *data2) {
 
     if (dia1 < dia2) return 1;
     return 0;
+}
+
+void* resize(void* array, int oldSize, char type)
+{
+    int newSize= 2* oldSize;
+    if (type== 'i')
+    {
+        array=realloc(array, newSize * sizeof(int));
+        
+        // Verifica se a realocação foi bem-sucedida
+        if (array == NULL) { 
+            printf("Erro ao realocar memória.\n");
+        }
+
+    }
+    else if(type=='c')
+    {
+        char* temp= realloc( array, newSize* sizeof(char));
+         array =temp;
+
+        // Verifica se a realocação foi bem-sucedida
+        if (array == NULL) { 
+            printf("Erro ao realocar memória.\n");
+        }
+    }
+    else
+    {
+         printf("Tipo Inválido.\n");
+    }
+    
+
+    return array;
+
 }
 

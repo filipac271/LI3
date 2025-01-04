@@ -15,6 +15,10 @@ typedef struct albums Album;
  */
 Album* createAlbum(char** tokens);
 
+
+char* getAlbumName(Album* album);
+
+
 /**
  * @brief Libera a memória alocada para um álbum.
  * 
@@ -28,7 +32,6 @@ void freeAlbum(Album* album);
  * @param album Ponteiro para o álbum a ser exibido.
  */
 void printAlbum(Album* album);
-
 
 
 #endif

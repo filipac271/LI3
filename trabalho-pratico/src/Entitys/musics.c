@@ -123,6 +123,10 @@ int get_numArtistsId (Music* music){
   return (music->num_artistId);
 }
 
+int get_music_album(Music* music)
+{
+  return (music->albumId);
+}
 
 
 int* getArtistIDfromMusicID(Music* music,int num_artists){
@@ -144,6 +148,10 @@ int* getArtistIDfromMusicID(Music* music,int num_artists){
 
   return novoarray;
 }
+
+// int get_numArtistsId (Music* music){
+//   return (music->num_artistId);
+// }
 
 
 // int get_artistID_at_index(Music* song, int index) {

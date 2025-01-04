@@ -208,6 +208,9 @@ int diaDaSemana(int ano, int mes, int dia);
 void calcularDomingoAnterior(const char *data, char *resultado);
 
 
+void* resize(void* array, int oldSize, char type);
+
+
 /**
  * @brief Converte um número em uma string formatada como ID.
  * 
@@ -240,6 +243,7 @@ int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data);
  * @return 1 se a primeira data for anterior à segunda, 0 se a segunda for anterior, e -1 se o formato das datas for inválido.
  */
 int verificaOrdemDatas(char *data1, char *data2);
+
 
 
 #endif // UTILIDADES_H
