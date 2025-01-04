@@ -172,7 +172,8 @@ char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int
      for(int i=0;i<Ainseridos;i++)
      {
       resultados[i]=malloc(256 * sizeof(char));
-       snprintf(resultados[i], 256, "%d %d %d", ARTISTA[i].artista ,ARTISTA[i].nMusicas,ARTISTA[i].tempoAudicao);
+      snprintf(resultados[i], 256, "%d %d %d", ARTISTA[i].artista ,ARTISTA[i].nMusicas,ARTISTA[i].tempoAudicao);
+
      }
      resultados[Ainseridos]=NULL;
      g_array_free(artistas,TRUE);
