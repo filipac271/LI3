@@ -89,6 +89,7 @@ void print_musicas(Music * musica){
 }
 
 
+
 //Getters
 
 int get_music_id (Music* music){
@@ -99,50 +100,36 @@ char* get_music_title (Music* music){
   return strdup(music->music_title);
 }
 
-// char** get_music_artist_id (Music* music){
-//   return music->music_artist_id;
-// }
-
 char* get_music_duration (Music* music){
   return strdup(music->music_duration);
 }
 
 
-int duration_to_seconds(char* music_duration) {
-    int hours, minutes, seconds;
-
-    sscanf(music_duration, "%d:%d:%d", &hours, &minutes, &seconds);
-
-    return hours * 3600 + minutes * 60 + seconds;
-}
 
 //getter que dá a duraçao em segundos
 int get_music_duration_seconds (Music* musica){
   return (duration_to_seconds(get_music_duration(musica)));
 }
 
-char* get_music_genre (Music* music){
-  return strdup(music->music_genre);
-}
 
 char* get_music_year (Music* music){
   return strdup(music->music_year);
 }
 
+char* get_music_genre (Music* music){
+  return strdup(music->music_genre);
+}
 int get_numArtistsId (Music* music){
   return (music->num_artistId);
 }
 
+int get_music_album(Music* music)
+{
+  return (music->albumId);
+}
 
-// int get_artistID_at_index(Music* song, int index) {
-//     if (!song || index < 0 || index >= song->num_artistId) {
-//         return -1; // Retorna um valor inválido se o índice for inválido
-//     }
-//     return song->music_artist_id[index];
-// }
 
-//É PRECISO DAR FREEEEEE
-int* getArtistIDfromMuiscID(Music* music,int num_artists){
+int* getArtistIDfromMusicID(Music* music,int num_artists){
 
 
   //acho que funciona, mas caso não funcionar usar um malloc e depois dar free
@@ -162,6 +149,17 @@ int* getArtistIDfromMuiscID(Music* music,int num_artists){
   return novoarray;
 }
 
+// int get_numArtistsId (Music* music){
+//   return (music->num_artistId);
+// }
+
+
+// int get_artistID_at_index(Music* song, int index) {
+//     if (!song || index < 0 || index >= song->num_artistId) {
+//         return -1; // Retorna um valor inválido se o índice for inválido
+//     }
+//     return song->music_artist_id[index];
+// }
 
 
 // char* get_music_lyrics (Music* music){

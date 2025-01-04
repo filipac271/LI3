@@ -136,6 +136,8 @@ void printaNcursesQ(WINDOW *full_window,int* currentY){
 
     freeParser(parser);
 
+    remove("./resultados/command1_output.txt");
+
 
 }
 

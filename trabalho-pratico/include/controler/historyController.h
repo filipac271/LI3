@@ -10,16 +10,11 @@
 
 /**
  * @typedef 
- * @brief 
+ * @brief Estrutura do Controller dos historys
  */
 typedef struct historyData HistoryData;
 
-/**
- * @brief Cria uma GHashTable para armazenar os dados do histórico organizados por semanas baseadas no domingo incial de cada uma.
- * 
- * @return Pointer para a nova Hash Table criada.
- */
-GHashTable* createHistoryTable();
+
 
 /**
  * @brief Procura um domingo específico na Hash Table externa.
@@ -43,6 +38,8 @@ Domingo* lookup_domingo(GHashTable* domingo, char* data);
  */
 void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicController);
 
+
+History* lookup_UserHistory(HistoryData* historyController,int userId);
 /**
  * @brief Converte os dados de uma Hash Table para um GArray.
  * 
@@ -53,6 +50,7 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
  * Passamos então a ter uma Hash Table externa constituida internamente por GArrays
  */
 void passa_hastable_para_garray(HistoryData* data);
+
 
 /**
  * @brief Processa o histórico de um ficheiro e preenche todas as estruturas de dados relacionadas.
@@ -69,6 +67,27 @@ void passa_hastable_para_garray(HistoryData* data);
  */
 HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData, UsersData* usersData);
 
+
+int getNumArtistas(HistoryData* historyController,int userId,int posicaoAno);
+
+int getIdArtista(HistoryData* historyController, int user_id, int ano, int i);
+
+int getTempoArtista(HistoryData* historyController, int user_id, int ano, int i);
+
+int getnMusicasArtista(HistoryData* historyController, int user_id, int ano, int i);
+
+int getPosicaoAno(HistoryData* historyController,int user_id, int ano);
+
+char** getNartistasMaisOuvidos(HistoryData* historyController, MusicData*musicController, int user_id,int  posicaoAno,int N);
+
+char* getArtistaMaisOuvido(HistoryData* historyController,int user_id,int posicaoAno);
+
+char* getDia(HistoryData*  historyController,int user_id,int ano);
+
+char * getAlbumGenero(HistoryData* historyController,MusicData* musicController, AlbumsData*albumController, int userId,int posicaoAno);
+
+char* getHora(HistoryData* historyController,int user_id,int ano);
+
 /**
  * @brief Liberta a memória associada à estrutura HistoryData.
  * 
@@ -83,13 +102,6 @@ void destroyHistoryData(HistoryData* data);
  */
 void print_all_history(HistoryData* history);
 
-/**
- * @brief Obtém a Hash table externa a partir de uma estrutura HistoryData.
- * 
- * @param data Pointer para a estrutura HistoryData.
- * @return Pointer para a GHashTable de domingos.
- */
-GHashTable* get_Domingo_from_HD(HistoryData* data);
 
 /**
  * @brief Determina o ID associado ao maior número de ocorrências em uma Hash Table de domingos quando a data não é um parâmetro.

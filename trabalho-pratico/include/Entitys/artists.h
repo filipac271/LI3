@@ -101,13 +101,44 @@ void print_artist(Artist* artist);
 void free_artist(Artist* artist);
 
 
-void setStreams (Artist* artista,double stream);
+/**
+ * @brief Atualiza o lucro total de um artista com base no número de streams.
+ * 
+ * @param artista Ponteiro para o artista a ser atualizado.
+ * @param stream Valor dos lucros obtidos com streams.
+ */
+void setStreams(Artist* artista, double stream);
 
-void setAlbuns (Artist* artista);
+/**
+ * @brief Incrementa o número de álbuns individuais do artista.
+ * 
+ * @param artista Ponteiro para o artista a ser atualizado.
+ */
+void setAlbuns(Artist* artista);
 
+/**
+ * @brief Obtém o lucro total de um artista.
+ * 
+ * @param artista Ponteiro para o artista.
+ * @return Lucro total do artista.
+ */
+double getArtistProfits(Artist* artista);
 
-double getArtistProfits (Artist* artista);
-int getArtistAlbunsIndividuais (Artist* artista);
+/**
+ * @brief Obtém o número de álbuns individuais do artista.
+ * 
+ * @param artista Ponteiro para o artista.
+ * @return Número de álbuns individuais do artista.
+ */
+int getArtistAlbunsIndividuais(Artist* artista);
+
+/**
+ * @brief Obtém os IDs dos membros do grupo de um artista.
+ * 
+ * @param artista Ponteiro para o artista.
+ * @return Array dinâmico contendo os IDs dos membros do grupo. 
+ *         O utilizador deve liberar a memória alocada para este array após o uso.
+ */
 int* getArtistGrupo(Artist* artista);
 
 #endif

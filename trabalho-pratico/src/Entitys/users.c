@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <glib.h>
 
 #define numGenerosDif 10
 #define numIdades 130
-#define InitMaxUsers 260000
 
 
 struct users
@@ -368,8 +368,9 @@ int** getPreferenciasQ5(Query5* q5){
     for (int i = 0; i < q5->numUsers; i++) {
         prefre[i] = malloc(sizeof(int) * q5->numGeneros);
 
-        int* preferenciasUsuario = g_array_index(q5->preferencias, int*, i); 
+        int* preferenciasUsuario = g_array_index(q5->preferencias, int*, i);
 
+        // Copia as preferências do array original para o novo array alocado
         memcpy(prefre[i], preferenciasUsuario, q5->numGeneros * sizeof(int)); 
     }    
     return prefre;

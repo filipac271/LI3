@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include"Entitys/history.h"
 
 #include "Output.h"
 #include "Input.h"
@@ -89,6 +90,36 @@ void output3(Output* output3, char* genero, int num, char c)
 }
 
 
+void output6(char c, Output* output6, char* tempoAudicao,int nMusicas,char* artistId,char* data,char* genero,char* album, char* hora,int N)
+{
+      if ( c == 'S')
+    {
+        if(N==0)
+        {
+            fprintf(output6->file,"%s=%d=%s=%s=%s=%s=%s\n",tempoAudicao,nMusicas,artistId,data,genero,album,hora); 
+        }
+        else if( N==1)
+        {
+            fprintf(output6->file,"%s=%d=%s\n",artistId, nMusicas,tempoAudicao); 
+        }
+        
+    }
+    else
+    {
+          if(N==0)
+        {
+            fprintf(output6->file,"%s;%d;%s;%s;%s;%s;%s\n",tempoAudicao,nMusicas,artistId,data,genero,album,hora); 
+        }
+        else if( N==1)
+        {
+            fprintf(output6->file,"%s;%d;%s\n",artistId, nMusicas,tempoAudicao); 
+        }
+          
+    }
+    
+}
+
+
 //Função de output da Querie 5
 void output5(Output* output5, char** usernames,int numrecomendacoes)
 {
@@ -110,3 +141,4 @@ void output4(Output* output4, char* name, char* type, int num, char c){
         fprintf(output4->file,"%s;%s;%d\n",name, type, num);  
     }
 }
+

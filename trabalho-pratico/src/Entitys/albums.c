@@ -46,6 +46,10 @@ Album* createAlbum(char** tokens){
 
 }
 
+char* getAlbumName(Album* album)
+{
+    return strdup(album->title); //////Falta Copia
+}
 
 void freeAlbum (Album* album){
     free(album->title);

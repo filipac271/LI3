@@ -1,5 +1,7 @@
 #include "controler/usersController.h"
 #include "controler/artistsController.h"
+#include "controler/albumsController.h"
+#include "controler/historyController.h"
 #include "controler/mainController.h"
 #include "controler/historyController.h"
 #include "querie/querie1.h"
@@ -7,6 +9,8 @@
 #include "querie/querie3.h"
 #include "querie/query4.h"
 #include "querie/query5.h"
+#include  "querie/querie6.h"
+
 #include "utilidades.h"
 #include "Input.h"
 
@@ -171,8 +175,9 @@ void queries(MainController *data, char *querieFile)
     // Recupera controladores
     UsersData *UserController = getUserController(data);
     ArtistsData *ArtistController = getartistController(data);
-    HistoryData *HistoryConctoller = gethistoryController(data);
-
+    HistoryData *HistoryController = gethistoryController(data);
+    MusicData* musicController=getMusicController(data);
+     AlbumsData* albumController=getalbumController(data);
     int **elementosMatriz = getElementosMatrizQ5(UserController);
     char **idsUsers = getLinhasMatrizQ5(UserController);
     char **nomesGeneros = getColunasMatrizQ5(UserController);
@@ -186,7 +191,7 @@ void queries(MainController *data, char *querieFile)
         case '1':
 
             querie1(UserController, line, i, ArtistController);
-
+            
             break;
 
         case '2':
@@ -196,14 +201,14 @@ void queries(MainController *data, char *querieFile)
             break;
 
         case '3':
-
+            
             querie3(i, line, UserController);
 
-            break;
+                break;
 
         case '4':
 
-            query4(HistoryConctoller, ArtistController, line, i);
+            query4(HistoryController, ArtistController, line, i);
 
             break;
 
@@ -212,6 +217,13 @@ void queries(MainController *data, char *querieFile)
             query5(line, i, UserController, elementosMatriz, idsUsers, nomesGeneros);
 
             break;
+            
+        case '6':
+
+            querie6(i,line, HistoryController,musicController, albumController);
+
+            break;
+            
         default:
             break;
         }

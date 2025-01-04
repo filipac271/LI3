@@ -5,6 +5,7 @@
 #include "controler/albumsController.h"
 
 /**
+ * @typedef
  * @brief Estrutura que representa os dados de músicas.
  */
 typedef struct musicData MusicData;
@@ -28,14 +29,6 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
  */
 Music* lookup_musica(MusicData* controller, int music_id);
 
-/**
- * @brief Imprime uma entrada da tabela de músicas.
- * 
- * @param key Chave da entrada (por exemplo, o ID da música).
- * @param value Valor associado à entrada (dados da música).
- * @param user_data Dados adicionais fornecidos pelo utilizador.
- */
-void print_music_entry(gpointer key, gpointer value, gpointer user_data);
 
 /**
  * @brief Imprime todas as músicas armazenadas.
@@ -98,4 +91,62 @@ int getnumartistaMusicControl(MusicData* musicController, int id);
 int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas);
 
 
+
+/**
+ * @brief Obtém o ID de uma música.
+ * 
+ * @param musicController Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser pesquisada.
+ * @return ID da música. 
+ */
+int get_music_id_control(MusicData* musicController, int id);
+
+/**
+ * @brief Obtém o título de uma música.
+ * 
+ * @param musicController Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser pesquisada.
+ * @return Ponteiro para o título da música. 
+ */
+char* get_music_title_control(MusicData* musicController, int id);
+
+/**
+ * @brief Obtém a duração de uma música como string.
+ * 
+ * @param musicController Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser pesquisada.
+ * @return Ponteiro para a string que representa a duração da música. 
+ */
+char* get_music_duration_control(MusicData* musicController, int id);
+
+/**
+ * @brief Obtém a duração de uma música em segundos.
+ * 
+ * @param musicController Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser pesquisada.
+ * @return Duração da música em segundos. 
+ */
+int get_music_duration_seconds_control(MusicData* musicController, int id);
+
+/**
+ * @brief Obtém o ano de uma música.
+ * 
+ * @param musicController Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser pesquisada.
+ * @return Ponteiro para o ano da música como string. 
+ */
+char* get_music_year_control(MusicData* musicController, int id);
+
+
+int get_musicAlbum(MusicData* musicController , int musicId);
+
+int get_numArtists(MusicData* musicController,int musicId);
+
+//int* getArtistIdMusic(MusicData* musicController,int musicId);
+
+char* get_musicGenre(MusicData* musicController, int musicId);
+
+int getnumartistaMusicControl (MusicData* musicController, int id);
+
+int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas);
 #endif

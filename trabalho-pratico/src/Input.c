@@ -22,10 +22,11 @@ int checkDiretoria (char* diretoria){
 
     ficheiro = fopen(diretoria, "r");
     if (ficheiro == NULL) {
+        fclose(ficheiro);
         return 0;
     } 
 
-
+    fclose(ficheiro);
     return 1;
 }
 

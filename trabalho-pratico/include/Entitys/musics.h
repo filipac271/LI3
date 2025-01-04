@@ -60,13 +60,7 @@ char* get_music_title(Music* music);
  */
 char* get_music_duration(Music* music);
 
-/**
- * @brief Realiza as contas necessárias para passar o campo de music_duration do formato 'hh:mm:ss' para segundos.
- * 
- * @param music_duration String representando a duração da música (formato hh:mm:ss).
- * @return Duração em segundos.
- */
-int duration_to_seconds(char* music_duration);
+
 
 /**
  * @brief Getter para a duração da música em segundos.
@@ -95,13 +89,29 @@ char* get_music_year(Music* music);
 
 
 
+
 //NAO COMENTADO 
+int get_music_album(Music* music);
 
-int get_numArtistsId (Music* music);
 
-int get_artistID_at_index(Music* song, int index);
+/**
+ * @brief Obtém os IDs dos artistas associados a uma música.
+ * 
+ * @param music Ponteiro para a estrutura Music que contém os dados da música.
+ * @param num_artists Número de artistas associados à música.
+ * @return Array dinâmico contendo os IDs dos artistas. 
+ *         O utilizador é responsável por liberar a memória alocada para este array após o uso.
+ *         Retorna NULL em caso de falha na alocação de memória.
+ */
+int* getArtistIDfromMusicID(Music* music, int num_artists);
 
-int* getArtistIDfromMuiscID(Music* music,int num_artists);
+/**
+ * @brief Obtém o número de IDs de artistas associados a uma música.
+ * 
+ * @param music Ponteiro para a estrutura Music que contém os dados da música.
+ * @return Número de IDs de artistas associados à música.
+ */
+int get_numArtistsId(Music* music);
 
 
 #endif

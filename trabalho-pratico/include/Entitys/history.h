@@ -16,6 +16,33 @@ typedef struct artistahistory UmArtista;
  */
 typedef struct domingo Domingo;
 
+
+typedef struct genero Generos;
+typedef struct album Albuns;
+
+typedef struct artista Artistas;
+typedef struct dia Dia;
+typedef struct hora Hora;
+typedef struct musica Musica;
+typedef struct ano Ano;
+typedef struct userHistory History;
+
+char* HoraMaisAudicoes(History* userHistory,int anoP);
+
+char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int pAno, int N);
+
+char * AlbumGenero(MusicData* musicController,History* userHistory,AlbumsData*albumController, int posicaoAno);
+
+char* DataMaisMusicas(History* userHistory,int anoP);
+
+int procuraAno(History* history, int ano);
+
+void adicionaUserHistory(History* userHistory,int musicId,int ano,int mes,int dia,int hora,int duration);
+
+History* inicializaUserHistory(int userId,int musicId,int ano,int mes, int dia,int hora,int duration);
+
+void freeUserHistory(History* history);
+
 /**
  * @brief Liberta a memória associada a um artista.
  * 
@@ -35,6 +62,7 @@ void free_garray_with_data(GArray* array);
  * 
  * @param domingo Ponteiro para a estrutura Domingo a ser libertada.
  */
+
 void freeDomingo(Domingo* domingo);
 
 /**
@@ -94,13 +122,6 @@ void passa_Domingo_para_garray(Domingo* domingo);
  */
 gint compare_seconds(gconstpointer a, gconstpointer b);
 
-/**
- * @brief Obtém a tabela hash de histórico de artistas de um domingo.
- * 
- * @param domingo Ponteiro para a estrutura Domingo.
- * @return Ponteiro para a tabela hash de histórico de artistas.
- */
-GHashTable* get_artisthistorido_dedomingo(Domingo* domingo);
 
 /**
  * @brief Procura um artista específico na tabela hash de histórico de artistas.
@@ -111,13 +132,6 @@ GHashTable* get_artisthistorido_dedomingo(Domingo* domingo);
  */
 UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id);
 
-/**
- * @brief Obtém o histórico de artistas de um domingo.
- * 
- * @param domingo Ponteiro para a estrutura Domingo.
- * @return Ponteiro para a tabela hash de histórico de artistas.
- */
-GHashTable* getArtistHistory(Domingo* domingo);
 
 /**
  * @brief Obtém a GArray de um domingo.
