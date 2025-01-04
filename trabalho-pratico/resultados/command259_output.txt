@@ -1,0 +1,10 @@
+Metal;248212
+Reggae;246524
+Jazz;246441
+Classical;246407
+Pop;246258
+Electronic;245841
+Hip Hop;245715
+Country;245216
+Blues;245215
+Rock;245182

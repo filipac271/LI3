@@ -1,0 +1,10 @@
+Metal=107106
+Jazz=106413
+Pop=106292
+Classical=106081
+Electronic=106068
+Reggae=105999
+Hip Hop=105754
+Country=105689
+Rock=105499
+Blues=105486

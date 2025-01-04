@@ -192,4 +192,9 @@ void print_semana_completa(gpointer key, gpointer value, gpointer user_data);
 
 
 
+
+GArray* get_artistahistory_garray_copy(Domingo* dom);
+
+void free_garray_with_data2(GArray* array);
+
 #endif

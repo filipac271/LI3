@@ -1,0 +1,10 @@
+Metal;589853
+Reggae;585869
+Pop;585680
+Electronic;585293
+Jazz;585248
+Classical;585197
+Blues;584694
+Country;584262
+Hip Hop;582352
+Rock;581919

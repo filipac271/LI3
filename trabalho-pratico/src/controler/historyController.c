@@ -23,9 +23,9 @@ struct historyData{
   //  GHashTable* Anos;
 };
 
-GHashTable* get_Domingo_from_HD (HistoryData* data){
-    return data->Domingo;
-}
+// GHashTable* get_Domingo_from_HD (HistoryData* data){
+//     return data->Domingo;
+// }
 
 
 
@@ -183,7 +183,7 @@ void destroyHistoryData(HistoryData* data) {
 
 int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrencias) {
 
-    GHashTable* domingo = get_Domingo_from_HD(HistoryController);
+    GHashTable* domingo = HistoryController->Domingo;
     //Criamos a hash table auxiliar
     GHashTable* hash_auxiliar = g_hash_table_new_full(g_int_hash, g_int_equal, free, free);
 
@@ -200,7 +200,7 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
         //hash table externa
         Domingo* semana_atual = (Domingo*)value;
         //GArray interno
-        GArray* top_semanal = get_garray_from_domingo(semana_atual);
+        GArray* top_semanal = get_artistahistory_garray_copy(semana_atual);
 
         for (int i = 0; i < (int)top_semanal->len; i++) {
             //Vamos iterar o GArray interno
@@ -237,6 +237,9 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
                 *maior_n_ocorrencias = max_ocorrencias;
             }
         }
+        free_garray_with_data2(top_semanal);
+        //g_array_free(top_semanal, TRUE);
+
     }
 
     g_hash_table_destroy(hash_auxiliar);
@@ -249,7 +252,7 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
 //Assume-se que as datas recebidas por esta funcao já sao os domingos 
 int artista_mais_frequente_com_data (HistoryData* HistoryController, char* data_inicio, char* data_fim, int *ocorrencia_final){
 
-    GHashTable* semanas = get_Domingo_from_HD(HistoryController);
+    GHashTable* semanas = HistoryController->Domingo;
 
     int artista_mais_frequente = -1;
     int max_ocorrencias = 0;
@@ -270,7 +273,7 @@ if (data_inicio != NULL && data_fim != NULL && strcmp(data_inicio, "") != 0 && s
         //hash table externa
         Domingo* semana_atual = (Domingo*)value;
         //GArray interno
-        GArray* top_semanal = get_garray_from_domingo(semana_atual);
+        GArray* top_semanal = get_artistahistory_garray_copy(semana_atual);
 
             // Processar o GArray (top 10 artistas)
             for (int i = 0; i < (int)top_semanal->len; i++) {
@@ -308,6 +311,10 @@ if (data_inicio != NULL && data_fim != NULL && strcmp(data_inicio, "") != 0 && s
 
                 }
             }
+            free_garray_with_data2(top_semanal);
+            //g_array_free(top_semanal, TRUE);
+
+
         }
     }
 }
