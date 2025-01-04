@@ -29,7 +29,6 @@ void querie6(int i, char * line, HistoryData* historyController,MusicData* music
 
     sprintf(filename, "resultados/command%d_output.txt", i + 1);
     Output* output = iniciaOutput(filename);
-
     int  ano, N; char user_id[9];
     int count = sscanf(line, " %*[^ ] %s %d %d", user_id, &ano, &N);
     int userId=transformaIds(user_id);
@@ -43,59 +42,43 @@ void querie6(int i, char * line, HistoryData* historyController,MusicData* music
         return;
     }
     else
-    {
-        
-        // char* genero= getGeneroMaisOuvido(historyController,userId, posicaoAno);
-        // int album=getAlbumFavorito(historyController,userId, posicaoAno,albumController);
-      
+    {     
         char* albumGenero= getAlbumGenero(historyController,musicController,albumController, userId, posicaoAno); 
-         char genero[20];int album;
-         sscanf(albumGenero,"%[^0-9]%d", genero, &album);
+        char genero[20];int album;
+        sscanf(albumGenero,"%[^0-9]%d", genero, &album);
         char albumfav[9];
         normalizaId(album, albumfav,'a');
         char* hora= getHora(historyController,userId, posicaoAno);
-       char** resultados= getNartistasMaisOuvidos(historyController, musicController,userId, posicaoAno,0);
+        char** resultados= getNartistasMaisOuvidos(historyController, musicController,userId, posicaoAno,0);
         int artistId, nMusicas, tempoAudicao;
         sscanf(resultados[0],"%d %d %d",&artistId, &nMusicas, &tempoAudicao);
-      
         char artista[10];
         normalizaId(artistId,artista, 'A');
         char* data=getDia(historyController,userId, posicaoAno);
         char* tempo= seconds_to_hhmmss(tempoAudicao); 
-       
-
-
+        free(resultados[0]);
+        free(resultados);
         output6(line[1],output,tempo,nMusicas,artista, data, genero, albumfav,hora, 0); 
 
         if( count==3)
-      {
-            // printf("INICIO\n");
-      
-            char** resultados=getNartistasMaisOuvidos(historyController, musicController, userId, posicaoAno, N);
-            // for(int j=0;resultados[j]!=NULL;j++)
-            // {
-            //     printf("%s\n",resultados[j]);
-            // }
-            //  printf("FIM\n");
-
+        { 
+            char** resultadosN=getNartistasMaisOuvidos(historyController, musicController, userId, posicaoAno, N);
             int artistId, nMusicas, tempoAudicao;
-            for(int j=0;resultados[j]!=NULL;j++)
-            {
-                
-                sscanf(resultados[j],"%d %d %d",&artistId, &nMusicas, &tempoAudicao);
+            int j=0;
+            for(;resultadosN[j]!=NULL;j++)
+            {    
+                sscanf(resultadosN[j],"%d %d %d",&artistId, &nMusicas, &tempoAudicao);
                 normalizaId(artistId,artista, 'A'); 
                 char* tempo= seconds_to_hhmmss(tempoAudicao);  
                 output6(line[1],output,tempo,nMusicas,artista, NULL,NULL, NULL,NULL,1);
                 free(tempo); 
-                free(resultados[j]);
+                free(resultadosN[j]);
             }
-            
-           
-       }
-        
-           free(albumGenero);
+            free(resultadosN[j]);
+             free(resultadosN);
+        }
+            free(albumGenero);
             free(hora);
-            free(resultados);
             free(data);
             free(tempo);
     }

@@ -61,7 +61,6 @@ struct musica
 struct ano
 {
   int ano;
-  //GArray *artistas;
   GArray* musicas;
   GArray *horas;
   GArray *dia;
@@ -73,105 +72,6 @@ struct userHistory
   GArray *anos;
 };
 
-// void printUserHistory(History *userHistory)
-// {
-//   if (userHistory == NULL)
-//   {
-//     printf("Histórico de utilizador não encontrado.\n");
-//     return;
-//   }
-
-//   printf("Inicio \n");
-//   printf("ID do utilizador: %d\n", userHistory->id);
-//   printf("Número de anos registrados: %d\n", userHistory->anos->len);
-
-//   for (int i = 0; i <(int) userHistory->anos->len; i++)
-//   {
-//     Ano* ano=&g_array_index(userHistory->anos,Ano,i);
-//     printf("\nAno: %d\n", ano->ano);
-
-//     printf("Número de artistas: %d\n", ano->artistas->len);
-//     for (int j = 0; j <(int) ano->artistas->len; j++)
-//     {
-//       Artistas* artista =&g_array_index(ano->artistas, Artistas,j) ;
-//       printf("  Artista ID: %d, Tempo de audição: %d, Número de músicas: %d\n",
-//              artista->artista, artista->tempoAudicao, artista->musicas->len);
-//       printf("  Músicas: ");
-//       int* musicas= (int*)artista->musicas->data;
-//       for (int k = 0; k < (int)artista->musicas->len; k++)
-//       {
-//         printf("%d ", musicas[k]);
-//       }
-//       printf("\n");
-//     }
-
-//     printf("\nNúmero de géneros: %d\n", ano->genero->len);
-//     Generos *generos = (Generos *)ano->genero->data;
-//     Generos genero;
-//     for (int j = 0; j < (int) ano->genero->len; j++)
-//     {
-//       genero = generos[j];
-//       printf("  Género: %s, Tempo de audição: %d\n",
-//              genero.genero, genero.tempoAudicao);
-//     }
-
-//     Albuns *albums = (Albuns *)ano->album->data;
-//     Albuns album;
-//     printf("\nNúmero de álbuns: %d\n", ano->album->len);
-//     for (int j = 0; j <(int) ano->album->len; j++)
-//     {
-//       album = albums[j];
-//       printf("  Álbum ID: %d, Tempo de audição: %d\n",
-//              album.album, album.tempoAudicao);
-//     }
-
-//     printf("\nHoras:\n");
-//     Hora* hour = (Hora*)ano->horas->data;
-//     for (int j = 0; j < (int)ano->horas->len; j++)
-//     { // Supondo que o array `horas` tem tamanho 12 para os meses do ano
-//       printf("  Hora %d: nº Musicas :%d \n",hour[j].hora,hour[j].nMusicas);
-//     }
-//     Dia *dias = (Dia *)ano->dia->data;
-//     Dia dia;
-//     printf("\nNúmero de dias: %d\n", ano->dia->len);
-//     for (int j = 0; j < (int)ano->dia->len ; j++)
-//     {
-//       dia = dias[j];
-//       printf("  Dia: %d/%d, Número de músicas: %d\n",
-//              dia.dia, dia.mes, dia.nMusicas);
-//     }
-//   }
-//   printf("FIM \n");
-// }
-
-// int NumArtistas(History *userHistory, int posicaoAno)
-// {
-//   Ano *ano = (Ano *)userHistory->anos->data;
-//   int numartistas = ano[posicaoAno].artistas->len;
-//   return numartistas;
-// }
-
-// int IdArtista(History *userHistory, int ano, int i)
-// {
-//   Ano *anos = (Ano *)userHistory->anos->data;
-//   Artistas *artista = (Artistas *)anos[ano].artistas->data;
-//   return artista[i].artista;
-// }
-
-// int TempoArtista(History *userHistory, int ano, int i)
-// {
-//   Ano *anos = (Ano *)userHistory->anos->data;
-//   Artistas *artista = (Artistas *)anos[ano].artistas->data;
-//   return artista[i].tempoAudicao;
-// }
-
-// int nMusicasArtista(History *userHistory, int ano, int i)
-// {
-//   Ano *anos = (Ano *)userHistory->anos->data;
-//   Artistas *artista = (Artistas *)anos[ano].artistas->data;
-//   int nMusicas = artista[i].nMusicas;
-//   return nMusicas;
-// }
 
 int comparaArtistas(const void *a, const void *b)
 {
@@ -225,7 +125,7 @@ char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int
   {
     existe=0;
     int numArtistas=getnumartistaMusicControl(musicController,musica[i].musicId);
-   Id=getarrayArtistasMusicControl( musicController, musica[i].musicId , numArtistas);
+    Id=getarrayArtistasMusicControl( musicController, musica[i].musicId , numArtistas);
     tempoTotal+=musica[i].tempoAudicao;
    for(int k=0;k<numArtistas;k++)
    {
@@ -247,80 +147,53 @@ char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int
     }
    
    }
-   
+   free(Id);
   }
 
   if (N==0)
   {    
-     char** resultados = malloc(1 * sizeof(char*));
+      char** resultados = malloc(1 * sizeof(char*));
       resultados[0] = malloc(256 * sizeof(char));
-   int posicao= artistaMaisOuvido(artistas, Ainseridos);
-   Artistas* ARTISTA= &g_array_index(artistas,Artistas,posicao);
-  snprintf(resultados[0], 256, "%d %d %d", ARTISTA->artista ,nMusicas,tempoTotal);
-  return resultados;
+      int posicao= artistaMaisOuvido(artistas, Ainseridos);
+      Artistas* ARTISTA= &g_array_index(artistas,Artistas,posicao);
+      snprintf(resultados[0], 256, "%d %d %d", ARTISTA->artista ,nMusicas,tempoTotal);
+      g_array_free(artistas,TRUE);
+      return resultados;
   }
   
   if (N > Ainseridos)
   {
-    char** resultados = malloc(Ainseridos * sizeof(char*));
-    Artistas* ARTISTA=(Artistas*) artistas->data;
-    qsort(ARTISTA,Ainseridos, sizeof(Artistas),  comparaArtistas);
+     char** resultados = malloc((Ainseridos+1) * sizeof(char*));
+     Artistas* ARTISTA=(Artistas*) artistas->data;
+     qsort(ARTISTA,Ainseridos, sizeof(Artistas),  comparaArtistas);
      for(int i=0;i<Ainseridos;i++)
      {
       resultados[i]=malloc(256 * sizeof(char));
        snprintf(resultados[i], 256, "%d %d %d", ARTISTA[i].artista ,ARTISTA[i].nMusicas,ARTISTA[i].tempoAudicao);
      }
-    resultados[Ainseridos]=NULL;
-    return resultados;
+     resultados[Ainseridos]=NULL;
+     g_array_free(artistas,TRUE);
+     return resultados;
   }
   else 
    {
-     char** resultados = malloc(N * sizeof(char*));
-    Artistas* ARTISTA=(Artistas*) artistas->data;
-    qsort(ARTISTA,Ainseridos, sizeof(Artistas),  comparaArtistas);
+     char** resultados = malloc((N+1) * sizeof(char*));
+     Artistas* ARTISTA=(Artistas*) artistas->data;
+     qsort(ARTISTA,Ainseridos, sizeof(Artistas),  comparaArtistas);
      for(int i=0;i<N;i++)
      {
       resultados[i]=malloc(256 * sizeof(char));
        snprintf(resultados[i], 256, "%d %d %d", ARTISTA[i].artista ,ARTISTA[i].nMusicas,ARTISTA[i].tempoAudicao);
      }
      resultados[N]=NULL;
-    return resultados;
+     g_array_free(artistas,TRUE);
+     return resultados;
   }
   
 
   
 }
 
-// char *ArtistaMaisOuvido(History *userHistory, int anoP)
-// {
-//   Ano *ano = (Ano *)userHistory->anos->data;  
-//   int N = (int)ano[anoP].artistas->len;
-//   printf("N:%d\n",N);
-//   Artistas *artista = (Artistas *)ano[anoP].artistas->data;
-
-//   int max = artista[0].tempoAudicao;
-//   int artistaId = artista[0].artista;
-//   int tempoTotal = max;
-//   int nMusicas = artista->nMusicas;
-
-//   for (int i = 1; i < N; i++)
-//   {
-    
-//     if (max < artista[i].tempoAudicao || (max == artista[i].tempoAudicao && artistaId > artista[i].artista))
-//     {
-//       max = artista[i].tempoAudicao;
-//       artistaId = artista[i].artista;
-//     }
-   
-//     tempoTotal += artista[i].tempoAudicao;printf("%d %d \n",tempoTotal,i);
-//     nMusicas += artista->nMusicas;
-//   }
-//   char resultados[256];
-//   nMusicas=ano[anoP].nMusicas;
-//   snprintf(resultados, 256, "%d %d %d", artistaId, nMusicas, tempoTotal);
-
-//   return strdup(resultados);
-// }
 
 char* HoraMaisAudicoes(History *userHistory, int anoP)
 {
@@ -329,8 +202,10 @@ char* HoraMaisAudicoes(History *userHistory, int anoP)
   int max = horas[0].tempoAudicao;
   int hour = horas[0].hora;
   int N=ano[anoP].horas->len;
+
   for (int i = 1; i <N ; i++)
   {
+    
     if (horas[i].tempoAudicao > max || (horas[i].tempoAudicao== max && hour>horas[i].hora ))
     {
       max = horas[i].tempoAudicao;
@@ -461,8 +336,6 @@ char * AlbumGenero(MusicData* musicController,History* userHistory,AlbumsData*al
       free(ALBuns->albumName);
     }
     g_array_free(albuns,TRUE);
-    // Liberar memória alocada para os arrays de structs
-   
     return strdup(resultados);
 }
 
@@ -497,13 +370,15 @@ char *DataMaisMusicas(History *userHistory, int anoP)
   int maior = dias[0].nMusicas;
   int dia = dias[0].dia;
   int mes = dias[0].mes;
-
+ 
   for (int i = 1; i < (int)ano[anoP].dia->len; i++)
   {
+    
     if (maior < dias[i].nMusicas || (maior == dias[i].nMusicas && (mes < dias[i].mes || (mes == dias[i].mes && dia < dias[i].dia))))
     {
       dia = dias[i].dia;
       mes = dias[i].mes;
+      maior= dias[i].nMusicas;
     }
   }
   char *data = DataParaChar(ano[anoP].ano, mes, dia);
@@ -572,81 +447,6 @@ int procura_Artista(Artistas *artistas, int N, int artistId)
   return -1;
 }
 
-// void adicionarMusica(Artistas *artista, int musicId, int duracao)
-// {
-//   int i;
-//   int nMusicas = artista->nMusicas;
-//   int * musicas=artista->musicas;
-//   int existe=0;
-
-//   for (i = 0; i < nMusicas && !existe; i++)
-//   {
-//     if(musicas[i] == musicId)
-//     {
-//       artista->tempoAudicao += duracao;
-//       existe=1;
-//     }
-//   }
-
-//   if (!existe)
-//   {
-//     if(artista->tamanho<=artista->nMusicas)
-//     {
-//      artista->musicas= resize(artista->musicas,artista->tamanho,'i');
-//      artista->tamanho*=2;
-//     }  
-//     artista->tempoAudicao += duracao;
-//     artista->musicas[artista->nMusicas]=musicId;
-//     artista->nMusicas++;
-//   }
-// }
-
-
-// void novoArtista(GArray* artistas, int artistId, int musicId, int duracao)
-// {
-//   Artistas novoArtista = {.artista = artistId, .tempoAudicao = duracao};
-//   novoArtista.musicas=calloc(2,sizeof(int));
-//   novoArtista.musicas[0]=musicId;
-//   novoArtista.nMusicas=1;
-//   novoArtista.tamanho=2;
-//   g_array_append_val(artistas, novoArtista);
-// }
-
-// void adicionaArtista(GArray* artista, int *artistId, int numArtistas, int duracao, int musicId,  int novo)
-// {
-
-//   if (novo == 1)
-//   {
-//     for (int i = 0; i < numArtistas; i++)
-//     {
-//       novoArtista(artista, artistId[i], musicId, duracao);
-//     }
-
-//   }
-//   else
-//   {
-//     for (int i = 0; i < numArtistas; i++)
-//     {
-//       int N = (int)artista->len;
-//       int existe=0;
-//       for (int j = 0; j < N && !existe; j++)
-//       {
-//          Artistas *artistas = &g_array_index(artista, Artistas, j);
-//          if (artistas->artista == artistId[i])
-//          {
-//             adicionarMusica(artistas, musicId, duracao);
-//             existe=1;
-//          }
-//       }
-
-//       if (existe==0)
-//       {
-//         novoArtista(artista, artistId[i], musicId, duracao);
-//       }
-     
-//     }
-//   }
-// }
 
 
 void insereHora(GArray* horas,int hour,int duracao,int novo)
@@ -681,7 +481,7 @@ void insereHora(GArray* horas,int hour,int duracao,int novo)
   }
 }
 
-int insereMusica(GArray* musicas,int musicId,int duracao,int novo)
+void insereMusica(GArray* musicas,int musicId,int duracao,int novo)
 {
   int existe=0;
   if(novo==1)
@@ -712,7 +512,7 @@ int insereMusica(GArray* musicas,int musicId,int duracao,int novo)
       g_array_append_val(musicas, m);   
     }
   }
-  return existe;
+
   }
 
 
@@ -739,7 +539,7 @@ void adicionarAno( GArray* Anos, int musicId, int ano, int mes, int dia, int hor
   //int *artistId = getArtistIdMusic(musicController, musicId);
   //adicionaArtista(anoAtual->artistas, artistId, numartistas, duracao, musicId, novo);
   //free(artistId);
-  int existe=insereMusica(anoAtual->musicas,musicId,duracao,novo);
+  insereMusica(anoAtual->musicas,musicId,duracao,novo);
   insereHora(anoAtual->horas,hora, duracao,novo);
   insereDia(mes, dia, anoAtual->dia, novo);
   
@@ -752,10 +552,6 @@ History *inicializaUserHistory(int userId,  int musicId, int ano, int mes, int d
   userHistory->anos = g_array_new(FALSE, FALSE, sizeof(Ano));
   adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration,  1, 0);
   userHistory->id = userId;
-  
-  //if(userId== 173609) printf("I Ano: %d 0\n",ano);
-  //printUserHistory(userHistory);
-
   return userHistory;
 }
 
@@ -772,9 +568,6 @@ void adicionaUserHistory(History *userHistory,  int musicId, int ano, int mes, i
     else
     {
    adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration, 0, anoPosicao);
-      
-     //printUserHistory(userHistory);
-    // if(userHistory->id== 173609) printf("Ano: %d %d\n",ano , anoPosicao);
     }
   
 }
@@ -785,41 +578,24 @@ void freeUserHistory(History *history)
   Ano* anos= (Ano*) history->anos->data;
   for (int i = 0; i < nAnos; i++)
   {
+    GArray* musica= anos[i].musicas;
+    if(musica)
+    {
+      g_array_free(musica,TRUE);
+    }
+
+      GArray* dia= anos[i].dia;
+      // Liberar os dias
+      if (dia)
+      {
+        g_array_free(dia, TRUE);
+      }
     
-    //  // Liberar artistas
-    //  int nArtistas=(int) anos[i].artistas->len;
-    //   GArray *artistas=anos[i].artistas;
-    //     for (int j = 0; j < nArtistas; j++) {
-    //         // Liberar músicas dos artistas
-    //       Artistas *artista = &g_array_index(artistas, Artistas, j);
-    //         if (artista->musicas) {
-    //           //  g_array_free(artista->musicas, TRUE);
-    //           free(artista->musicas);
-    //         }
-    //     }
-    //     if (artistas) {
-    //        g_array_free(anos[i].artistas, TRUE);
-    //     }
-   
-
-  GArray* musica= anos[i].musicas;
-  if(musica)
-  {
-    g_array_free(musica,TRUE);
-  }
-
-    GArray* dia= anos[i].dia;
-    // Liberar os dias
-    if (dia)
-    {
-      g_array_free(dia, TRUE);
-    }
-   
-    GArray* hora=anos[i].horas;
-     if (hora)
-    {
-      g_array_free(hora, TRUE);
-    }
+      GArray* hora=anos[i].horas;
+      if (hora)
+      {
+        g_array_free(hora, TRUE);
+      }
    
   }
 
