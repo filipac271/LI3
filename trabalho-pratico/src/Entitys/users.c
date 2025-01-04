@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <glib.h>
 
 #define numGenerosDif 10
 #define numIdades 130

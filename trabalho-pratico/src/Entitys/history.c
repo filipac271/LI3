@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <glib.h>
 
 #include "Entitys/history.h"
 #include "Entitys/artists.h"
@@ -192,6 +193,7 @@ char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int
      return resultados;
   }
   
+}
 
 char* HoraMaisAudicoes(History *userHistory, int anoP)
 {
@@ -431,6 +433,7 @@ void insereDia(int mes, int dia, GArray* Dias, int novo)
       g_array_append_val(Dias, novoDia);
     }
   }
+}
 
 void freeUmArtista (UmArtista* artista){
     if(artista == NULL){
@@ -438,7 +441,6 @@ void freeUmArtista (UmArtista* artista){
     } 
     free(artista);
 }
-
 
 // Função para libertar o GArray e seus dados
 void free_garray_with_data(GArray* array) {
@@ -468,6 +470,7 @@ void freeDomingo(Domingo* domingo) {
     free(domingo);
 
 }
+
 
 int procura_Artista(Artistas *artistas, int N, int artistId)
 {
@@ -660,23 +663,8 @@ void freeUserHistory(History *history)
 //   free(artista);
 // }
 
-void freeUmArtista(UmArtista *artista)
-{
-  if (artista == NULL)
-  {
-    return;
-  }
-  free(artista);
-}
 
-void freeDomingo(Domingo *domingo)
-{
-  free(domingo->data);
 
-  g_hash_table_destroy(domingo->artistahistory);
-
-  free(domingo);
-}
 
 void destroy_history(Domingo *domingo)
 {
@@ -684,7 +672,7 @@ void destroy_history(Domingo *domingo)
   free(domingo->data);
 
   g_hash_table_destroy(domingo->artistahistory);
-
+}
 
 UmArtista* new_umArtista (int artist_id, int segundos){
     UmArtista* n_umart = malloc(sizeof(UmArtista)); 
@@ -700,6 +688,7 @@ UmArtista* new_umArtista (int artist_id, int segundos){
     return n_umart;  
 }
 
+
 //Função para inserir um novo artista na Hash Table
 void inserir_umartista_na_semana(GHashTable* artisthistory, UmArtista* novo_artista, int artist_id){
     
@@ -709,68 +698,6 @@ void inserir_umartista_na_semana(GHashTable* artisthistory, UmArtista* novo_arti
     g_hash_table_insert(artisthistory, key, novo_artista);
    // free(key); //isto nao é solucao para nada apenas traz erros
 
-}
-
-    int numartistas = getnumartistaMusicControl(musicController, music_id);
-
-    //array de artistas que constituem essa musica
-    int* arrayartistas = getarrayArtistasMusicControl(musicController,music_id, numartistas);
-
-
-UmArtista *new_umArtista(int artist_id, int segundos)
-{
-  UmArtista *n_umart = malloc(sizeof(UmArtista));
-
-
-  if (n_umart == NULL)
-  {
-    fprintf(stderr, "Memory allocation failed for novo UMArtista\n");
-    exit(1);
-  }
-
-
-  // Artista ainda não existe na tabela, crie um novo registro
-  n_umart->artist_id = artist_id;
-  n_umart->totalsemanalsegundos = segundos; // Inicialize o valor
-
-
-  return n_umart;
-}
-
-   
-
-void inserir_umartista_na_semana(GHashTable *artisthistory, UmArtista *novo_artista, int artist_id)
-{
-  // printf("INSERIR ARTISTA NA SEMANA!");
-
-  int *key = malloc(sizeof(int)); // Aloca memória para a chave
-  *key = artist_id;
-
-  g_hash_table_insert(artisthistory, key, novo_artista);
-}
-
-GHashTable *get_artisthistorido_dedomingo(Domingo *domingo)
-{
-  return domingo->artistahistory;
-}
-
-UmArtista *lookup_artista_historico(GHashTable *Artista, int artist_id)
-{
-  return g_hash_table_lookup(Artista, &artist_id);
-
-        if (!artist_data) {
-            //Se o artista nao existir cria-lo e acrescenta à hash table interna
-            UmArtista* novo_artista = new_umArtista(artist_id, segundos);
-            inserir_umartista_na_semana(artistahistory, novo_artista, artist_id);
-        } else {
-            artist_data->totalsemanalsegundos += segundos; //this is line 178
-        }
-    } 
-    } else {
-        printf("SOMETHING IS VERY WRONG\n");
-    }
-    free(arrayartistas);
-    free(segundosparaadicionar);
 }
 
 
@@ -896,6 +823,7 @@ void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
   free(arrayartistas);
   free(segundosparaadicionar);
 }
+
   
 int get_garray_len (Domingo* domingo){
     return(domingo->artistahistory_garray->len);
@@ -944,11 +872,6 @@ void print_artisthistory (UmArtista* artista) {
 
     }
 
-
-
-GHashTable *getArtistHistory(Domingo *domingo)
-{
-  return (domingo->artistahistory);
 }
 
 // Função para imprimir o GArray
@@ -967,32 +890,7 @@ void print_garray(GArray* array) {
     }
 }
 
-void printf_domingo (Domingo* domingo) {
-    if (domingo) {
-        if (domingo->data) {
-            printf("DATA: %s\n", domingo->data);
-        } else {
-            fprintf(stderr, "Erro: DATA do Domingo é NULL\n");
-        }
-    } else {
-        fprintf(stderr, "Erro: ESTA DOMINGO NAO EXISTE\n");
-    }
 
-}
-
-// FUNCOES PRINTS QUE NAO FUNCIONAM
-void print_artisthistory(UmArtista *artista)
-{
-  if (artista)
-  {
-    printf("ARTIST_ID: %d\n", artista->artist_id);
-    printf("TOTAL_SEGUNDOS: %d\n", artista->totalsemanalsegundos);
-  }
-  else
-  {
-    fprintf(stderr, "Erro: ESTE UMARTISTA NAO EXISTE\n");
-  }
-}
 
 void printf_domingo(Domingo *domingo)
 {
