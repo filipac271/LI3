@@ -38,6 +38,16 @@ int calcular_idade( char* data_nascimento_str) {
     return idade;
 }
 
+int duration_to_seconds(char* music_duration) {
+    int hours, minutes, seconds;
+
+    sscanf(music_duration, "%d:%d:%d", &hours, &minutes, &seconds);
+
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
+
+
 
 guint get_garray_length(GArray *array) {
     if (array == NULL) {
@@ -108,22 +118,30 @@ int calculate_num_members(char* grupo) {
 
 
 
-
-int validaData(char* date) {
+int validaData(char *date) {
     int year, month, day;
+    int offset = 0; // Offset para lidar com aspas
 
-    // Verifica o tamanho esperado da string (aaaa/mm/dd = 10 caracteres)
-    if (strlen(date) != 12) {
+    // Verifica se a string está entre aspas
+    if (date[0] == '"' && date[strlen(date) - 1] == '"') {
+        offset = 1; // Ignorar as aspas inicial e final
+    }
+
+    // Calcula o tamanho esperado da string sem aspas
+    size_t expectedLength = offset ? 12 : 10;
+
+    // Verifica o tamanho esperado da string (aaaa/mm/dd = 10 caracteres ou "aaaa/mm/dd" = 12 caracteres)
+    if (strlen(date) != expectedLength) {
         return 0;
     }
 
-    // Verifica o formato: os caracteres nas posições 4 e 7 devem ser '/'
-    if (date[5] != '/' || date[8] != '/') {
+    // Verifica o formato: os caracteres nas posições corretas devem ser '/'
+    if (date[4 + offset] != '/' || date[7 + offset] != '/') {
         return 0;
     }
 
-    // Usa sscanf para extrair ano, mês e dia da string
-    if (sscanf(date, "\"%d/%d/%d\"", &year, &month, &day) != 3) {
+    // Usa sscanf para extrair ano, mês e dia da string, ajustando pelo offset
+    if (sscanf(date + offset, "%d/%d/%d", &year, &month, &day) != 3) {
         return 0;
     }
 
@@ -313,17 +331,20 @@ int* divideArray(char* inputArray, int numElementos) {
 
 
 
-
-// Função para comparar linha a linha dois arquivos e contar ocorrências corretas
-int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas) {
+int compararFicheirosPorLinha(char *file1, char *file2, int *ocorrenciasCorretas) {
     FILE *f1 = fopen(file1, "r");
     FILE *f2 = fopen(file2, "r");
 
-    if (f1 == NULL || f2 == NULL) {
-        printf("Erro ao abrir um dos arquivos para comparação%s",file2);
-        return -1;  // Erro ao abrir arquivos
+    if (f1 == NULL) {
+        printf("Erro ao abrir o arquivo %s para comparação\n", file1);
+        if (f2 != NULL) fclose(f2); // Fecha f2 se foi aberto
+        return -1;  // Erro ao abrir f1
     }
-
+    if (f2 == NULL) {
+        printf("Erro ao abrir o arquivo %s para comparação\n", file2);
+        fclose(f1);  // Fecha f1 se foi aberto
+        return -1;  // Erro ao abrir f2
+    }
 
     char linha1[1024], linha2[1024];
     int linhaNumero = 1;
@@ -333,7 +354,6 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
         // Remover quebra de linha para evitar diferenças acidentais
         linha1[strcspn(linha1, "\n")] = '\0';
         linha2[strcspn(linha2, "\n")] = '\0';
-
 
         if (strcmp(linha1, linha2) == 0) {            
             (*ocorrenciasCorretas)++;  // Incrementa ocorrências corretas
@@ -345,12 +365,12 @@ int compararFicheirosPorLinha(char *file1,char *file2, int *ocorrenciasCorretas)
         }
         linhaNumero++;
     }
-    
 
     fclose(f1);
     fclose(f2);
     return 1;  // Arquivos são iguais
 }
+
 
 //Funciona apenas se a string já vier sem aspas o que é o caso dos arrays mas não dos ids individuais
 int transformaIds (char* idString){
@@ -401,59 +421,127 @@ void pega_data(char* datetime, char* data) {
     data[10] = '\0'; // Adiciona o terminador nulo
 }
 
-int calcular_dia_da_semana(int ano, int mes, int dia) {
-    if (mes < 3) {
-        mes += 12;
-        ano -= 1;
-    }
-    int k = ano % 100;
-    int j = ano / 100;
-    int dia_da_semana = (dia + 13 * (mes + 1) / 5 + k + k / 4 + j / 4 - 2 * j) % 7;
-    return (dia_da_semana + 5) % 7 + 1; // Ajusta para 1 (segunda-feira) a 7 (domingo)
-
-}
-
-void ajustar_data(int* ano, int* mes, int* dia) {
-    while (*dia <= 0) { // Caso o dia seja <= 0, ajusta para o mês anterior
-        *mes -= 1;
-        if (*mes <= 0) { // Se o mês for <= 0, ajusta para o ano anterior
-            *mes = 12;
-            *ano -= 1;
-        }
-        *dia += 31; // Supondo que todos os meses têm 31 dias
-    }
-    while (*dia > 31) { // Caso o dia ultrapasse 31, ajusta para o próximo mês
-        *dia -= 31;
-        *mes += 1;
-        if (*mes > 12) { // Se o mês ultrapassar 12, ajusta para o próximo ano
-            *mes = 1;
-            *ano += 1;
+int diasNoMes(int ano, int mes) {
+    int a = ano;
+    int m = mes;
+    int dias[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (m == 2) {
+        // Verificar se o ano é bissexto
+        if ((a % 4 == 0 && a % 100 != 0) || (a % 400 == 0)) {
+            return 29;
         }
     }
+    return dias[m - 1];
 }
 
-char* calcular_domingo_anterior(char* data) {
+    //algoritmo de Zeller ou variantes dele
+int diaDaSemana(int ano, int mes, int dia) {
+    int m = mes;
+    int y = ano;
+    int d = dia;
+
+    if (m < 3) {
+        m += 12;
+        y -= 1;
+    }
+
+    // Formula para calcular o dia da semana.
+    int formula = d + 2*m + (3*(m+1)/5) + y + y/4 - y/100 + y/400 + 2;  
+
+    return formula % 7;
+}
+
+int diasParavoltar(int dia_da_semana) {
+    switch (dia_da_semana) {
+        case 0: return 6; // Sabado
+        case 1: return 0; // DOmingo
+        case 2: return 1; // Segunda
+        case 3: return 2; // Terça
+        case 4: return 3; // Quarta
+        case 5: return 4; // Quinta
+        case 6: return 5; // Sexta
+        default: return -1; // default
+    }
+}
+
+
+
+void calcularDomingoAnterior(const char *data, char *resultado) {
     int ano, mes, dia;
     sscanf(data, "%d/%d/%d", &ano, &mes, &dia);
 
-    int dia_da_semana = calcular_dia_da_semana(ano, mes, dia);
-   // printf("O DIA DA SEMANA É: %d\n", dia_da_semana);
-    int dias_desde_domingo = dia_da_semana % 7;
-    int domingo_dia = dia - dias_desde_domingo;
+    // Obter o dia da semana da data fornecida
+    int diaSemana = diaDaSemana(ano, mes, dia);
 
-    ajustar_data(&ano, &mes, &domingo_dia);
-
-    char* resultado = malloc(11 * sizeof(char));
-    if (!resultado) {
-        fprintf(stderr, "Erro ao alocar memória.\n");
-        exit(EXIT_FAILURE);
+    // Calcula quantos dias deve voltar para o domingo anterior
+    int diasparavoltar = diasParavoltar(diaSemana);
+    // Subtrair os dias para obter o domingo anterior
+    dia -= diasparavoltar;
+    if (dia < 1) {
+        mes--;
+        if (mes < 1) {
+            mes = 12;
+            ano--;
+        }
+        dia += diasNoMes(ano, mes);
     }
 
-    sprintf(resultado, "%04d/%02d/%02d", ano, mes, domingo_dia);
-    return resultado;
-
+    sprintf(resultado, "%04d/%02d/%02d", ano, mes, dia);
+    
 }
 
+
+void destransforma_IDs(int numero, char *resultado) {
+    // Formata o número e armazena na string resultado
+    sprintf(resultado, "A%07d", numero);
+}
+
+
+
+int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data) {
+    int ano_inicial, mes_inicial, dia_inicial;
+    int ano_final, mes_final, dia_final;
+    int ano, mes, dia;
+
+    // Lê as datas inicial, final e a data fornecida
+    sscanf(data_inicial, "%d/%d/%d", &ano_inicial, &mes_inicial, &dia_inicial);
+    sscanf(data_final, "%d/%d/%d", &ano_final, &mes_final, &dia_final);
+    sscanf(data, "%d/%d/%d", &ano, &mes, &dia);
+
+    // Verifica se a data está fora do intervalo
+    if (ano < ano_inicial || (ano == ano_inicial && (mes < mes_inicial || (mes == mes_inicial && dia < dia_inicial)))) {
+        return 0; 
+    }
+
+    if (ano > ano_final || (ano == ano_final && (mes > mes_final || (mes == mes_final && dia > dia_final)))) {
+        return 0; 
+    }
+
+    return 1; 
+}
+
+
+
+int verificaOrdemDatas(char *data1, char *data2) {
+    int ano1, mes1, dia1;
+    int ano2, mes2, dia2;
+
+    // Parse das datas para seus componentes (ano, mês, dia)
+    if (sscanf(data1, "%d/%d/%d", &ano1, &mes1, &dia1) != 3 ||
+        sscanf(data2, "%d/%d/%d", &ano2, &mes2, &dia2) != 3) {
+        return -1; // Retorna -1 se o formato das datas for inválido
+    }
+
+    // Comparação ano/mês/dia
+    if (ano1 < ano2) return 1;
+    if (ano1 > ano2) return 0;
+
+    if (mes1 < mes2) return 1;
+    if (mes1 > mes2) return 0;
+
+    if (dia1 < dia2) return 1;
+    return 0;
+}
 
 void* resize(void* array, int oldSize, char type)
 {
@@ -487,3 +575,4 @@ void* resize(void* array, int oldSize, char type)
     return array;
 
 }
+

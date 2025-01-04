@@ -121,4 +121,16 @@ char* getLine(Parser* parserE);
  */
 int contar_linhas(char* nome_ficheiro);
 
+/**
+ * @brief Verifica se o diretório ou arquivo existe.
+ * 
+ * A função tenta abrir um arquivo no caminho especificado por `diretoria` em modo leitura.
+ * Se o arquivo ou diretório não existir ou não puder ser acessado, retorna 0.
+ * Caso contrário, retorna 1, indicando que o diretório ou arquivo foi encontrado e pode ser acessado.
+ * 
+ * @param diretoria O caminho para o diretório ou arquivo a ser verificado.
+ * @return Retorna 1 se o diretório ou arquivo for encontrado e acessível, ou 0 se não for encontrado.
+ */
+int checkDiretoria(char* diretoria);
+
 #endif 

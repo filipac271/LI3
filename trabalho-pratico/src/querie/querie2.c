@@ -2,22 +2,52 @@
 #include "utilidades.h"
 #include "Entitys/artists.h"
 #include "Output.h"
+#include "querie/querie2.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
 #include <unistd.h>
 
+struct discografia{
+    int artist_id;
+    int segundos;
+};
+
+
+Discography* create_discography(int artist_id, int segundos){
+    Discography* n_discography = malloc(sizeof(Discography));
+
+    if (n_discography == NULL) {
+        fprintf(stderr, "Memory allocation failed for novo Discography\n"); //this is line 123
+        exit(1);
+    }
+
+    n_discography->artist_id = artist_id;
+    n_discography->segundos = segundos;
+
+    return n_discography;
+}
+
+
+void free_discografia (Discography* atual){
+    if(atual == NULL){
+    return;
+    } 
+
+    free(atual);
+}
+
 
 
 // Função de comparação para ordenar pela discografia em ordem decrescente
 gint compare_discography(gconstpointer a, gconstpointer b) {
 
-    Artist *artist_a = *(Artist **)a;
-    Artist *artist_b = *(Artist **)b;
+    Discography *artist_a = *(Discography **)a;
+    Discography *artist_b = *(Discography **)b;
 
-    int disc_a = getArtistDiscography(artist_a);
-    int disc_b = getArtistDiscography(artist_b);
+    int disc_a = (artist_a->segundos);
+    int disc_b = (artist_b->segundos);
 
     int r = disc_b - disc_a;
 
@@ -71,16 +101,18 @@ void querie2(ArtistsData* ArtistController, char* line, int i) {
         outputNULL(output);
     } else {
         while (j < n && j < (int)length) {
-            Artist* artist_atual = g_array_index(q2, Artist*, j);
+            Discography* artist_atual = g_array_index(q2, Discography*, j);
 
-            int discography = getArtistDiscography(artist_atual);
+            int id = artist_atual->artist_id;
+
+            int discography = (artist_atual->segundos);
             if(discography == 0)break;
             
             char* time = seconds_to_hhmmss(discography);
 
-            char* nome = getArtistName(artist_atual);
-            char* tipo = getArtistType(artist_atual);
-            char* pais = getArtistCountry(artist_atual);
+            char* nome = getArtistNameControl(ArtistController, id);
+            char* tipo = getArtistTypeControl(ArtistController, id);
+            char* pais = getArtistCountryControl(ArtistController, id);
 
             output2(output, nome, tipo, time, pais, line[1]);
 
@@ -90,6 +122,12 @@ void querie2(ArtistsData* ArtistController, char* line, int i) {
             free(time);
             j++;
         }
+    }
+
+    for(guint i = 0; i < q2->len; i++){
+        Discography* artist_atual = g_array_index(q2, Discography*, i);
+
+        free_discografia(artist_atual);
     }
 
     g_array_free(q2, TRUE);

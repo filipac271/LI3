@@ -89,6 +89,7 @@ void output3(Output* output3, char* genero, int num, char c)
     
 }
 
+
 void output6(char c, Output* output6, char* tempoAudicao,int nMusicas,char* artistId,char* data,char* genero,char* album, char* hora,int N)
 {
       if ( c == 'S')
@@ -117,3 +118,27 @@ void output6(char c, Output* output6, char* tempoAudicao,int nMusicas,char* arti
     }
     
 }
+
+
+//Função de output da Querie 5
+void output5(Output* output5, char** usernames,int numrecomendacoes)
+{
+        for (int i = 0; i < numrecomendacoes; i++)
+        {
+            fprintf(output5->file,"%s\n",usernames[i]); 
+        }
+}
+
+//Função de output da Query 4
+//name;type;count_top_10
+void output4(Output* output4, char* name, char* type, int num, char c){
+    if ( c == 'S')
+    {
+        fprintf(output4->file,"%s=%s=%d\n",name, type, num); 
+    }
+    else
+    {
+        fprintf(output4->file,"%s;%s;%d\n",name, type, num);  
+    }
+}
+

@@ -4,6 +4,7 @@
 #include "validacao/validaArtista.h"
 #include "utilidades.h"
 #include "Input.h"
+#include "querie/querie2.h"
 
 #include <glib.h>
 #include <stdio.h>
@@ -80,7 +81,6 @@ ArtistsData* artistFeed(char* diretoria) {
         if (tokens==NULL) {
 
              // Fecha o ficheiro guardado no Parser e liberta a memória alocada neste
-
               freeParser(parserE); break;
          }
 
@@ -276,7 +276,9 @@ void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country
 
         if (country == NULL || strcmp(country, "") == 0 || strcmp(pais, country) == 0) {
 
-            g_array_append_val(array, artist_to_filter);
+            Discography* n_discography = create_discography(getArtistId(artist_to_filter), getArtistDiscography(artist_to_filter));
+
+            g_array_append_val(array, n_discography);
 
         }
 
@@ -284,4 +286,74 @@ void fill_filtered_artists(ArtistsData* controller, GArray *array, char *country
 
     }
 
+}
+
+
+
+int isArtistValid (ArtistsData* controlador , int id){
+    Artist* artista = lookup_artist(controlador,id);
+
+    if(artista == NULL) return 1;
+    
+    return 0;
+}
+
+
+
+//Getters
+
+char* getArtistNameControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistName(artista);
+}
+
+char* getArtistCountryControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistCountry(artista);
+}
+
+char* getArtistTypeControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistType(artista);
+}
+
+
+int getArtistAlbunsIndividuaisControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistAlbunsIndividuais(artista);
+}
+
+
+double getArtistProfitsControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistProfits(artista);
+}
+
+
+int getArtistDiscographyControl(ArtistsData* controlador, int id){
+    Artist* artista = lookup_artist(controlador,id);
+    return getArtistDiscography(artista);
+}
+
+
+
+
+int getArtistNumMembrosControl(ArtistsData* controlador, int id) {
+    Artist* artista = lookup_artist(controlador, id);
+    return getArtistNumMembros(artista);
+}
+
+int* getArtistGrupoControl(ArtistsData* controlador, int id) {
+    Artist* artista = lookup_artist(controlador, id);
+    return getArtistGrupo(artista);
+}
+
+double getArtistGanhoControl(ArtistsData* controlador, int id) {
+    Artist* artista = lookup_artist(controlador, id);
+    return getArtistGanho(artista);
+}
+
+int getArtistIdControl(ArtistsData* controlador, int id) {
+    Artist* artista = lookup_artist(controlador, id);
+    return getArtistId(artista);
 }

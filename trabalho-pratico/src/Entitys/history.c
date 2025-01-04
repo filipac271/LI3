@@ -10,16 +10,15 @@
 #include "Entitys/artists.h"
 #include "controler/historyController.h"
 
-struct artistahistory
-{
-  int artist_id;
-  int totalsemanalsegundos; // passar a duration de hh:mm:ss (funcao defenida nas utilities)
+struct artistahistory{
+    int artist_id;
+    int totalsemanalsegundos; //passar a duration de hh:mm:ss (funcao defenida nas utilities) 
 };
 
-struct domingo
-{
-  char *data;
-  GHashTable *artistahistory;
+struct domingo{
+    char* data ;
+    GHashTable* artistahistory; //mudar para garray
+    GArray* artistahistory_garray;
 };
 
 struct artista
@@ -34,6 +33,7 @@ struct genero
   char *genero;
   int tempoAudicao;
 };
+
 
 struct album
 {
@@ -53,6 +53,7 @@ struct dia
   int nMusicas;
 };
 
+
 struct musica
 {
   int musicId;
@@ -71,6 +72,7 @@ struct userHistory
   int id;
   GArray *anos;
 };
+
 
 
 int comparaArtistas(const void *a, const void *b)
@@ -191,10 +193,6 @@ char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int
   }
   
 
-  
-}
-
-
 char* HoraMaisAudicoes(History *userHistory, int anoP)
 {
   Ano *ano = (Ano *)userHistory->anos->data;
@@ -202,6 +200,7 @@ char* HoraMaisAudicoes(History *userHistory, int anoP)
   int max = horas[0].tempoAudicao;
   int hour = horas[0].hora;
   int N=ano[anoP].horas->len;
+
 
   for (int i = 1; i <N ; i++)
   {
@@ -432,6 +431,42 @@ void insereDia(int mes, int dia, GArray* Dias, int novo)
       g_array_append_val(Dias, novoDia);
     }
   }
+
+void freeUmArtista (UmArtista* artista){
+    if(artista == NULL){
+        return;
+    } 
+    free(artista);
+}
+
+
+// Função para libertar o GArray e seus dados
+void free_garray_with_data(GArray* array) {
+    if (array != NULL) {
+        // Itera sobre o GArray e liberta cada elemento
+        guint i;
+        for (i = 0; i < array->len; i++) {
+            UmArtista* artista = g_array_index(array, UmArtista*, i);
+            freeUmArtista(artista);  // Liberta os dados (cada UmArtista)
+        }
+        g_array_free(array, FALSE);  
+    }
+}
+
+void freeDomingo(Domingo* domingo) {
+    free(domingo->data);  
+
+    for (guint i = 0; i < domingo->artistahistory_garray->len; i++) {
+    // Obter o ponteiro para UmArtista no índice i
+    UmArtista* artista = g_array_index(domingo->artistahistory_garray, UmArtista*, i);
+
+    // Libertar a estrutura com a função específica
+    freeUmArtista(artista);
+    }
+    // Libertar o GArray
+    g_array_free(domingo->artistahistory_garray, TRUE);
+    free(domingo);
+
 }
 
 int procura_Artista(Artistas *artistas, int N, int artistId)
@@ -446,6 +481,7 @@ int procura_Artista(Artistas *artistas, int N, int artistId)
   }
   return -1;
 }
+
 
 
 
@@ -526,7 +562,6 @@ void adicionarAno( GArray* Anos, int musicId, int ano, int mes, int dia, int hor
   {
      novoAno.ano=ano;
      novoAno.horas=g_array_new(FALSE, FALSE, sizeof(Hora));
-    // novoAno.artistas = g_array_new(FALSE, FALSE, sizeof(Artistas));
      novoAno.musicas=g_array_new(FALSE, FALSE, sizeof(Musica));
      novoAno.dia = g_array_new(FALSE, FALSE, sizeof(Dia));
 
@@ -535,25 +570,41 @@ void adicionarAno( GArray* Anos, int musicId, int ano, int mes, int dia, int hor
   }
  
   anoAtual = &g_array_index(Anos, Ano, posicao);
-  //int numartistas = get_numArtists(musicController, musicId);
-  //int *artistId = getArtistIdMusic(musicController, musicId);
-  //adicionaArtista(anoAtual->artistas, artistId, numartistas, duracao, musicId, novo);
-  //free(artistId);
   insereMusica(anoAtual->musicas,musicId,duracao,novo);
   insereHora(anoAtual->horas,hora, duracao,novo);
   insereDia(mes, dia, anoAtual->dia, novo);
   
 }
 
-History *inicializaUserHistory(int userId,  int musicId, int ano, int mes, int dia, int hora, int duration)
-{
 
+Domingo* newDomingo(char* data){
+   // Aloca memória para a estrutura
+    Domingo* novo_domingo = malloc(sizeof(Domingo));
+    if (!novo_domingo) {
+        fprintf(stderr, "Erro ao alocar memória para Domingo\n");
+        return NULL;
+    }
+
+    novo_domingo->data = strdup(data); // Duplica a string passada como parâmetro
+
+    // Cria a hash table para armazenar o histórico dos artistas   (GDestroyNotify)freeUmArtista
+    novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, NULL, (GDestroyNotify)freeUmArtista);
+
+    novo_domingo->artistahistory_garray = g_array_new(FALSE, FALSE, sizeof(UmArtista*));
+  
+    return novo_domingo;
+}
+
+
+  History *inicializaUserHistory(int userId,  int musicId, int ano, int mes, int dia, int hora, int duration)
+{
   History *userHistory = malloc(sizeof(History));
   userHistory->anos = g_array_new(FALSE, FALSE, sizeof(Ano));
   adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration,  1, 0);
   userHistory->id = userId;
   return userHistory;
 }
+
 
 void adicionaUserHistory(History *userHistory,  int musicId, int ano, int mes, int dia, int hora, int duration)
 {
@@ -633,31 +684,43 @@ void destroy_history(Domingo *domingo)
   free(domingo->data);
 
   g_hash_table_destroy(domingo->artistahistory);
+
+
+UmArtista* new_umArtista (int artist_id, int segundos){
+    UmArtista* n_umart = malloc(sizeof(UmArtista)); 
+
+    if (n_umart == NULL) {
+        fprintf(stderr, "Memory allocation failed for novo UMArtista\n"); //this is line 123
+        exit(1);
+    }
+    // Artista ainda não existe na tabela, cria um novo registro
+    n_umart->artist_id = artist_id;
+    n_umart->totalsemanalsegundos = segundos;
+
+    return n_umart;  
 }
 
-Domingo *newDomingo(char *data)
-{
-  // Aloca memória para a estrutura
-  Domingo *novo_domingo = malloc(sizeof(Domingo));
-  if (!novo_domingo)
-  {
-    fprintf(stderr, "Erro ao alocar memória para Domingo\n");
-    return NULL;
-  }
+//Função para inserir um novo artista na Hash Table
+void inserir_umartista_na_semana(GHashTable* artisthistory, UmArtista* novo_artista, int artist_id){
+    
+    int* key = malloc(sizeof(int));  
+    *key = artist_id;
 
-  // Ver se é realmente preciso um strdup
-  novo_domingo->data = strdup(data); // Duplica a string passada como parâmetro
-                                     // GHashTable* Domingo =g_hash_table_new_full(g_int_hash, g_int_equal, free, (GDestroyNotify)freeUser);
+    g_hash_table_insert(artisthistory, key, novo_artista);
+   // free(key); //isto nao é solucao para nada apenas traz erros
 
-  // Cria a hash table para armazenar o histórico dos artistas
-  novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, free, (GDestroyNotify)freeUmArtista);
-
-  return novo_domingo;
 }
+
+    int numartistas = getnumartistaMusicControl(musicController, music_id);
+
+    //array de artistas que constituem essa musica
+    int* arrayartistas = getarrayArtistasMusicControl(musicController,music_id, numartistas);
+
 
 UmArtista *new_umArtista(int artist_id, int segundos)
 {
   UmArtista *n_umart = malloc(sizeof(UmArtista));
+
 
   if (n_umart == NULL)
   {
@@ -665,12 +728,16 @@ UmArtista *new_umArtista(int artist_id, int segundos)
     exit(1);
   }
 
+
   // Artista ainda não existe na tabela, crie um novo registro
   n_umart->artist_id = artist_id;
   n_umart->totalsemanalsegundos = segundos; // Inicialize o valor
 
+
   return n_umart;
 }
+
+   
 
 void inserir_umartista_na_semana(GHashTable *artisthistory, UmArtista *novo_artista, int artist_id)
 {
@@ -690,6 +757,92 @@ GHashTable *get_artisthistorido_dedomingo(Domingo *domingo)
 UmArtista *lookup_artista_historico(GHashTable *Artista, int artist_id)
 {
   return g_hash_table_lookup(Artista, &artist_id);
+
+        if (!artist_data) {
+            //Se o artista nao existir cria-lo e acrescenta à hash table interna
+            UmArtista* novo_artista = new_umArtista(artist_id, segundos);
+            inserir_umartista_na_semana(artistahistory, novo_artista, artist_id);
+        } else {
+            artist_data->totalsemanalsegundos += segundos; //this is line 178
+        }
+    } 
+    } else {
+        printf("SOMETHING IS VERY WRONG\n");
+    }
+    free(arrayartistas);
+    free(segundosparaadicionar);
+}
+
+
+void passa_Domingo_para_garray(Domingo* domingo) {
+    if (domingo == NULL || domingo->artistahistory == NULL || domingo->artistahistory_garray == NULL) {
+        return;
+    }
+
+    // Limpa o GArray antes de começar
+    g_array_set_size(domingo->artistahistory_garray, 0); 
+
+    GHashTableIter iter;
+    gpointer key, value;
+    //pega no domingo e vai começar a iterar por ele
+    g_hash_table_iter_init(&iter, domingo->artistahistory);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+
+        UmArtista* artist = value; //resolvido
+
+        if(artist == NULL){
+            free(key); // Liberta a chave se o artista for ignorado
+            continue;
+        }
+
+        if (artist->totalsemanalsegundos == 0) { // se o tempo for 0 o artista é ignorado porque nao vale a pena ele ocupar espaço
+            free(key); // Liberta a chave se o artista for ignorado
+            continue;
+        }
+
+        UmArtista* artist_to_filter = new_umArtista(artist->artist_id, artist->totalsemanalsegundos); //novo leak
+
+        g_array_append_val(domingo->artistahistory_garray, artist_to_filter);
+        //freeUmArtista(artist); //nao é solução
+        free(key); //liberta a chave para ele ir para o proximo
+    }
+    g_hash_table_destroy(domingo->artistahistory);
+    domingo->artistahistory = NULL;
+
+    // Ordena o GArray
+    g_array_sort(domingo->artistahistory_garray, (GCompareFunc)compare_seconds);
+
+    // Remove elementos excedentes, mantendo apenas os 10 primeiros
+    guint length = domingo->artistahistory_garray->len;
+    if (length > 10) {    
+        for (guint i = 10; i < domingo->artistahistory_garray->len; i++) {
+            UmArtista* artista = g_array_index(domingo->artistahistory_garray, UmArtista*, i);
+            freeUmArtista(artista); // Liberta os elementos excedentes
+        }
+    g_array_set_size(domingo->artistahistory_garray, 10);
+    }
+}
+
+
+gint compare_seconds(gconstpointer a, gconstpointer b) {
+    
+    UmArtista *artist_a = *(UmArtista **)a;
+    UmArtista *artist_b = *(UmArtista **)b;
+
+    int segundos_a = get_seconds_from_garray(artist_a);
+    int segundos_b = get_seconds_from_garray(artist_b);
+    //printf("NAO SEI\n");
+
+    // Compara pela duração em segundos (ordem decrescente)
+    int r = segundos_b - segundos_a;
+
+    // Se os segundos forem iguais, compara pelo artist_id para ficar com o de menor id 
+    if (r == 0) {
+        r = artist_a->artist_id - artist_b->artist_id;
+    }
+
+    return r;
 }
 
 // Função para adicionar um artista ao Domingo
@@ -698,12 +851,11 @@ void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
   // transforma o char music_id em int para conseguir encontrar a estrutura Music
   int music_id = transformaIds(tokens[2]);
 
-  Music *musicadoartista = lookup_musica(musicController, music_id);
+    int numartistas = getnumartistaMusicControl(musicController, music_id);
 
-  int numartistas = get_numArtistsId(musicadoartista);
-
-  // array de artistas que constituem essa musica
-  int *arrayartistas = getArtistIDfromMusicID(musicadoartista, numartistas);
+    //array de artistas que constituem essa musica
+    int* arrayartistas = getarrayArtistasMusicControl(musicController,music_id, numartistas);
+  
 
   GHashTable *artistahistory = domingo->artistahistory;
   if (!artistahistory)
@@ -711,11 +863,12 @@ void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
     fprintf(stderr, "Erro: artistahistory é NULL.\n");
     return;
   }
-
   char *segundosparaadicionar = remove_quotes(tokens[4]);
+
 
   int segundos = duration_to_seconds(segundosparaadicionar);
 
+  
   // É PRECISO ALTERAR PARA QUANDO O NUMARTISTA É 0 ISTO É QUANDO NAO É UM GRUPO
   if (numartistas > 0)
   {
@@ -736,15 +889,95 @@ void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
 
         artist_data->totalsemanalsegundos += segundos;
       }
+     } 
+      } else {
+        printf("SOMETHING IS VERY WRONG\n");
     }
-  }
   free(arrayartistas);
   free(segundosparaadicionar);
 }
+  
+int get_garray_len (Domingo* domingo){
+    return(domingo->artistahistory_garray->len);
+}
+//GETTERS E SETTEERS
+GHashTable* get_artisthistorido_dedomingo (Domingo* domingo){
+    return domingo->artistahistory;
+}
+
+
+UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
+    return g_hash_table_lookup(Artista, &artist_id);
+
+}
+
+GHashTable* getArtistHistory(Domingo* domingo){
+    return(domingo->artistahistory);
+}
+
+GArray* get_garray_from_domingo (Domingo* domingo){
+    return (domingo->artistahistory_garray);
+}
+
+
+int get_artist_id_from_garray (UmArtista* artista){
+    return artista->artist_id;
+}
+
+
+int get_seconds_from_garray (UmArtista* artista){
+    return artista->totalsemanalsegundos;
+}
+
+
+
+
+
+
+//FUNCOES PRINTS 
+void print_artisthistory (UmArtista* artista) {
+    if (artista) {
+        printf("ARTIST_ID: %d\n", artista->artist_id);
+        printf("TOTAL_SEGUNDOS: %d\n", artista->totalsemanalsegundos);
+    } else {
+        fprintf(stderr, "Erro: ESTE UMARTISTA NAO EXISTE\n");
+
+    }
+
+
 
 GHashTable *getArtistHistory(Domingo *domingo)
 {
   return (domingo->artistahistory);
+}
+
+// Função para imprimir o GArray
+void print_garray(GArray* array) {
+    if (array == NULL) {
+        printf("O GArray está vazio ou não foi inicializado.\n");
+        return;
+    }
+
+    printf("O GArray contém %d elementos:\n", array->len);
+
+    // Iterar sobre todos os elementos do GArray
+    for (guint i = 0; i < array->len; i++) {
+        UmArtista* artista = g_array_index(array, UmArtista*, i);
+        print_artisthistory(artista);
+    }
+}
+
+void printf_domingo (Domingo* domingo) {
+    if (domingo) {
+        if (domingo->data) {
+            printf("DATA: %s\n", domingo->data);
+        } else {
+            fprintf(stderr, "Erro: DATA do Domingo é NULL\n");
+        }
+    } else {
+        fprintf(stderr, "Erro: ESTA DOMINGO NAO EXISTE\n");
+    }
+
 }
 
 // FUNCOES PRINTS QUE NAO FUNCIONAM
@@ -796,23 +1029,24 @@ void print_artisthistory_entry(gpointer key, gpointer value, gpointer user_data)
   print_artisthistory(artista);
 }
 
-void print_semana_completa(Domingo *domingo)
-{
-  if (domingo == NULL)
-  {
-    fprintf(stderr, "Erro: Domingo é NULL.\n");
-    return;
-  }
 
-  if (get_artisthistorido_dedomingo(domingo) == NULL)
-  {
-    fprintf(stderr, "Erro: Hash Table artistahistory é NULL.\n");
-    return;
-  }
+void print_semana_completa(gpointer key, gpointer value, gpointer user_data) {
+    (void)key; // Se não for usado
+    (void)user_data; // Ignora user_data, se não for usado
 
-  printf("----- Hash Table DOMINGO da semana %s -----\n", domingo->data);
+    Domingo *domingo = (Domingo *)value;
 
-  g_hash_table_foreach(get_artisthistorido_dedomingo(domingo), print_artisthistory_entry, NULL);
+    if (domingo == NULL) {
+        fprintf(stderr, "Erro: Domingo é NULL.\n");
+        return;
+    }
 
-  printf("----- Fim da Hash Table DOMINGO da semana %s -----\n", domingo->data);
+    if (get_artisthistorido_dedomingo(domingo) == NULL) {
+        fprintf(stderr, "Erro: Hash Table artistahistory é NULL.\n");
+        return;
+    }
+
+    printf("----- Hash Table DOMINGO da semana %s -----\n", domingo->data);
+    g_hash_table_foreach(get_artisthistorido_dedomingo(domingo), print_artisthistory_entry, NULL);
+    printf("----- Fim da Hash Table DOMINGO da semana %s -----\n", domingo->data);
 }

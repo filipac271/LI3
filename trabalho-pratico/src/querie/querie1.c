@@ -25,16 +25,15 @@ Output* output= iniciaOutput(filename);
 
 int id = transformaIds(idChar);
 
-User* utilizador = NULL;
-Artist* artista = NULL;
+int decidingFlag = 0;
 
 if(c == 'S'){
-      if(line[3] == 'U') utilizador = fetchUser(userController,id);
-      if(line[3] == 'A') artista = lookup_artist(artistController,id);
+      if(line[3] == 'U') decidingFlag = 1;
+      if(line[3] == 'A') decidingFlag = 2;
 }
 else{
-      if(line[2] == 'U') utilizador = fetchUser(userController,id);
-      if(line[2] == 'A') artista = lookup_artist(artistController,id);  
+      if(line[2] == 'U')  decidingFlag = 1;
+      if(line[2] == 'A') decidingFlag = 2;  
 }
 
 
@@ -53,13 +52,19 @@ char* artistCountry;
 int numAlbunsIndividual;
 double totalRecipe;
 
-if (utilizador != NULL)
+if (decidingFlag == 1)
 { 
-      userBirthDate = getUserBirthDate(utilizador);
-      userEmail =getUserEmail(utilizador);
-      userNome =getUserNome(utilizador);
-      userApelido =getUserApelido(utilizador);
-      userCountry =getUserCountry(utilizador);
+      if(isUserValid(userController,id)){
+            outputNULL(output);
+            free(filename);
+            freeOutput(output);
+            return;
+      }
+      userBirthDate = getUserBirthDateControl(userController,id);
+      userEmail =getUserEmailControl(userController,id);
+      userNome =getUserNomeControl(userController,id);
+      userApelido =getUserApelidoControl(userController,id);
+      userCountry =getUserCountryControl(userController,id);
    
       int idade = calcular_idade(userBirthDate);
    
@@ -70,13 +75,18 @@ if (utilizador != NULL)
       free(userApelido);
       free(userCountry);
 
-}else if (artista != NULL){
-
-      artistName = getArtistName(artista);
-      artistType =getArtistType(artista);
-      artistCountry = getArtistCountry(artista);
-      numAlbunsIndividual = getArtistAlbunsIndividuais(artista);
-      totalRecipe = getArtistProfits(artista);
+}else if (decidingFlag == 2){
+      if(isArtistValid(artistController,id)){
+            outputNULL(output);
+            free(filename);
+            freeOutput(output);
+            return;
+      }
+      artistName = getArtistNameControl(artistController,id);
+      artistType =getArtistTypeControl(artistController,id);
+      artistCountry = getArtistCountryControl(artistController,id);
+      numAlbunsIndividual = getArtistAlbunsIndividuaisControl(artistController,id);
+      totalRecipe = getArtistProfitsControl(artistController,id);
       
       output1(output,artistName,artistType,artistCountry,&numAlbunsIndividual,&totalRecipe,c,1);
 
@@ -85,10 +95,7 @@ if (utilizador != NULL)
       free(artistCountry);
 
 }
-if(utilizador==NULL && artista ==NULL)
-{
- outputNULL(output);
-}
+
 
 
 

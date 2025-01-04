@@ -72,8 +72,42 @@ void output2(Output* output2, char* nome, char* tipo, char* time,char* pais, cha
  */
 void output3(Output* output3, char* genero, int num, char c);
 
+/**
+ * @brief Função de saída para a Query 4.
+ * 
+ * A função imprime informações no arquivo de saída associada à estrutura `Output`.
+ * Dependendo do valor do caractere `c`, a formatação será diferente:
+ * - Se `c` for 'S', a saída será no formato "name=name;num".
+ * - Caso contrário, a saída será no formato "name;type;num".
+ * 
+ * @param output4 A estrutura `Output` contendo o arquivo de saída.
+ * @param name O nome a ser impresso.
+ * @param type O tipo a ser impresso.
+ * @param num O número a ser impresso.
+ * @param c Caractere que determina o formato da saída ('S' ou outro).
+ */
+void output4(Output* output4, char* name, char* type, int num, char c);
+
+/**
+ * @brief Função de saída para a Query 5.
+ * 
+ * A função imprime os usernames no arquivo de saída associado à estrutura `Output`. 
+ * Para cada recomendação, um nome de usuário será impresso, seguido de uma nova linha.
+ * 
+ * @param output5 A estrutura `Output` contendo o arquivo de saída.
+ * @param usernames Um array de strings com os nomes de usuário a serem impressos.
+ * @param numrecomendacoes O número total de recomendações a serem processadas.
+ */
+void output5(Output* output5, char** usernames, int numrecomendacoes);
+
+
+
+
 
 void output6(char c, Output* output6, char* tempoAudicao,int nMusicas,char* artistId,char* data,char* genero,char* album, char* hora,int N);
+
+
+
 
 
 #endif

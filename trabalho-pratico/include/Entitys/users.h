@@ -9,6 +9,9 @@
 #ifndef USERS_H
 #define USERS_H
 
+#include "controler/musicsController.h"
+
+
 /**
  * @brief Estrutura que representa um utilizador.
  */
@@ -19,13 +22,15 @@ typedef struct users User;
  */
 typedef struct usersByAge Age;
 
+typedef struct query5 Query5;
+
 /**
  * @brief Cria uma nova instância de `User` e coloca os tokens nos respetivos lugares.
  * 
  * @param tokens Array de strings que contém os parametros do utilizador.
  * @return Pointer para a nova estrutura `User`.
  */
-User* newUser(char** tokens);
+User* newUser(char** tokens,int posicaoChegada);
 
 /**
  * @brief Liberta a memória alocada para um utilizador.
@@ -165,4 +170,26 @@ Age* insertGenero(Age* usersByAge, int idade, char* genero);
  */
 void freeUsersByAge(Age* usersByAge);
 
+
+Query5* createQ5Struct(MusicData* musicController);
+
+void inserirUserQ5(char* username, Query5* usersMatrizQ5);
+
+void freeQ5struct (Query5* q5);
+
+void atualizaGeneros(char* genero,Query5* q5,User* user);
+
+int** getPreferenciasQ5(Query5* q5);
+
+char** getUsersId(Query5* q5);
+
+char** getGenerosNomes(Query5* q5);
+
+int getnumUsers (Query5* q5);
+
+int getnumGeneros (Query5* q5);
+
+void criaLinhaPreferencia (int posicaoChegada,Query5* q5);
+
+int getPosicaoChegada (User* user);
 #endif

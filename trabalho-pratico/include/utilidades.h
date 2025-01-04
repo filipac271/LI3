@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <glib.h>
+
 #include "Entitys/users.h"
 
 
-//FALTA A DESCRIÇÃO GRANDE DO TRANSFORMAiDS E DOS DIVIDIR GROUPS E PENSAR EM COMO ESCREVER O DO COMPARAR
 /**
  * @brief Calcula a idade com base na data de nascimento.
  * 
@@ -18,6 +18,14 @@
  * @return A idade em anos do respetivo user..
  */
 int calcular_idade(char* data_nascimento_str);
+
+/**
+ * @brief Realiza as contas necessárias para passar o campo de music_duration do formato 'hh:mm:ss' para segundos.
+ * 
+ * @param music_duration String representando a duração da música (formato hh:mm:ss).
+ * @return Duração em segundos.
+ */
+int duration_to_seconds(char* music_duration);
 
 /**
  * @brief Obtém o tamanho de um GArray.
@@ -128,7 +136,7 @@ void freeArray(int* array);
 int* divideGroup(char* group, int numMembros);
 
 /**
- * @brief Divide uma string de array em elementos individuais.
+ * @brief Divide uma string de array em elementos individuais em inteiros.
  * 
  * @param arrayString String representando o array.
  * @param numElements Número de elementos no array.
@@ -137,10 +145,10 @@ int* divideGroup(char* group, int numMembros);
 int* divideArray(char* arrayString, int numElements);
 
 /**
- * @brief Transforma uma string de IDs em uma lista de inteiros.
+ * @brief Transforma um Id em String em um Id em Inteiro.
  * 
- * @param idString String contendo os IDs separados por delimitadores.
- * @return Número de IDs processados.
+ * @param idString Id em string.
+ * @return Id em inteiro.
  */
 int transformaIds(char* idString);
 
@@ -155,20 +163,87 @@ int transformaIds(char* idString);
 int compararFicheirosPorLinha(char *file1, char *file2, int *ocorrenciasCorretas);
 
 
+/**
+ * @brief Converte todos os caracteres de uma string para letras minúsculas.
+ * 
+ * @param str Ponteiro para a string a ser convertida. 
+ *            A conversão é feita in-place, ou seja, a string original é modificada.
+ */
 void toLowerCase(char *str);
 
 
-//FUNCOES NAO COMENTADAS
-
+/**
+ * @brief Extrai a data de uma string de data e hora.
+ * 
+ * @param datetime String que contém a data e hora no formato "yyyy/mm/dd hh:mm:ss".
+ * @param data String de saída onde será armazenada apenas a data no formato "yyyy/mm/dd".
+ */
 void pega_data(char* datetime, char* data);
 
-int calcular_dia_da_semana(int ano, int mes, int dia);
+/**
+ * @brief Calcula o número de dias em um mês específico de um ano.
+ * 
+ * @param ano Ano a ser considerado (para verificar anos bissextos).
+ * @param mes Mês (1-12).
+ * @return Número de dias no mês especificado.
+ */
+int diasNoMes(int ano, int mes);
 
-void ajustar_data(int* ano, int* mes, int* dia);
+/**
+ * @brief Determina o dia da semana para uma data específica.
+ * 
+ * @param ano Ano da data.
+ * @param mes Mês da data (1-12).
+ * @param dia Dia da data.
+ * @return Inteiro que representa o o dia da semana (0 = sábado, 1 = domingo, ..., 6 = sexta-feira).
+ */
+int diaDaSemana(int ano, int mes, int dia);
 
-char* calcular_domingo_anterior(char* data);
+/**
+ * @brief Calcula o domingo anterior a uma data específica.
+ * 
+ * @param data String contendo a data no formato "yyyy/mm/dd".
+ * @param resultado String de saída onde será armazenada a data do domingo anterior no formato "yyyy/mm/dd".
+ */
+void calcularDomingoAnterior(const char *data, char *resultado);
+
 
 void* resize(void* array, int oldSize, char type);
+
+
+/**
+ * @brief Converte um número em uma string formatada como ID.
+ * 
+ * @param numero Número a ser convertido.
+ * @param resultado String de saída onde será armazenado o ID formatado.
+ */
+void destransforma_IDs(int numero, char *resultado);
+
+/**
+ * @brief Verifica se uma data pertence a um intervalo.
+ * 
+ * @param data_inicial String representando a data inicial no formato "yyyy/mm/dd".
+ * @param data_final String representando a data final no formato "yyyy/mm/dd".
+ * @param data String representando a data a ser verificada.
+ * @return 1 se a data pertence ao intervalo, 0 caso contrário.
+ */
+int pertence_ao_intervalo(char* data_inicial, char* data_final, char* data);
+
+
+/**
+ * @brief Verifica a ordem cronológica entre duas datas.
+ * 
+ * A função recebe duas datas no formato "dd/mm/aaaa" e compara qual é mais antiga. 
+ * Se a primeira data for anterior à segunda, a função retorna 1. Se a segunda data for anterior, retorna 0.
+ * Caso o formato das datas seja inválido, a função retorna -1.
+ * 
+ * @param data1 A primeira data a ser comparada no formato "dd/mm/aaaa".
+ * @param data2 A segunda data a ser comparada no formato "dd/mm/aaaa".
+ * 
+ * @return 1 se a primeira data for anterior à segunda, 0 se a segunda for anterior, e -1 se o formato das datas for inválido.
+ */
+int verificaOrdemDatas(char *data1, char *data2);
+
 
 
 #endif // UTILIDADES_H

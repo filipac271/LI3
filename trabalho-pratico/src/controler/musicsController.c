@@ -20,7 +20,7 @@
 
 struct musicData {
   GHashTable* musicsTable;
-
+  GArray* generosDif;
 };
 
 
@@ -46,6 +46,12 @@ GHashTable* iniciar_hash_musica(){
 
 }
 
+GArray* iniciarDiferentesGeneros(){
+    GArray* difGenerosArray = g_array_new(TRUE, TRUE, sizeof(char*)); 
+
+    return difGenerosArray;
+}
+
 
 //Inserir música na Hash Table
 void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica, int music_id) {
@@ -56,6 +62,26 @@ void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica, int music_
 }
 
 
+void isNewGenre(char* genero, GArray* arrayDifGeneros) {
+    char* generoSemAspas = remove_quotes(genero); // Remove as aspas do gênero
+    int genreFound = 0;
+
+    // Percorrer o GArray de gêneros para verificar se o gênero já existe
+    for (guint i = 0; i < arrayDifGeneros->len; i++) {
+        char* existingGenero = g_array_index(arrayDifGeneros, char*, i);
+        if (strcmp(existingGenero, generoSemAspas) == 0) {
+            genreFound = 1; // Gênero já existe
+            break;
+        }
+    }
+
+    if (!genreFound) {
+        // Adiciona o gênero ao final do GArray
+        g_array_append_val(arrayDifGeneros, generoSemAspas); 
+    } else {
+        free(generoSemAspas); // Libera memória se o gênero já existe
+    }
+}
 
 
 
@@ -74,12 +100,13 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
     Output* Erros= iniciaOutput("resultados/musics_errors.csv");
   
     MData->musicsTable = iniciar_hash_musica();
+    MData->generosDif = iniciarDiferentesGeneros();
 
     //Inicia o Parser e abre o ficheiro "musics.csv" do dataset
     Parser* parserE= newParser(diretoria,"musics.csv");
 
     // Ler a primeira linha do ficheiro 
-    char * line= pegaLinha(parserE);
+    char* line= pegaLinha(parserE);
 
     //Enviar a linha para o ficheiro musics_erros.csv, esta não será inserida hashTable
     outputErros(Erros,line);
@@ -105,8 +132,8 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
 
         // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
         if(isValid){ 
+          isNewGenre(tokens[5],MData->generosDif);
           Music* nova_musica = new_music(tokens);
-
           // Soma o tempo da música à discografia de todos os seus autores
           inserir_discography_into_artist(artistsData,tokens[4],tokens[2]);
 
@@ -117,8 +144,8 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
         free(linhaE);
         free(getLine(parserE));
 
-   }
-   
+  }
+  
     // Liberta a memória alocada pelo Output Erros e fecha o ficheiro dos erros
     freeOutput(Erros);
   
@@ -127,14 +154,21 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
 }
 
 
-void destroyMusicTable(MusicData* data){
+void destroyMusicData(MusicData* data){
 
   g_hash_table_destroy(data->musicsTable);
+  for (guint i = 0; i < data->generosDif->len; i++) {
+        free(g_array_index(data->generosDif, char*, i));  
+    }
+  g_array_free(data->generosDif, TRUE); 
   printf("Tabela das musicas destruida\n");
 
 }
 
-
+int getnumGenerosDif (MusicData* musicController){
+  int tamanho = musicController->generosDif->len;
+  return tamanho;
+}
 
 
 
@@ -197,6 +231,7 @@ void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* a
   
 }
 
+
 int get_musicAlbum(MusicData* musicController , int musicId)
 {
      Music* music=lookup_musica(musicController, musicId);
@@ -204,6 +239,7 @@ int get_musicAlbum(MusicData* musicController , int musicId)
      return album;
 }
 
+//Igual 1
 int get_numArtists(MusicData* musicController,int musicId)
 {
   
@@ -213,13 +249,7 @@ int get_numArtists(MusicData* musicController,int musicId)
   return numartistas; 
 }
 
-//  int* getArtistIdMusic(MusicData* musicController,int musicId)
-//  {
-//      Music* music=lookup_musica(musicController, musicId);
-//     int* artistas= getArtistIDfromMuiscID(music);
-//    return artistas;
-//  } 
-
+// igual 2
  char* get_musicGenre(MusicData* musicController, int musicId)
  {
      Music* music=lookup_musica(musicController, musicId);
@@ -227,11 +257,58 @@ int get_numArtists(MusicData* musicController,int musicId)
      return genero;
  }
 
- int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas){
-  Music* musica_atual = lookup_musica(musicController, id);
-  return getArtistIDfromMusicID(musica_atual, numartistas);
+
+//igual 2
+char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type){
+  char* genero = NULL;
+  if(type == 's'){
+      Music* musica = lookup_musica(musicController,transformaIds((char*)idMusic));
+      genero = get_music_genre(musica);
+  }
+
+  if(type == 'i'){
+      Music* musica = lookup_musica(musicController,*(int*)idMusic);
+      genero = get_music_genre(musica);
+  }
+
+
+  return genero;
 }
+
+//Igual 1
 int getnumartistaMusicControl (MusicData* musicController, int id){
   Music* musica_atual = lookup_musica(musicController, id);
   return get_numArtistsId(musica_atual);
 }
+
+
+int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas){
+  Music* musica_atual = lookup_musica(musicController, id);
+  return getArtistIDfromMusicID(musica_atual, numartistas);
+}
+
+int get_music_id_control(MusicData* musicController, int id) {
+    Music* musica_atual = lookup_musica(musicController, id);
+    return get_music_id(musica_atual);
+}
+
+char* get_music_title_control(MusicData* musicController, int id) {
+    Music* musica_atual = lookup_musica(musicController, id);
+    return get_music_title(musica_atual);
+}
+
+char* get_music_duration_control(MusicData* musicController, int id) {
+    Music* musica_atual = lookup_musica(musicController, id);
+    return get_music_duration(musica_atual);
+}
+
+int get_music_duration_seconds_control(MusicData* musicController, int id) {
+    Music* musica_atual = lookup_musica(musicController, id);
+    return get_music_duration_seconds(musica_atual);
+}
+
+char* get_music_year_control(MusicData* musicController, int id) {
+    Music* musica_atual = lookup_musica(musicController, id);
+    return get_music_year(musica_atual);
+}
+
