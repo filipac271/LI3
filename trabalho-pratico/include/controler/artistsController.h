@@ -32,14 +32,7 @@ ArtistsData* artistFeed(char* diretoria);
  */
 void inserir_discography_into_artist (ArtistsData* controller, char* music_durationAspas, char* music_artists);
 
-/**
- * @brief Procura um artista na tabela hash pelo ID.
- * 
- * @param controller Ponteiro para ArtistsData contendo a tabela hash de artistas.
- * @param id ID do artista a ser procurado.
- * @return Ponteiro para o artista correspondente, ou NULL se o ID não for encontrado.
- */
-Artist* lookup_artist(ArtistsData* controller, int id);
+
 
 /**
  * @brief Imprime todos os artistas na tabela hash.

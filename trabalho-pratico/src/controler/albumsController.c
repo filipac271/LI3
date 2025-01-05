@@ -78,6 +78,12 @@ AlbumsData* albumsFeed(char* diretoria, ArtistsData* artistController) {
     return ALData;
 }
 
+// Função para procurar um album pelo id (chave da hash table)
+Album* lookup_album(AlbumsData* controller, int id) {
+
+    return g_hash_table_lookup(controller->albumsTable, &id);
+
+}
 char* get_Album_Name(AlbumsData* albumController, int albumId)
 {
     Album* album=lookup_album( albumController, albumId);
@@ -92,12 +98,6 @@ void destroyTableAlbum(AlbumsData* AlbumData){
 
 }
 
-// Função para procurar um album pelo id (chave da hash table)
-Album* lookup_album(AlbumsData* controller, int id) {
-
-    return g_hash_table_lookup(controller->albumsTable, &id);
-
-}
 
 //Função para imprimir um album
 void print_album_entry (gpointer key, gpointer value, gpointer user_data) {
@@ -128,3 +128,12 @@ void print_all_albums(AlbumsData* data) {
     printf("----- Fim da Hash Table -----\n");
 
 }
+
+
+
+int isAlbumValid(AlbumsData* controlador,int id){
+    Album* album = lookup_album(controlador,id);
+    if(album == NULL) return 1;
+    return 0;
+}
+

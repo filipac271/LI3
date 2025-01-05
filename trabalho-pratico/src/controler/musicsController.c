@@ -274,3 +274,11 @@ char* get_music_year_control(MusicData* musicController, int id) {
     return get_music_year(musica_atual);
 }
 
+int isMusicValid (MusicData* controlador , int id){
+  Music* musico = lookup_musica(controlador,id);
+  if (musico == NULL)return 1;
+  return 0;
+}
+
+
+

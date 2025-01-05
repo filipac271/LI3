@@ -37,6 +37,11 @@ void insert_artist_into_table(GHashTable* artists_table, Artist* new_artist,int 
     g_hash_table_insert(artists_table, key,new_artist);
 }
 
+// Função para procurar um artista pelo id (chave da hash table)
+Artist* lookup_artist(ArtistsData* controller, int id) {
+
+    return g_hash_table_lookup(controller->artistsTable, &id);
+}
 
 ArtistsData* artistFeed(char* diretoria) {
 
@@ -171,11 +176,6 @@ void destroyTableArtist(ArtistsData* ArtistData){
     printf("Destrui artistaData\n");
 }
 
-// Função para procurar um artista pelo id (chave da hash table)
-Artist* lookup_artist(ArtistsData* controller, int id) {
-
-    return g_hash_table_lookup(controller->artistsTable, &id);
-}
 
 //Função para imprimir um artista
 void print_artist_entry (gpointer key, gpointer value, gpointer user_data) {

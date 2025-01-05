@@ -21,14 +21,6 @@ typedef struct usersData UsersData;
  */
 UsersData* usersFeed(char* diretoria, MusicData* musicData);
 
-/**
- * @brief Procura um usuário na hash table pelo username.
- * 
- * @param controlador Ponteiro para a estrutura UsersData.
- * @param username ID do usuário a ser buscado.
- * @return Ponteiro para a estrutura User encontrada ou NULL caso não exista.
- */
-User* fetchUser(UsersData* controlador, int username);
 
 
 /**
