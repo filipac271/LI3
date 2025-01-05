@@ -38,12 +38,10 @@ Album* createAlbum(char** tokens){
     
     newAlbum->numArtists = numArtists;
 
-
     free(clearYear);
     freeArray(artistsList);
 
     return newAlbum;
-
 }
 
 char* getAlbumName(Album* album)
@@ -71,7 +69,6 @@ void printAlbum (Album* album){
     printf("\n");
     printf("Ano do lançamento do album:%d\n",album->year);
 
-    printf("\n");
+    printf("\n"); 
     
-
 }

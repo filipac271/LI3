@@ -5,8 +5,6 @@
 #include "Entitys/users.h"
 #include "Input.h"
 
-
-
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,9 +61,7 @@ Age* insertGeneros(Age* usersByAge, int idade,int* liked_songs_id,int SongCount,
         free(genero);
     }
 
-
      return usersByAge;    
-  
 }
 
 
@@ -99,7 +95,6 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     while (1) {
 
         parserE= parser(parserE); 
-
         char** tokens= getTokens(parserE); 
         
         if (tokens==NULL){
@@ -110,10 +105,9 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
     
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
         char* linhaE=getLineError(parserE);
-
         int numSongs=calculate_num_members(tokens[7]);
-
         int isValid = validaUser(tokens[1],tokens[4],tokens[6],musicData,tokens[7],numSongs,Erros,linhaE);
+
         if(isValid){  
             
             int idade= calcular_idade(tokens[4]); 
@@ -121,7 +115,6 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
 
             //  Inserir os Géneros das Liked Songs no array usersByAge
             UData->usersByAge= insertGeneros(UData->usersByAge,idade,liked_songs_id,numSongs, musicData);
-        
             // Criar o User e inseri-lo na Hash Table
             User* user= newUser(tokens,posicaoChegada);
             insertUser(UData->usersTable,user,transformaIds(tokens[0])); 
@@ -134,16 +127,10 @@ UsersData* usersFeed(char* diretoria, MusicData* musicData){
         free(linhaE);
         free(getLine(parserE));
     }
-
     // Liberta a memória alocada pelo Output Erros e fecha o ficheiro dos erros
     freeOutput(Erros);
     return UData;
 }
-
-
-
-
-
 
 
 
@@ -192,15 +179,12 @@ void destroyUsersData(UsersData* data){
 }
 
 
-
-
 // Procura o género no array usersByAge de uma dada idade na posição i
 char* getUBAGenero(UsersData * userController,int idade,int i) {
 
     char* genero= getGenero(userController->usersByAge,idade,i);
     char* copiaGenero = strdup(genero);
     free(genero);
-
     return copiaGenero;
 }
 
@@ -208,12 +192,10 @@ char* getUBAGenero(UsersData * userController,int idade,int i) {
 /// Procura o número de músicas no array usersByAge de uma dada idade na posição i
 int getUBANSongs(UsersData* userController, int idade, int j)
 {
-
     Age* usersByAge= userController->usersByAge;
     int Nsongs=getUBANumberSongs(usersByAge,idade, j);
 
     return Nsongs;
-
 }
 
 
@@ -247,7 +229,6 @@ int** getElementosMatrizQ5(UsersData* userController){
 char** getLinhasMatrizQ5(UsersData* userController){
 
     return getUsersId(userController->usersMatrizQ5);//Manda copia da estrutura da Q5
-
 }
 
 char** getColunasMatrizQ5(UsersData* userController){
@@ -275,7 +256,6 @@ int getPosicaoUser(UsersData* userController,char* username){
     int posicao = getPosicaoChegada(user);
     return posicao;
 }
-
 
 
 

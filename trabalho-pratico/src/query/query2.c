@@ -2,7 +2,7 @@
 #include "utilidades.h"
 #include "Entitys/artists.h"
 #include "Output.h"
-#include "querie/querie2.h"
+#include "query/query2.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,7 +72,7 @@ GArray* filter_and_sort_hash_table_by_discography(ArtistsData* controller, char 
 
 
 
-void querie2(ArtistsData* ArtistController, char* line, int i) {
+void query2(ArtistsData* ArtistController, char* line, int i) {
     int n;
     char country[256] = "";  // String para armazenar o país, inicializada como string vazia
 

@@ -90,8 +90,6 @@ int getnumartistaMusicControl(MusicData* musicController, int id);
  */
 int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas);
 
-
-
 /**
  * @brief Obtém o ID de uma música.
  * 
@@ -137,16 +135,15 @@ int get_music_duration_seconds_control(MusicData* musicController, int id);
  */
 char* get_music_year_control(MusicData* musicController, int id);
 
-
+/**
+ * @brief Obtém o id do album de uma música.
+ * 
+ * @param musicController Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser pesquisada.
+ * @return Id do Album da música como int. 
+ */
 int get_musicAlbum(MusicData* musicController , int musicId);
 
-int get_numArtists(MusicData* musicController,int musicId);
 
-//int* getArtistIdMusic(MusicData* musicController,int musicId);
 
-char* get_musicGenre(MusicData* musicController, int musicId);
-
-int getnumartistaMusicControl (MusicData* musicController, int id);
-
-int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas);
 #endif

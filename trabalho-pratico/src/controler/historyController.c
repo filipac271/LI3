@@ -8,11 +8,7 @@
 #include "Input.h"
 #include "Output.h"
 
-
 #include <glib.h>
-
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -28,23 +24,15 @@ struct historyData{
     GHashTable* history;
 };
 
-// GHashTable* get_Domingo_from_HD (HistoryData* data){
-//     return data->Domingo;
-// }
-
-
-
 
 GHashTable* createHistoryTable() {
     GHashTable* Domingo = g_hash_table_new_full(g_str_hash, g_str_equal, free, (GDestroyNotify)freeDomingo);
-
     if (!Domingo) {
         fprintf(stderr, "Erro: Hash table Domingo não foi criada.\n");
         exit(1);
     } else {
         printf("Hash table Domingo criada com sucesso.\n");
     }
-
     return Domingo;
 }
 
@@ -61,8 +49,6 @@ GHashTable* createUserHistoryTable() {
     return history;
 }
 
-
-
 Domingo* lookup_domingo(GHashTable* domingo, char* data) {
     if (!domingo) {
         fprintf(stderr, "Erro: Tabela Domingo é NULL.\n");
@@ -70,7 +56,6 @@ Domingo* lookup_domingo(GHashTable* domingo, char* data) {
     }
     return g_hash_table_lookup(domingo, data);
 }
-
 
 void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicController) {
 
@@ -80,7 +65,6 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
     data[10] = '\0'; 
 
     char* domingo_anterior = malloc(11 * sizeof(char));
-
     //calcula o domingo dessa semana para usar como key da hash table externa
     calcularDomingoAnterior(data, domingo_anterior);
 
@@ -101,9 +85,6 @@ void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicCo
 
     free(domingo_anterior);  //liberta a data
 }
-
-
-
 
 History* lookup_UserHistory(HistoryData* historyController,int userId)
 {
@@ -127,15 +108,11 @@ void addhistory(HistoryData* history, char* user_id,char* music_id,char* timesta
         *key = userId;
         userHistory= inicializaUserHistory(userId, musicId, ano,mes,dia,hora, duracao); 
          g_hash_table_insert(history->history,key, userHistory); 
-
-
     }
     else
     {    
         adicionaUserHistory(userHistory, musicId, ano,mes,dia,hora, duracao);
     }
-  
-
 }
 
 
@@ -151,7 +128,6 @@ void passa_hastable_para_garray (HistoryData* data){
     while (g_hash_table_iter_next(&iter, &key, &value)){
 
         Domingo* domingo_atual = value;
-
         passa_Domingo_para_garray(domingo_atual);
     } 
     
@@ -159,7 +135,6 @@ void passa_hastable_para_garray (HistoryData* data){
 
 
 HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData,UsersData* usersData) {
-
 
     HistoryData* Hdata = malloc(sizeof(HistoryData));
     if (!Hdata) {
@@ -172,11 +147,8 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
     Hdata->Domingo = createHistoryTable();
     Hdata->history=createUserHistoryTable();
 
-    // Mesma coisa mas para a hash table da querie 6
-
     Parser* parserE = newParser(diretoria, "history.csv");
-
-          // Ler a primeira linha do ficheiro  
+    // Ler a primeira linha do ficheiro  
     char* linha= pegaLinha(parserE);
     //Enviar a linha para o ficheiro "history_erros.csv", esta não será inserida na hashTable
     outputErros(Erros,linha);
@@ -185,7 +157,6 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
     while (1) {
 
         parserE = parser(parserE);
-
         char** tokens = getTokens(parserE);
         if (!tokens) {
          
@@ -193,30 +164,23 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
             break;
         }
 
-    char* linhaE=getLineError(parserE);
-    int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
-    if(isValid) {
+        char* linhaE=getLineError(parserE);
+        int isValid = validaHistory(tokens[5],tokens[4],Erros,linhaE);
+        if(isValid) {
 
-
-        addhistory(Hdata,tokens[1],tokens[2],tokens[3], tokens[4]);
-        char* genre = getMusicGenreControl(tokens[2],musicData,'s');
-        atualizaPrefsUser(genre,tokens[1],usersData);
-        newDomingo_orNot(Hdata, tokens, musicData); 
-        atualizaStreams(tokens[2], musicData, artistData);
-        
-    }  
-
-
-        free(linhaE);
-        free(getLine(parserE));  
-
-    }
-  
-    freeOutput(Erros);
-
-    passa_hastable_para_garray(Hdata);
-
-    return Hdata;
+            addhistory(Hdata,tokens[1],tokens[2],tokens[3], tokens[4]);
+            char* genre = getMusicGenreControl(tokens[2],musicData,'s');
+            atualizaPrefsUser(genre,tokens[1],usersData);
+            newDomingo_orNot(Hdata, tokens, musicData); 
+            atualizaStreams(tokens[2], musicData, artistData);
+        }  
+            free(linhaE);
+            free(getLine(parserE));  
+        }
+    
+        freeOutput(Erros);
+        passa_hastable_para_garray(Hdata);
+        return Hdata;
 }
 
 
@@ -229,7 +193,6 @@ int getPosicaoAno(HistoryData* historyController,int user_id, int ano)
     }
     int i= procuraAno(userHistory,ano);
     return i;
-   
 }
 
 
@@ -244,8 +207,7 @@ char** getNartistasMaisOuvidos(HistoryData* historyController, MusicData*musicCo
 
 
 char* getDia(HistoryData*  historyController,int user_id,int ano)
-{
-   
+{ 
     History* userHistory= lookup_UserHistory(historyController, user_id);
     char* data=DataMaisMusicas(userHistory,ano); //////Falta dar copia 
     return data;
@@ -274,8 +236,6 @@ void print_all_history (HistoryData* Hdata){
     printf("----- Fim da Hash Table do HISTORICO-----\n");
 }
 
-
-
 void destroyHistoryData(HistoryData* data) {
 
         g_hash_table_destroy(data->Domingo);
@@ -284,7 +244,6 @@ void destroyHistoryData(HistoryData* data) {
     printf("Tabela DOMINGO destruida\n");
 
 }
-
 
 //Q4
 
@@ -312,13 +271,10 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
         for (int i = 0; i < (int)top_semanal->len; i++) {
             //Vamos iterar o GArray interno
             UmArtista* artista_atual = g_array_index(top_semanal, UmArtista*, i);
-            
             int id_atual = get_artist_id_from_garray(artista_atual);
-
             // Aloca memória para a chave para evitar usar algo local 
             int* id_atual_ptr = g_new(int, 1);
             *id_atual_ptr = id_atual;
-
             // Verifica se a chave já existe na hash table
             int* ocorrencia_atual_ptr = g_hash_table_lookup(hash_auxiliar, id_atual_ptr);
 
@@ -333,7 +289,6 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
                 (*ocorrencia_atual_ptr)++;
                 g_free(id_atual_ptr); // Libera a chave alocada para evitar duplicação
             }
-
             // Atualiza o artista mais frequente
             int ocorrencia_atual = ocorrencia_atual_ptr ? *ocorrencia_atual_ptr : 1;
 
@@ -346,9 +301,7 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
         }
         free_garray_with_data2(top_semanal);
         //g_array_free(top_semanal, TRUE);
-
     }
-
     g_hash_table_destroy(hash_auxiliar);
     return mais_freq_artist;
 }
@@ -420,8 +373,6 @@ if (data_inicio != NULL && data_fim != NULL && strcmp(data_inicio, "") != 0 && s
             }
             free_garray_with_data2(top_semanal);
             //g_array_free(top_semanal, TRUE);
-
-
         }
     }
 }

@@ -7,12 +7,13 @@
 #include "controler/mainController.h"
 #include "controler/historyController.h"
 #include "Input.h"
-#include "querie/querieManager.h"
-#include "querie/querie1.h"
-#include "querie/querie2.h"
-#include "querie/querie3.h"
-#include "querie/query4.h"
-#include "querie/query5.h"
+#include "query/queryManager.h"
+#include "query/query1.h"
+#include "query/query2.h"
+#include "query/query3.h"
+#include "query/query4.h"
+#include "query/query5.h"
+#include "query/query6.h"
 
 
 void capturarEntrada(WINDOW *window, int *linha, int coluna, const char *mensagem, char *entrada, size_t tamanhoMaximo) {
@@ -66,10 +67,12 @@ int validaInputs (char* argumentos,char* query){
     return validade;
 }
 
-void querieManagerInt(char* argumentos,char* query,MainController* data){
+void queryManagerInt(char* argumentos,char* query,MainController* data){
     UsersData *UserController = getUserController(data);
     ArtistsData *ArtistController = getartistController(data);
-    HistoryData *HistoryConctoller = gethistoryController(data);
+    HistoryData *HistoryController = gethistoryController(data);
+    MusicData* musicController=getMusicController(data);
+    AlbumsData* albumController=getalbumController(data);
 
     int **elementosMatriz = getElementosMatrizQ5(UserController);
     char **idsUsers = getLinhasMatrizQ5(UserController);
@@ -82,25 +85,25 @@ void querieManagerInt(char* argumentos,char* query,MainController* data){
         {
         case '1':
 
-            querie1(UserController, line, 0, ArtistController);
+            query1(UserController, line, 0, ArtistController);
 
             break;
 
         case '2':
 
-            querie2(ArtistController, line, 0);
+            query2(ArtistController, line, 0);
 
             break;
 
         case '3':
 
-            querie3(0, line, UserController);
+            query3(0, line, UserController);
 
             break;
 
         case '4':
 
-            query4(HistoryConctoller, ArtistController, line, 0);
+            query4(HistoryController, ArtistController, line, 0);
 
             break;
 
@@ -109,15 +112,20 @@ void querieManagerInt(char* argumentos,char* query,MainController* data){
             query5(line, 0, UserController, elementosMatriz, idsUsers, nomesGeneros);
 
             break;
+        case '6':
+
+            query6(0,line, HistoryController,musicController, albumController);
+            
+            break;
+
         default:
             break;
         }
-
-        
         
     freeQ5Matrizes(elementosMatriz, idsUsers, nomesGeneros, UserController);
 
 }
+
 void printaNcursesQ(WINDOW *full_window,int* currentY){
 
     Parser* parser = newParser("./resultados","command1_output.txt");
@@ -131,13 +139,9 @@ void printaNcursesQ(WINDOW *full_window,int* currentY){
     }
         wmove(full_window,*currentY,1);
     
-
-    
-
     freeParser(parser);
 
     remove("./resultados/command1_output.txt");
-
 
 }
 
@@ -150,7 +154,7 @@ void processaQueries(WINDOW *full_window, int *currentY, MainController* data) {
     capturarEntrada(full_window, currentY, 1, "Insira os argumentos para a query: ", argumentosQuery, sizeof(argumentosQuery));
     int valido = validaInputs(argumentosQuery, queryInput);
     if (valido) {
-        querieManagerInt(argumentosQuery, queryInput,data);
+        queryManagerInt(argumentosQuery, queryInput,data);
         printaNcursesQ(full_window,currentY);
     } else {
         wattron(full_window, A_BOLD | A_UNDERLINE);
@@ -247,7 +251,6 @@ void interativo() {
             if(continuar[0] == 'n')break;
 
         }
-        
 
         break;
     }

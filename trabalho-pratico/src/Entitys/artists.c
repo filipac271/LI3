@@ -22,8 +22,6 @@ struct artists
 };
 
 
-
-
 // Função para criar um novo artista
 Artist* create_artist(char** tokens) {
     Artist* new_artist = malloc(sizeof(Artist));
@@ -33,7 +31,6 @@ Artist* create_artist(char** tokens) {
     }
 
     //O remove quotes já manda uma cópia
-
     char* ganhos = remove_quotes(tokens[3]);
     double clean_ganhos = atof(ganhos);
 
@@ -70,7 +67,6 @@ void free_artist(Artist* artist) {
         free(artist->name);
         //free(artist->descriçao);
         free(artist->country);
-
         free(artist->grupo);
         free(artist->type);
         free(artist);
@@ -110,8 +106,7 @@ void print_artist(Artist* artist) {
 
 //Getters
 
-
-int getArtistId(Artist* artista){//
+int getArtistId(Artist* artista){
     return artista->id;
 }
 
@@ -119,13 +114,13 @@ char* getArtistName(Artist* artista){
     return strdup(artista->name);
 }
 
-double getArtistGanho(Artist* artista){//
+double getArtistGanho(Artist* artista){
     return artista->ganho_por_stream;
 }
 
-int* getArtistGrupo(Artist* artista){//
-    int num_artists = getArtistNumMembros(artista);
+int* getArtistGrupo(Artist* artista){
 
+    int num_artists = getArtistNumMembros(artista);
     int* novoarray = malloc(num_artists * sizeof(int));
 
   if(num_artists > 0){
@@ -146,7 +141,7 @@ char* getArtistType(Artist* artista){
     return strdup(artista->type);
 }
 
-int getArtistNumMembros(Artist* artista){//
+int getArtistNumMembros(Artist* artista){
     return artista->numMembrosGrupo;
 }
 
@@ -163,8 +158,8 @@ int getArtistAlbunsIndividuais (Artist* artista){
     return artista->albunsIndividuais;
 }
 
-//Setters
 
+//Setters
 
 void setArtistDiscography(Artist* artista, int discography){
     artista->total_discography += discography;
@@ -178,10 +173,3 @@ void setStreams (Artist* artista,double stream){
 void setAlbuns (Artist* artista){
     artista->albunsIndividuais += 1;
 }
-
-
-
-//Unused
-// char* getArtistDescriçao(Artist* artista){
-//     return strdup(artista->descriçao);
-// }

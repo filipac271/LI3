@@ -15,9 +15,13 @@ typedef struct albums Album;
  */
 Album* createAlbum(char** tokens);
 
-
+/**
+ * @brief Busca o nome de um album.
+ * 
+ * @param album Ponteiro para o album.
+ * @return Nome do album em formato string.
+ */
 char* getAlbumName(Album* album);
-
 
 /**
  * @brief Libera a memória alocada para um álbum.

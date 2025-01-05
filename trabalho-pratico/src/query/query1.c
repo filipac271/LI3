@@ -13,7 +13,7 @@
 
 
 
-void querie1(UsersData* userController, char* line,int i, ArtistsData* artistController){
+void query1(UsersData* userController, char* line,int i, ArtistsData* artistController){
 
 char *filename = malloc(sizeof(char) * 256);
 sprintf(filename, "resultados/command%d_output.txt",i+1);
