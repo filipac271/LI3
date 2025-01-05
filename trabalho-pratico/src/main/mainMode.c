@@ -1,5 +1,5 @@
 #include "controler/mainController.h"
-#include "querie/querieManager.h"
+#include "query/queryManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,14 +1,14 @@
 #define _GNU_SOURCE and #define _POSIX_C_SOURCE 1999309L
 #include "controler/mainController.h"
 #include "controler/historyController.h"
-#include "querie/querieManager.h"
+#include "query/queryManager.h"
 #include "Input.h"
-#include "querie/querie1.h"
-#include "querie/querie2.h"
-#include "querie/querie3.h"
-#include "querie/query4.h"
-#include "querie/query5.h"
-#include "querie/querie6.h"
+#include "query/query1.h"
+#include "query/query2.h"
+#include "query/query3.h"
+#include "query/query4.h"
+#include "query/query5.h"
+#include "query/query6.h"
 
 #include "utilidades.h"
 
@@ -88,7 +88,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
                     clock_gettime(CLOCK_REALTIME, &start);
 
-                    querie1(UserController, line , i,ArtistController);
+                    query1(UserController, line , i,ArtistController);
                     
                     clock_gettime(CLOCK_REALTIME, &end);
 
@@ -102,7 +102,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
                 clock_gettime(CLOCK_REALTIME, &start);
                 
-                querie2(ArtistController, line, i);
+                query2(ArtistController, line, i);
 
                 clock_gettime(CLOCK_REALTIME, &end);
 
@@ -114,7 +114,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
             case '3':
                 clock_gettime(CLOCK_REALTIME, &start);
 
-                querie3(i, line, UserController);
+                query3(i, line, UserController);
                 clock_gettime(CLOCK_REALTIME, &end);
 
                 //Tempo unico desta chamada da querie3
@@ -145,7 +145,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
              case '6':
                 clock_gettime(CLOCK_REALTIME, &start);
 
-                querie6(i,line, HistoryController, musicController, albumController);
+                query6(i,line, HistoryController, musicController, albumController);
                 clock_gettime(CLOCK_REALTIME, &end);
 
                 //Tempo unico desta chamada da querie3
@@ -207,19 +207,19 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
 
 
-    printf("\nTempo médio da querie 1: %.6f ms\n",timeQ1/q1 * 1e3 );
-    printf("Tempo médio da querie 2: %.6f ms\n",timeQ2/q2 * 1e3 );
-    printf("Tempo médio da querie 3: %.6f ms\n",timeQ3/q3 * 1e3 );
-    printf("Tempo médio da querie 4: %.6f ms\n",timeQ4/q4 * 1e3 );
-    printf("Tempo médio da querie 5: %.6f ms\n",timeQ5/q5 * 1e3 );
-     printf("Tempo médio da querie 6: %.6f ms\n",timeQ6/q6 * 1e3 );
+    printf("\nTempo médio da query 1: %.6f ms\n",timeQ1/q1 * 1e3 );
+    printf("Tempo médio da query 2: %.6f ms\n",timeQ2/q2 * 1e3 );
+    printf("Tempo médio da query 3: %.6f ms\n",timeQ3/q3 * 1e3 );
+    printf("Tempo médio da query 4: %.6f ms\n",timeQ4/q4 * 1e3 );
+    printf("Tempo médio da query 5: %.6f ms\n",timeQ5/q5 * 1e3 );
+     printf("Tempo médio da query 6: %.6f ms\n",timeQ6/q6 * 1e3 );
      
-    printf("\nA Querie 1 demorou na totalidade: %.6fms\n",timeQ1* 1e3);
-    printf("A Querie 2 demorou na totalidade: %.6fms\n",timeQ2* 1e3);
-    printf("A Querie 3 demorou na totalidade: %.6fms\n",timeQ3* 1e3);
-    printf("A Querie 4 demorou na totalidade: %.6fms\n",timeQ4* 1e3);
-    printf("A Querie 5 demorou na totalidade: %.6fms\n",timeQ5* 1e3);
-    printf("A Querie 6 demorou na totalidade: %.6fms\n",timeQ6* 1e3);
+    printf("\nA Query 1 demorou na totalidade: %.6fms\n",timeQ1* 1e3);
+    printf("A Query 2 demorou na totalidade: %.6fms\n",timeQ2* 1e3);
+    printf("A Query 3 demorou na totalidade: %.6fms\n",timeQ3* 1e3);
+    printf("A Query 4 demorou na totalidade: %.6fms\n",timeQ4* 1e3);
+    printf("A Query 5 demorou na totalidade: %.6fms\n",timeQ5* 1e3);
+    printf("A Query 6 demorou na totalidade: %.6fms\n",timeQ6* 1e3);
     
     printf("\nForam executadas %d queries 1\n",q1);
     printf("Foram executadas %d queries 2\n",q2);
@@ -284,7 +284,7 @@ int teste(char* pastaPrincipal,char* queriesFile,char* outputEsperado) {
 
 
     if (correctLine == (q1 + q2 + q3+ q4 +q5 + q6)) {
-        printf(COLOR_GREEN "\nNão houve erros em nenhuma querie\n\n" COLOR_RESET);
+        printf(COLOR_GREEN "\nNão houve erros em nenhuma query\n\n" COLOR_RESET);
     } else {
         printf(COLOR_RED "\nHouve erros em uma ou mais queries\n\n" COLOR_RESET);
     }

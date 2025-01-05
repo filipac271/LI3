@@ -21,6 +21,14 @@ typedef struct albumsData AlbumsData;
  */
 AlbumsData* albumsFeed(char* diretoria, ArtistsData* artistController);
 
+/**
+ * @brief Obtém o nome do album.
+ * 
+ * @param albumController Ponteiro para a estrutura AlbumsData que contém a tabela hash.
+ * @param albumId Id do album cujo nome é procurado.
+ * @return nome do album em string.
+ */
+char* get_Album_Name(AlbumsData* albumController, int albumId);
 
 /**
  * @brief Liberta a memória alocada pela Hash Table contida em AlbumsData.

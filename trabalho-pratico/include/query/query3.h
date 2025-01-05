@@ -24,6 +24,6 @@ typedef struct querie3 Genero;
  * @param userController Controlador contendo os dados dos usuários.
  * 
  */
-void querie3(int num, char* line, UsersData* userController);
+void query3(int num, char* line, UsersData* userController);
 
 #endif

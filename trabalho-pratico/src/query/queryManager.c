@@ -4,12 +4,12 @@
 #include "controler/historyController.h"
 #include "controler/mainController.h"
 #include "controler/historyController.h"
-#include "querie/querie1.h"
-#include "querie/querie2.h"
-#include "querie/querie3.h"
-#include "querie/query4.h"
-#include "querie/query5.h"
-#include  "querie/querie6.h"
+#include "query/query1.h"
+#include "query/query2.h"
+#include "query/query3.h"
+#include "query/query4.h"
+#include "query/query5.h"
+#include "query/query6.h"
 
 #include "utilidades.h"
 #include "Input.h"
@@ -190,19 +190,19 @@ void queries(MainController *data, char *querieFile)
         {
         case '1':
 
-            querie1(UserController, line, i, ArtistController);
+            query1(UserController, line, i, ArtistController);
             
             break;
 
         case '2':
 
-            querie2(ArtistController, line, i);
+            query2(ArtistController, line, i);
 
             break;
 
         case '3':
             
-            querie3(i, line, UserController);
+            query3(i, line, UserController);
 
                 break;
 
@@ -220,7 +220,7 @@ void queries(MainController *data, char *querieFile)
             
         case '6':
 
-            querie6(i,line, HistoryController,musicController, albumController);
+            query6(i,line, HistoryController,musicController, albumController);
 
             break;
             

@@ -26,8 +26,6 @@ struct users
 
 };
 
-
-
 struct usersByAge
 {
     char** generos;
@@ -45,10 +43,6 @@ struct query5 {
 
 
 };
-
-
-
-
 
 //Dá print de um user
 void printUser(User* user) {
@@ -76,13 +70,13 @@ void printUser(User* user) {
 {
   
     struct usersByAge* usersAge = malloc(numIdades * sizeof(struct usersByAge));
-    for (int i = 0; i < numIdades; i++) {
-    usersAge[i].numGeneros = 0; 
-    for (int j=0;j<numGenerosDif;j++)
+    for (int i = 0; i < numIdades; i++) 
     {
-        usersAge[i].numSongs[j]=0;
-    }
-    
+        usersAge[i].numGeneros = 0; 
+        for (int j=0;j<numGenerosDif;j++)
+        {
+            usersAge[i].numSongs[j]=0;
+        }
     }
 
     return usersAge;
@@ -100,11 +94,9 @@ Query5* createQ5Struct(MusicData* musicController) {
 
     usersMatrizQ5->nomesGeneros = malloc(sizeof(char*) * usersMatrizQ5->numGenerosDiferentes);
 
-
     for (int i = 0; i < usersMatrizQ5->numGenerosDiferentes; i++) {
         usersMatrizQ5->nomesGeneros[i] = NULL;
     }
-
 
     // Inicializando o GArray para usersIds
     usersMatrizQ5->usersIds = g_array_new(TRUE, TRUE, sizeof(char*));  // GArray de strings (char*)
@@ -114,7 +106,6 @@ Query5* createQ5Struct(MusicData* musicController) {
 
     usersMatrizQ5->numGeneros = 0;
     usersMatrizQ5->numUsers = 0;
-
 
     return usersMatrizQ5;
 }
@@ -136,9 +127,7 @@ User* newUser (char** tokens,int posicaoChegada)
     int* liked_songs_id =divideArray(songs,numSongs);
  
     //O remove quotes já manda uma cópia
-
     user->username =transformaIds(tokens[0]);
-
     user->email=remove_quotes(tokens[1]);
     user->nome=remove_quotes(tokens[2]);
     user->apelido=remove_quotes(tokens[3]);
@@ -147,11 +136,12 @@ User* newUser (char** tokens,int posicaoChegada)
     user->subscription_type=remove_quotes(tokens[6]); 
 
     user->liked_songs_id = malloc((numSongs) * sizeof(int));
+
     for (int i = 0; i < numSongs; i++) {
         user->liked_songs_id[i] = liked_songs_id[i];
     }
-    user->number_liked_songs= numSongs;
 
+    user->number_liked_songs= numSongs;
     user->posicaoChegada = posicaoChegada;
 
     freeArray(liked_songs_id);
@@ -162,7 +152,6 @@ User* newUser (char** tokens,int posicaoChegada)
 
 
 Age *insertGenero(Age* usersByAge, int idade, char* genero )
-
 {
     int inserido=0;
     int nGeneros=usersByAge[idade].numGeneros;
@@ -174,25 +163,26 @@ Age *insertGenero(Age* usersByAge, int idade, char* genero )
         usersByAge[idade].numSongs[nGeneros]=1;
         usersByAge[idade].numGeneros=1;
     }
-    else{
-
- 
-    for(int i=0;i<nGeneros && !inserido;i++)
+    else
     {
-        if(strcmp(usersByAge[idade].generos[i],genero)==0)
+    
+        for(int i=0;i<nGeneros && !inserido;i++)
         {
-            usersByAge[idade].numSongs[i]++;
-            inserido=1;
+            if(strcmp(usersByAge[idade].generos[i],genero)==0)
+            {
+                usersByAge[idade].numSongs[i]++;
+                inserido=1;
+            }
         }
-    }
-    if(!inserido )
-    {
-        usersByAge[idade].generos[nGeneros]=strdup(genero);
-        usersByAge[idade].numSongs[nGeneros]+=1;
-        usersByAge[idade].numGeneros++;
+        if(!inserido )
+        {
+            usersByAge[idade].generos[nGeneros]=strdup(genero);
+            usersByAge[idade].numSongs[nGeneros]+=1;
+            usersByAge[idade].numGeneros++;
+        }
+
     }
 
-      }
     return usersByAge;
 }
 
@@ -217,24 +207,23 @@ void freeUsersByAge(Age* usersByAge){
     
    for (int i=0;i<numIdades;i++)
    {
-    if(usersByAge[i].numGeneros>0)
-    {
-      
-        for(int j = 0 ; j < usersByAge[i].numGeneros; j++)
-            {
-             free(usersByAge[i].generos[j]);
-            }
+        if(usersByAge[i].numGeneros>0)
+        {
+            for(int j = 0 ; j < usersByAge[i].numGeneros; j++)
+                {
+                    free(usersByAge[i].generos[j]);
+                }
 
-        free(usersByAge[i].generos);
-    }
+            free(usersByAge[i].generos);
+        }
    }
 
     free(usersByAge);
-
 }
 
 
 void freeQ5struct(Query5* q5) {
+
     if (!q5) return;
 
     for (int j = 0; j < q5->numGeneros; j++)
@@ -265,19 +254,18 @@ void atualizaGeneros(char* genero,Query5* q5,User* user){
 
     while (i < q5->numGeneros + 1)
     {
-    if (q5->nomesGeneros[i] == NULL ){
-        q5->nomesGeneros[i] = genero;
-        q5->numGeneros += 1;
-        g_array_index(q5->preferencias, int*, user->posicaoChegada)[i] += 1;
-        break;
-    } 
-    if(strcmp(q5->nomesGeneros[i],genero) == 0){
-        free(genero);
-        g_array_index(q5->preferencias, int*, user->posicaoChegada)[i] += 1;
-        break;
-    }
-
-    i++;
+        if (q5->nomesGeneros[i] == NULL ){
+            q5->nomesGeneros[i] = genero;
+            q5->numGeneros += 1;
+            g_array_index(q5->preferencias, int*, user->posicaoChegada)[i] += 1;
+            break;
+        } 
+        if(strcmp(q5->nomesGeneros[i],genero) == 0){
+            free(genero);
+            g_array_index(q5->preferencias, int*, user->posicaoChegada)[i] += 1;
+            break;
+        }
+        i++;
     }
   
 }
@@ -301,7 +289,6 @@ void inserirUserQ5(char* username, Query5* q5) {
     char* user_copy = g_strndup(username + 1, len - 2);  // Copia a string sem as aspas
     g_array_append_val(q5->usersIds, user_copy);
 
-    
     q5->numUsers++;
 }
 
@@ -346,7 +333,6 @@ void inserirUserQ5(char* username, Query5* q5) {
 }
 
 int getUBANumberSongs(Age *userAge,int idade, int i){
-
     return (userAge[idade].numSongs[i]);
 }
 
@@ -364,16 +350,16 @@ int getNGeneros(Age* userAge,int idade)
 
 
 int** getPreferenciasQ5(Query5* q5){
-    int** prefre = malloc(q5->numUsers * sizeof(int*));
+    int** prefere = malloc(q5->numUsers * sizeof(int*));
     for (int i = 0; i < q5->numUsers; i++) {
-        prefre[i] = malloc(sizeof(int) * q5->numGeneros);
+        prefere[i] = malloc(sizeof(int) * q5->numGeneros);
 
         int* preferenciasUsuario = g_array_index(q5->preferencias, int*, i);
 
         // Copia as preferências do array original para o novo array alocado
-        memcpy(prefre[i], preferenciasUsuario, q5->numGeneros * sizeof(int)); 
+        memcpy(prefere[i], preferenciasUsuario, q5->numGeneros * sizeof(int)); 
     }    
-    return prefre;
+    return prefere;
 }
 
 

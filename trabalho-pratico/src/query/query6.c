@@ -19,7 +19,7 @@ void normalizaId(int id, char *resultado, char c) {
 
 }
 
-void querie6(int i, char * line, HistoryData* historyController,MusicData* musicController, AlbumsData* albumController)
+void query6(int i, char * line, HistoryData* historyController, MusicData* musicController, AlbumsData* albumController)
 {
       char* filename = malloc(sizeof(char) * 256);
     if (filename == NULL) {
@@ -45,7 +45,7 @@ void querie6(int i, char * line, HistoryData* historyController,MusicData* music
     {     
         char* albumGenero= getAlbumGenero(historyController,musicController,albumController, userId, posicaoAno); 
         char genero[20];int album;
-        sscanf(albumGenero,"%[^0-9]%d", genero, &album);
+        sscanf(albumGenero,"%d%[^0-9]", &album, genero);
         char albumfav[9];
         normalizaId(album, albumfav,'a');
         char* hora= getHora(historyController,userId, posicaoAno);
@@ -75,7 +75,7 @@ void querie6(int i, char * line, HistoryData* historyController,MusicData* music
                 free(resultadosN[j]);
             }
             free(resultadosN[j]);
-             free(resultadosN);
+            free(resultadosN);
         }
             free(albumGenero);
             free(hora);

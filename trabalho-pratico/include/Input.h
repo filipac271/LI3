@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "querie/querie3.h"
+#include "query/query3.h"
 
 /** VER SE É PRECISO ESCREVER MAIS ALGUMA COISA NAS ESTRUTURAS
  * @typedef Parser

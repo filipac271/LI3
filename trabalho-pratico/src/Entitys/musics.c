@@ -57,12 +57,10 @@ void free_musica(Music* musica) {
 
         free(musica->music_title);
         free(musica->music_artist_id);
-
         free(musica->music_duration);
         free(musica->music_genre);
         free(musica->music_year);
         //free(musica->music_lyrics);
-
         free(musica);
     }
 }
@@ -104,8 +102,6 @@ char* get_music_duration (Music* music){
   return strdup(music->music_duration);
 }
 
-
-
 //getter que dá a duraçao em segundos
 int get_music_duration_seconds (Music* musica){
   return (duration_to_seconds(get_music_duration(musica)));
@@ -129,15 +125,13 @@ int get_music_album(Music* music)
 }
 
 
+
 int* getArtistIDfromMusicID(Music* music,int num_artists){
 
-
-  //acho que funciona, mas caso não funcionar usar um malloc e depois dar free
     int* novoarray = malloc(num_artists * sizeof(int));
     if (!novoarray) {
         return NULL; // Falha na alocação de memória
     }
-
 
   if(num_artists > 0){
     int i;
@@ -148,21 +142,3 @@ int* getArtistIDfromMusicID(Music* music,int num_artists){
 
   return novoarray;
 }
-
-// int get_numArtistsId (Music* music){
-//   return (music->num_artistId);
-// }
-
-
-// int get_artistID_at_index(Music* song, int index) {
-//     if (!song || index < 0 || index >= song->num_artistId) {
-//         return -1; // Retorna um valor inválido se o índice for inválido
-//     }
-//     return song->music_artist_id[index];
-// }
-
-
-// char* get_music_lyrics (Music* music){
-//   return strdup(music->music_lyrics);
-
-// }

@@ -9,7 +9,7 @@
 #include <glib.h>
 #include <unistd.h>
 
-#include "querie/querie3.h"
+#include "query/query3.h"
 
 struct querie3 {
     char* genero;     // Nome do género musical
@@ -18,7 +18,7 @@ struct querie3 {
 
 // Função `querie3`: realiza a consulta de géneros de música entre uma faixa de idades 
 // e grava os resultados num ficheiro de saída.
-void querie3(int num, char* line, UsersData* userController) {
+void query3(int num, char* line, UsersData* userController) {
     int min, max;
     sscanf(line + 2, "%d %d", &min, &max);  // Lê o intervalo de idades (min e max) a partir da linha de entrada
 
