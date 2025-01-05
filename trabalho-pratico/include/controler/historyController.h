@@ -17,40 +17,6 @@ typedef struct historyData HistoryData;
 
 
 /**
- * @brief Procura um domingo específico na Hash Table externa.
- * 
- * @param domingo Pointer para a Hash Table de domingos.
- * @param data String representando a data no formato yyyy/mm/dd.
- * @return Pointer para a estrutura Domingo correspondente à data, ou NULL se não for encontrada.
- */
-Domingo* lookup_domingo(GHashTable* domingo, char* data);
-
-/**
- * @brief Cria um novo domingo ou atualiza um existente com base nos tokens fornecidos.
- * 
- * Esta função começa por obter a data a partir do token que contem o timestamp, de seguida calcula o domingo anterior a essa data,
- * tirando se for um domingo, nesse caso a data mantêm-se. De seguida, verificamos se já existe uma hashtable interna associada a essa data.
- * Se já existir chamamos a função new_or_add. Caso contrario, criamos uma nova hashtable, um novo Domingo.
- * 
- * @param controller Pointer para o Controller de dados do histórico.
- * @param tokens Array de strings que contêm os tokens que serão processados.
- * @param musicController Pointer para o Controller dos dados referentes às musicas.
- */
-void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicController);
-
-History* lookup_UserHistory(HistoryData* historyController,int userId);
-/**
- * @brief Converte os dados de uma Hash Table para um GArray.
- * 
- * @param data Pointer para a estrutura HistoryData que contem a informação que será convertida.
- * 
- * Esta função processa a Hash Table armazenada em `HistoryData` e transfere seus elementos 
- * para uma GArray ao chamar passa_domingo_para_garray que transforma a hashtable interna em GArray. 
- * Passamos então a ter uma Hash Table externa constituida internamente por GArrays
- */
-void passa_hastable_para_garray(HistoryData* data);
-
-/**
  * @brief Processa o histórico de um ficheiro e preenche todas as estruturas de dados relacionadas.
  * 
  * Esta função começa por criar a estrutura HistoryData. Seguidamente inicia o output de erros pois os dados antes de serem inseridos

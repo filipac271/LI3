@@ -36,7 +36,7 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
 
     for (int i = 0; i < numSongs; i++) {
        
-        if (lookup_musica(musicsController,liked_songs_id[i]) == NULL) {
+        if (isMusicValid(musicsController,liked_songs_id[i])) {
             outputErros(Erros,linha);
             freeArray(liked_songs_id);
             return 0;

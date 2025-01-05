@@ -20,14 +20,7 @@ typedef struct musicData MusicData;
  */
 MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* albumData);
 
-/**
- * @brief Procura uma música pelo seu ID.
- * 
- * @param controller Ponteiro para a estrutura MusicData.
- * @param music_id ID da música a ser procurada.
- * @return Ponteiro para a música encontrada, ou NULL se não encontrada.
- */
-Music* lookup_musica(MusicData* controller, int music_id);
+
 
 
 /**
@@ -144,6 +137,13 @@ char* get_music_year_control(MusicData* musicController, int id);
  */
 int get_musicAlbum(MusicData* musicController , int musicId);
 
-
+/**
+ * @brief Verifica se uma música com o ID fornecido é válida.
+ * 
+ * @param controlador Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser verificada.
+ * @return 1 se a música não existir (inválida), 0 se a música existir (válida).
+ */
+int isMusicValid (MusicData* controlador , int id);
 
 #endif

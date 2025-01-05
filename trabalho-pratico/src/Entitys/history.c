@@ -688,13 +688,8 @@ void freeUserHistory(History *history)
   free(history);
 }
 
-void destroy_history(Domingo *domingo)
-{
 
-  free(domingo->data);
 
-  g_hash_table_destroy(domingo->artistahistory);
-}
 
 UmArtista* new_umArtista (int artist_id, int segundos){
     UmArtista* n_umart = malloc(sizeof(UmArtista)); 
@@ -718,8 +713,33 @@ void inserir_umartista_na_semana(GHashTable* artisthistory, UmArtista* novo_arti
     *key = artist_id;
 
     g_hash_table_insert(artisthistory, key, novo_artista);
-   // free(key); //isto nao é solucao para nada apenas traz erros
 
+}
+
+
+
+int get_seconds_from_garray (UmArtista* artista){
+    return artista->totalsemanalsegundos;
+}
+
+
+gint compare_seconds(gconstpointer a, gconstpointer b) {
+    
+    UmArtista *artist_a = *(UmArtista **)a;
+    UmArtista *artist_b = *(UmArtista **)b;
+
+    int segundos_a = get_seconds_from_garray(artist_a);
+    int segundos_b = get_seconds_from_garray(artist_b);
+
+    // Compara pela duração em segundos (ordem decrescente)
+    int r = segundos_b - segundos_a;
+
+    // Se os segundos forem iguais, compara pelo artist_id para ficar com o de menor id 
+    if (r == 0) {
+        r = artist_a->artist_id - artist_b->artist_id;
+    }
+
+    return r;
 }
 
 
@@ -773,24 +793,15 @@ void passa_Domingo_para_garray(Domingo* domingo) {
 }
 
 
-gint compare_seconds(gconstpointer a, gconstpointer b) {
-    
-    UmArtista *artist_a = *(UmArtista **)a;
-    UmArtista *artist_b = *(UmArtista **)b;
 
-    int segundos_a = get_seconds_from_garray(artist_a);
-    int segundos_b = get_seconds_from_garray(artist_b);
 
-    // Compara pela duração em segundos (ordem decrescente)
-    int r = segundos_b - segundos_a;
+UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
+    return g_hash_table_lookup(Artista, &artist_id);
 
-    // Se os segundos forem iguais, compara pelo artist_id para ficar com o de menor id 
-    if (r == 0) {
-        r = artist_a->artist_id - artist_b->artist_id;
-    }
-
-    return r;
 }
+
+
+
 
 // Função para adicionar um artista ao Domingo
 void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
@@ -837,22 +848,10 @@ void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
   free(segundosparaadicionar);
 }
 
-  
-int get_garray_len (Domingo* domingo){
-    return(domingo->artistahistory_garray->len);
-}
-
-//GETTERS E SETTERS
-
-UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
-    return g_hash_table_lookup(Artista, &artist_id);
-
-}
 
 
-GArray* get_garray_from_domingo (Domingo* domingo){
-    return (domingo->artistahistory_garray);
-}
+
+
 
 
 
@@ -882,35 +881,11 @@ GArray* get_artistahistory_garray_copy(Domingo* dom) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// int get_garray_len (Domingo* domingo){
-//     return(domingo->artistahistory_garray->len);
-// }
-
-
 int get_artist_id_from_garray (UmArtista* artista){
     return artista->artist_id;
 }
 
 
-int get_seconds_from_garray (UmArtista* artista){
-    return artista->totalsemanalsegundos;
-}
 
 
 

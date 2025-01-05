@@ -41,17 +41,7 @@ char* get_Album_Name(AlbumsData* albumController, int albumId);
 void destroyTableAlbum(AlbumsData* AlbumData);
 
 
-/**
- * @brief Procura um álbum na tabela hash usando o ID como chave.
- * 
- * Esta função busca um álbum na tabela hash contida em AlbumsData com base no 
- * ID fornecido.
- * 
- * @param controller Ponteiro para a estrutura AlbumsData contendo a tabela hash.
- * @param id ID do álbum a ser procurado.
- * @return Ponteiro para o álbum correspondente, ou NULL se o ID não for encontrado.
- */
-Album* lookup_album(AlbumsData* controller, int id);
+
 
 /**
  * @brief Imprime todos os álbuns na tabela hash.
@@ -61,5 +51,15 @@ Album* lookup_album(AlbumsData* controller, int id);
  * @param data Ponteiro para a estrutura AlbumsData contendo a tabela hash.
  */
 void print_all_albums(AlbumsData* data);
+
+
+/**
+ * @brief Verifica se um álbum com o ID fornecido é válido.
+ * 
+ * @param controlador Ponteiro para o controlador de álbuns.
+ * @param id ID do álbum a ser verificado.
+ * @return 1 se o álbum não existir (inválido), 0 se o álbum existir (válido).
+ */
+int isAlbumValid(AlbumsData* controlador,int id);
 
 #endif
