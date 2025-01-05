@@ -34,8 +34,8 @@ HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* art
 /**
  * @brief Procura e devolve a posição do ano no GArray anos do history do user.
  * 
- *  Esta função começa por procurar o history do user, se não existir devolve -1, 
- * se existir proocura no GArray anos pela posição do ano neste e devolve-a se a encontrar, em caso negativo devolve -1. 
+ *  Esta função começa por procurar o history do user, se não existir devolve -1, se existir chama a função procuraAno
+ *  qu devolve a posição do ano neste se a encontrar, em caso negativo devolve -1. 
  * 
  * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
  * @param  user_id Id do user.
@@ -46,7 +46,12 @@ int getPosicaoAno(HistoryData* historyController,int user_id, int ano);
 
 
 /**
- * @brief A função obtém os N artistas mais ouvidos pelo user,o número de músicas distintas ouvidas e o tempo total de audição , de cada artista. 
+ * @brief A função obtém os N artistas mais ouvidos pelo user,o número de músicas ouvidas e o tempo total de audição, de cada artista. 
+ * 
+ * Esta função começa por procurar o history do user, e depois chama a função NartistasMaisOuvidos e devolve o seu resultado.
+ * A função devolve, se N>0, um array de strings com os N artistas mais ouvidos, o número de músicas ouvidas 
+ * e o tempo total de audição de cada um pelo user, ou se N==0 um array de strings com apenas uma única posição com o 
+ * artista mais ouvido o número de músicas distintas ouvidas no total pelo user e o tempo total de audição deste.
  * 
  * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
  * @param  musicController Pointer para a estrutura MusicData 
@@ -60,6 +65,9 @@ char** getNartistasMaisOuvidos(HistoryData* historyController, MusicData*musicCo
 /**
  * @brief Devolve a data em que o user ouviu mais músicas, incluindo músicas repetidas.
  * 
+ *  Esta função começa por procurar o history do user, e depois chama a função DataMaisMusicas e devolve o que esta retorna,
+ * quee é a data em que o user ouviu mais músicas, incluindo músicas repetidas.
+ * 
  * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
  * @param  user_id Id do user.
  * @param  ano ano desta estatística.
@@ -69,6 +77,9 @@ char* getDia(HistoryData*  historyController,int user_id,int ano);
 
 /**
  * @brief Devolve o id do album favorito e o género de música mais ouvido de um user num certo ano.
+ * 
+ *  Esta função começa por procurar o history do user, necessário para depois chamar a função AlbumGenero que calcula e devolve 
+ * a string com o album e o género favorito.No final devolve o resultado que a função chamada devolve.
  * 
  * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
  * @param  musicController
@@ -81,6 +92,9 @@ char * getAlbumGenero(HistoryData* historyController,MusicData* musicController,
 
 /**
  * @brief Devolve a hora em que um user ouviu mais músicas durante um certo ano.
+ * 
+ *  Esta função começa por procurar o history do user, necessário para chamar a função HoraMaisAudicoes 
+ * que calcula a hora em que um user ouviu mais músicas durante um certo ano. Depois de chamar a função devolve o seu resultado.
  * 
  * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
  * @param  user_id Id do user.

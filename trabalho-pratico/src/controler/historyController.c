@@ -97,9 +97,9 @@ void addhistory(HistoryData* history, char* user_id,char* music_id,char* timesta
 
         int ano, mes,dia,hora;
         sscanf(timestamp,"\"%d/%d/%d %d",&ano,&mes,&dia,&hora); 
-        int musicId=transformaIds(music_id);
+        int musicId=transformaIds(music_id);  
         int userId= transformaIds(user_id);
-        int duracao= duration_to_seconds(duration);
+        int duracao= duration_to_seconds(duration);  
         History* userHistory=lookup_UserHistory(history, userId);
         
     if(userHistory==NULL)

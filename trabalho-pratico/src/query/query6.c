@@ -60,6 +60,7 @@ void query6(int i, char * line, HistoryData* historyController, MusicData* music
         free(resultados);
         output6(line[1],output,tempo,nMusicas,artista, data, genero, albumfav,hora, 0); 
 
+        // Caso for pedido os N artistas mais ouvidos
         if( count==3)
         { 
             char** resultadosN=getNartistasMaisOuvidos(historyController, musicController, userId, posicaoAno, N);
