@@ -122,6 +122,8 @@ char* DataMaisMusicas(History* userHistory,int anoP);
 /**
  * @brief Devolve a posição do ano no GArray anos do history do user.
  * 
+ *  Percorre o GArray anos, contido na estrutura history, para procurar a posição onde o ano se encontra.
+ * 
  * @param  userHistory Pointer para a estrutura history do user.
  * @param  ano Ano a ser procurado.
  ** @return A posição do ano no GArray anos do history do user .
@@ -131,6 +133,10 @@ int procuraAno(History* history, int ano);
 /**
  * @brief Adiciona as informações do histórico, ao ano correspondente , do history do user já existente.
  * 
+ *  Começa por chamar a função procuraAno para obter a posição do ano, se ele existir.
+ *  Se o ano existir apenas adiciona as novas informações às informações já guardadas dentro da estrutura ano. 
+ *  Se o ano não existir aloca memória para as estruturas internas à estrutura ano e guarda as informações nestas.
+ * 
  * @param userHistory Pointer para a estrutura history do user.
  * @param musicId Id da música a que o histórico se refere.
  * @param ano Ano do histórico.
@@ -138,12 +144,14 @@ int procuraAno(History* history, int ano);
  * @param dia Dia do histórico.
  * @param hora Hora do histórico.
  * @param duration Duração da audição da música.
- ** @return Uma string com a data em que o user ouviu mais músicas, calculada através do número de músicas.
  */
 void adicionaUserHistory(History* userHistory,int musicId,int ano,int mes,int dia,int hora,int duration);
 
 /**
  * @brief Aloca memória para o history do user e adiciona as informações do histórico .
+ * 
+ * Começa por alocar memória para a estrutura History e para o GArray anos dentro desta.
+ * Chama a função adicionarAno para adicionar as informações ao ano respetivo e adiciona o id do user à estrutura History.
  * 
  * @param userId Id do user.
  * @param musicId Id da música a que o histórico se refere.
@@ -152,6 +160,7 @@ void adicionaUserHistory(History* userHistory,int musicId,int ano,int mes,int di
  * @param dia Dia do histórico.
  * @param hora Hora do histórico.
  * @param duration Duração da audição da música.
+ * @return Devolve o ponteiro para a estrutura History.
  */
 History* inicializaUserHistory(int userId,int musicId,int ano,int mes, int dia,int hora,int duration);
 

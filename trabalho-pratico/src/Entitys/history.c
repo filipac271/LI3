@@ -11,6 +11,7 @@
 #include "Entitys/artists.h"
 #include "controler/historyController.h"
 
+// Artistahistory
 struct artistahistory{
     int artist_id;
     int totalsemanalsegundos; //passar a duration de hh:mm:ss (funcao defenida nas utilities) 
@@ -22,6 +23,8 @@ struct domingo{
     GArray* artistahistory_garray;
 };
 
+
+//Userhistory
 struct artista
 {
   int artista;
@@ -73,6 +76,9 @@ struct userHistory
 };
 
 
+
+
+//Userhistory
 
 int comparaArtistas(const void *a, const void *b)
 {
@@ -148,9 +154,11 @@ int adicionarArtista(Musica* musicas, int i, MusicData* musicController,GArray* 
 
 char ** resultados (int N, int inseridos, GArray * artistas, int nMusicas,int tempoTotal)
 {
+  //Ordena os artistas por ordem decrescente de tempo de Audição com qsort e preenche o array de strings resultados 
   char** resultados;
   if (N==0)
   {
+    // Se N for 0 devolve um array com uma string que contém o id do artista favorito, o número de músicas ouvidas e o tempo de audição total
       resultados=malloc(1 * sizeof(char*));
       resultados[0] = malloc(256 * sizeof(char));
       int posicao= artistaMaisOuvido(artistas, inseridos);
@@ -159,6 +167,8 @@ char ** resultados (int N, int inseridos, GArray * artistas, int nMusicas,int te
   }
   else if (N > inseridos)
   {
+    /*Se N for maior que o número de artistas que o user ouviu, devolve um array com tantas strings como número de artistas ouvidos mais um (para a string nula final), 
+    cada string contém o id do artista favorito, o número de músicas ouvidas e o tempo de audição total deste */ 
       resultados = malloc((inseridos+1) * sizeof(char*));
       Artistas* ARTISTA=(Artistas*) artistas->data;
       qsort(ARTISTA,inseridos, sizeof(Artistas),  comparaArtistas);
@@ -171,6 +181,7 @@ char ** resultados (int N, int inseridos, GArray * artistas, int nMusicas,int te
   }
   else 
  {
+  /* Devolve um array com N +1 strings, cada string contém o id do artista favorito, o número de músicas ouvidas e o tempo de audição total deste, menos a string final que é nula */ 
      resultados = malloc((N+1) * sizeof(char*));
      Artistas* ARTISTA=(Artistas*) artistas->data;
      qsort(ARTISTA,inseridos, sizeof(Artistas),  comparaArtistas);
@@ -246,6 +257,7 @@ int comparaGeneros(const void *a, const void *b)
   int tempoA=gA->tempoAudicao;
   int tempoB=gB->tempoAudicao;
 
+  // Se os tempos forem iguais ordena por ordem alfabética dos géneros
   if(tempoA > tempoB || (tempoA== tempoB &&  strcmp(gA->genero, gB->genero)<0) )
   {
     return -1;
@@ -264,6 +276,7 @@ int comparaAlbuns(const void *a, const void *b)
   int tempoA=A->tempoAudicao;
   int tempoB=B->tempoAudicao;
 
+   // Se os tempos forem iguais ordena por ordem alfabética dos nomes dos albuns
   if(tempoA > tempoB || (tempoA== tempoB &&  strcmp(A->albumName, B->albumName)<0) )
   {
      return -1;
@@ -355,7 +368,7 @@ char * AlbumGenero(MusicData* musicController,  History* userHistory,AlbumsData*
      GArray* albuns=g_array_new(FALSE, FALSE, sizeof(Albuns));
      int GInseridos=0;
      int AInseridos=0;
-   
+
      for(int i=0;i<(int)ano[posicaoAno].musicas->len ;i++)
      { 
         GInseridos= adicionaGenero(musicas, i, musicController, generos, GInseridos);
@@ -364,8 +377,10 @@ char * AlbumGenero(MusicData* musicController,  History* userHistory,AlbumsData*
 
      Generos* GENERO= (Generos*)generos->data;
      Albuns* ALBUNS=(Albuns*) albuns->data;
+     // Os qsort ordenam os arrays de Generos e de Albuns por ordem decrescente de tempo de audição
      qsort(GENERO,GInseridos, sizeof(Generos), comparaGeneros);
      qsort(ALBUNS, AInseridos, sizeof(Albuns),comparaAlbuns);
+     //Transforma o albumId e o genero numa única string
      char resultados[256];
      snprintf(resultados, 256, "%d%s" ,ALBUNS[0].album, GENERO[0].genero);
      freeGenero_Album(generos, GInseridos, 'g');
@@ -375,7 +390,7 @@ char * AlbumGenero(MusicData* musicController,  History* userHistory,AlbumsData*
 }
 
 
-
+// Tranforma os ints numa string tipo data
 char *DataParaChar(int ano, int mes, int dia)
 {
   char data[13];
@@ -406,9 +421,10 @@ char *DataMaisMusicas(History *userHistory, int anoP)
   int maior = dias[0].nMusicas;
   int dia = dias[0].dia;
   int mes = dias[0].mes;
- 
+  // Procura a data em que foram ouvidas mais músicas
   for (int i = 1; i < (int)ano[anoP].dia->len; i++)
   {  
+    // Se tiver o mesmo número de músicas, a data com mais músicas será a mais recente
     if (maior < dias[i].nMusicas || (maior == dias[i].nMusicas && (mes < dias[i].mes || (mes == dias[i].mes && dia < dias[i].dia))))
     {
       dia = dias[i].dia;
@@ -445,7 +461,7 @@ void insereDia(int mes, int dia, GArray* Dias, int novo)
   {
     int i;
     int N = (int)Dias->len;
-
+    // Verifica se o dia já existe 
     for (i = 0; i < N ; i++)
     {
       Dia* dias= &g_array_index(Dias,Dia,i);
@@ -540,6 +556,7 @@ void insereHora(GArray* horas,int hour,int duracao,int novo)
     int N =(int) horas->len;
     int existe=0;
 
+    //Verifica se a hora já existe
     for (i = 0; i < N && existe==0 ; i++)
     {
       Hora* h= &g_array_index(horas, Hora, i);
@@ -569,7 +586,7 @@ void insereMusica(GArray* musicas,int musicId,int duracao,int novo)
   {
     int i;
     int N =(int) musicas->len;
-    
+    //Verifica se a música já existe
     for (i = 0; i < N && existe==0 ; i++)
     {
       Musica* musica= &g_array_index(musicas, Musica, i);
@@ -643,7 +660,8 @@ Domingo* newDomingo(char* data){
 
 void adicionaUserHistory(History *userHistory,  int musicId, int ano, int mes, int dia, int hora, int duration)
 {
-    int anoPosicao = procuraAno(userHistory, ano);
+    // Se anoPosicao for -1 quer dizer que o ano ainda não existe 
+    int anoPosicao = procuraAno(userHistory, ano); 
 
     if (anoPosicao == -1)
     {

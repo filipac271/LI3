@@ -108,12 +108,6 @@ char* getUserSubscryptionType(User* user);
 int getUserNumberLikedSongs(User* user);
 
 
-
-
-
-
-
-
 /**
  * @brief Cria uma nova estrutura para agrupar utilizadores por idade.
  * 

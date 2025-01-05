@@ -86,11 +86,14 @@ char* get_music_genre(Music* music);
  */
 char* get_music_year(Music* music);
 
-
-
-
-
-//NAO COMENTADO 
+/**
+ * @brief Getter para o id do album a que uma música pertence.
+ * 
+ * Acede ao id do album guardado na estrutura music. 
+ * 
+ * @param music Pointer para a estrutura `Music`.
+ * @return Id do album em int.
+ */
 int get_music_album(Music* music);
 
 
@@ -107,6 +110,8 @@ int* getArtistIDfromMusicID(Music* music, int num_artists);
 
 /**
  * @brief Obtém o número de IDs de artistas associados a uma música.
+ * 
+ * Acede ao número de artistas da música guardado na estrutura music. 
  * 
  * @param music Ponteiro para a estrutura Music que contém os dados da música.
  * @return Número de IDs de artistas associados à música.
