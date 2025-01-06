@@ -17,42 +17,6 @@ typedef struct historyData HistoryData;
 
 
 /**
- * @brief Procura um domingo específico na Hash Table externa.
- * 
- * @param domingo Pointer para a Hash Table de domingos.
- * @param data String representando a data no formato yyyy/mm/dd.
- * @return Pointer para a estrutura Domingo correspondente à data, ou NULL se não for encontrada.
- */
-Domingo* lookup_domingo(GHashTable* domingo, char* data);
-
-/**
- * @brief Cria um novo domingo ou atualiza um existente com base nos tokens fornecidos.
- * 
- * Esta função começa por obter a data a partir do token que contem o timestamp, de seguida calcula o domingo anterior a essa data,
- * tirando se for um domingo, nesse caso a data mantêm-se. De seguida, verificamos se já existe uma hashtable interna associada a essa data.
- * Se já existir chamamos a função new_or_add. Caso contrario, criamos uma nova hashtable, um novo Domingo.
- * 
- * @param controller Pointer para o Controller de dados do histórico.
- * @param tokens Array de strings que contêm os tokens que serão processados.
- * @param musicController Pointer para o Controller dos dados referentes às musicas.
- */
-void newDomingo_orNot(HistoryData* controller, char** tokens, MusicData* musicController);
-
-
-History* lookup_UserHistory(HistoryData* historyController,int userId);
-/**
- * @brief Converte os dados de uma Hash Table para um GArray.
- * 
- * @param data Pointer para a estrutura HistoryData que contem a informação que será convertida.
- * 
- * Esta função processa a Hash Table armazenada em `HistoryData` e transfere seus elementos 
- * para uma GArray ao chamar passa_domingo_para_garray que transforma a hashtable interna em GArray. 
- * Passamos então a ter uma Hash Table externa constituida internamente por GArrays
- */
-void passa_hastable_para_garray(HistoryData* data);
-
-
-/**
  * @brief Processa o histórico de um ficheiro e preenche todas as estruturas de dados relacionadas.
  * 
  * Esta função começa por criar a estrutura HistoryData. Seguidamente inicia o output de erros pois os dados antes de serem inseridos
@@ -67,25 +31,76 @@ void passa_hastable_para_garray(HistoryData* data);
  */
 HistoryData* historyFeed(char* diretoria, MusicData* musicData, ArtistsData* artistData, UsersData* usersData);
 
-
-int getNumArtistas(HistoryData* historyController,int userId,int posicaoAno);
-
-int getIdArtista(HistoryData* historyController, int user_id, int ano, int i);
-
-int getTempoArtista(HistoryData* historyController, int user_id, int ano, int i);
-
-int getnMusicasArtista(HistoryData* historyController, int user_id, int ano, int i);
-
+/**
+ * @brief Procura e devolve a posição do ano no GArray anos do history do user.
+ * 
+ *  Esta função começa por procurar o history do user, se não existir devolve -1, se existir chama a função procuraAno
+ *  qu devolve a posição do ano neste se a encontrar, em caso negativo devolve -1. 
+ * 
+ * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
+ * @param  user_id Id do user.
+ * @param  ano ano cuja posicao vai ser devolvida.
+ ** @return int da posicao do ano no array anos do history do user.
+ */
 int getPosicaoAno(HistoryData* historyController,int user_id, int ano);
 
+
+/**
+ * @brief A função obtém os N artistas mais ouvidos pelo user,o número de músicas ouvidas e o tempo total de audição, de cada artista. 
+ * 
+ * Esta função começa por procurar o history do user, e depois chama a função NartistasMaisOuvidos e devolve o seu resultado.
+ * A função devolve, se N>0, um array de strings com os N artistas mais ouvidos, o número de músicas ouvidas 
+ * e o tempo total de audição de cada um pelo user, ou se N==0 um array de strings com apenas uma única posição com o 
+ * artista mais ouvido o número de músicas distintas ouvidas no total pelo user e o tempo total de audição deste.
+ * 
+ * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
+ * @param  musicController Pointer para a estrutura MusicData 
+ * @param  user_id Id do user.
+ * @param  posicaoAno posicao do ano desta estatística no GArray anos do history do user.
+ * @param  N número de linhas da matriz (artistas).
+ * @return Array de strings, cada linha sendo um artista, o número de músicas ouvidas pelo user deste e o tempo total que o user as ouviu.
+ */
 char** getNartistasMaisOuvidos(HistoryData* historyController, MusicData*musicController, int user_id,int  posicaoAno,int N);
 
-char* getArtistaMaisOuvido(HistoryData* historyController,int user_id,int posicaoAno);
-
+/**
+ * @brief Devolve a data em que o user ouviu mais músicas, incluindo músicas repetidas.
+ * 
+ *  Esta função começa por procurar o history do user, e depois chama a função DataMaisMusicas e devolve o que esta retorna,
+ * quee é a data em que o user ouviu mais músicas, incluindo músicas repetidas.
+ * 
+ * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
+ * @param  user_id Id do user.
+ * @param  ano ano desta estatística.
+ ** @return String da data em que user ouviu mais músicas.
+ */
 char* getDia(HistoryData*  historyController,int user_id,int ano);
 
-char * getAlbumGenero(HistoryData* historyController,MusicData* musicController, AlbumsData*albumController, int userId,int posicaoAno);
+/**
+ * @brief Devolve o id do album favorito e o género de música mais ouvido de um user num certo ano.
+ * 
+ *  Esta função começa por procurar o history do user, necessário para depois chamar a função AlbumGenero que calcula e devolve 
+ * a string com o album e o género favorito.No final devolve o resultado que a função chamada devolve.
+ * 
+ * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
+ * @param  musicController
+ * @param  albumController 
+ * @param  userId Id do user
+ * @param  posicaoAno Posicao do ano no GArray anos da hash table history.
+ ** @return String do albumId e genero.
+ */
+char * getAlbumGenero(HistoryData* historyController,MusicData* musicController, AlbumsData* albumController, int userId,int posicaoAno);
 
+/**
+ * @brief Devolve a hora em que um user ouviu mais músicas durante um certo ano.
+ * 
+ *  Esta função começa por procurar o history do user, necessário para chamar a função HoraMaisAudicoes 
+ * que calcula a hora em que um user ouviu mais músicas durante um certo ano. Depois de chamar a função devolve o seu resultado.
+ * 
+ * @param  historyController Pointer para a estrutura HistoryData que contem a hash table history.
+ * @param  user_id Id do user.
+ * @param  ano ano desta estatística.
+ ** @return String da hora em que o user ouviu mais músicas.
+ */
 char* getHora(HistoryData* historyController,int user_id,int ano);
 
 /**
@@ -102,14 +117,13 @@ void destroyHistoryData(HistoryData* data);
  */
 void print_all_history(HistoryData* history);
 
-
 /**
  * @brief Determina o ID associado ao maior número de ocorrências em uma Hash Table de domingos quando a data não é um parâmetro.
  * 
  * A função começa por criar uma Hash Table auxiliar que será usuada para armazenar a soma do ocorrências de cada artista, sendo o id do respetivo artista
- * a key da Hash Table. de seguida inicia max_ocorrencias e mais_freq_artist a -1 pois no fim da função teremos o id do artista mais frequente e o 
+ * a key da Hash Table. SDe seguida inicia max_ocorrencias e mais_freq_artist a -1 pois no fim da função teremos o id do artista mais frequente e o 
  * numero de ocorrencias do respetivo artista.
- * Seguidamente começamos a iteraar a Hash Table externa e para cada data iteramos o GArray que esta contém. AO iterar o Garray interno verificamos 
+ * Seguidamente começamos a iterar a Hash Table externa e para cada data iteramos o GArray que esta contém. Ao iterar o GArray interno verificamos 
  * se o id do artista atual já se encontra na Hash Table auxiliar. Se já estiver, adicionamos à Hash Table auxiliar mais uma unidade pois aquele id ocorreu mais uma vez.
  * Se o id ainda não se encontrar na Hash Table auxiliar então adicionamos e inciamos as ocorrencias do mesmo a 1.
  * Á medida que vamos fazendo isto, vamos verificando e atualizando tanto o valor de max_ocorrencias como o mais_freq_artist.
@@ -126,11 +140,11 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
  * 
  * A função começa por criar uma Hash Table auxiliar que será usuada para armazenar a soma do ocorrências de cada artista, sendo o id do respetivo artista
  * a key da Hash Table. de seguida inicia max_ocorrencias e mais_freq_artist a -1 pois no fim da função teremos o id do artista mais frequente e o 
- * numero de ocorrencias do respetivo artista.
+ * número de ocorrências do respetivo artista.
  * Seguidamente começamos a iterar a Hash Table externa verificando se a key da mesma, isto é a data se encontra no intervalo de datas. Se tal acontecer 
- * para cada data iteramos o GArray que esta contém. AO iterar o Garray interno verificamos se o id do artista atual já se encontra na Hash Table auxiliar. 
- * Se já estiver, adicionamos à Hash Table auxiliar mais uma unidade pois aquele id 
- * ocorreu mais uma vez. Se o id ainda não se encontrar na Hash Table auxiliar então adicionamos e inciamos as ocorrencias do mesmo a 1.
+ * para cada data iteramos o GArray que esta contém. Ao iterar o Garray interno verificamos se o id do artista atual já se encontra na Hash Table auxiliar. 
+ * Se já estiver, adicionamos à Hash Table auxiliar mais uma unidade pois aquele id ocorreu mais uma vez. 
+ * Se o id ainda não se encontrar na Hash Table auxiliar então adicionamos e inciamos as ocorrencias do mesmo a 1.
  * Á medida que vamos fazendo isto, vamos verificando e atualizando tanto o valor de max_ocorrencias como o mais_freq_artist.
  * No final, libertamos a hashtbale auxiliar para evitar memory leaks e retornamos o id do artista mais frequente.
  * 

@@ -11,6 +11,7 @@
 #include "Entitys/artists.h"
 #include "controler/historyController.h"
 
+// Artistahistory
 struct artistahistory{
     int artist_id;
     int totalsemanalsegundos; //passar a duration de hh:mm:ss (funcao defenida nas utilities) 
@@ -22,6 +23,8 @@ struct domingo{
     GArray* artistahistory_garray;
 };
 
+
+//Userhistory
 struct artista
 {
   int artista;
@@ -34,7 +37,6 @@ struct genero
   char *genero;
   int tempoAudicao;
 };
-
 
 struct album
 {
@@ -53,7 +55,6 @@ struct dia
   int mes;
   int nMusicas;
 };
-
 
 struct musica
 {
@@ -76,6 +77,9 @@ struct userHistory
 
 
 
+
+//Userhistory
+
 int comparaArtistas(const void *a, const void *b)
 {
   Artistas* A=(Artistas*)a;
@@ -92,7 +96,7 @@ int comparaArtistas(const void *a, const void *b)
   }
   else
   {
-      return 1;
+    return 1;
   }
 }
 
@@ -106,14 +110,90 @@ int artistaMaisOuvido(GArray * artistas, int N)
    {
      tempo=artista[i].tempoAudicao;
      id=artista[i].artista;
-    if(tempo>max ||(tempo==max && id< maxId))
-    {
-      max=tempo;
-      maxId=id;
-      posicao=i;
-    }
+     if(tempo>max ||(tempo==max && id< maxId))
+     {
+        max=tempo;
+        maxId=id;
+        posicao=i;
+     }
+   }
+   return posicao;
+}
+
+
+int adicionarArtista(Musica* musicas, int i, MusicData* musicController,GArray* artistas,int inseridos)
+{
+    int existe=0; int * Id;
+    int numArtistas=getnumartistaMusicControl(musicController,musicas[i].musicId);
+    Id=getarrayArtistasMusicControl( musicController, musicas[i].musicId , numArtistas);
+   
+   for(int k=0;k<numArtistas;k++)
+   {
+       for(int j=0;j<inseridos;j++)
+      {
+         Artistas* artista= &g_array_index(artistas,Artistas,j);
+         if(artista->artista==Id[k])
+         {
+          artista->nMusicas++;
+          artista->tempoAudicao+=musicas[i].tempoAudicao;
+          existe=1;
+         }
+      }
+      if(!existe)
+      {
+          Artistas novoArtista={.artista=Id[k], .nMusicas=1, .tempoAudicao=musicas[i].tempoAudicao};
+          inseridos+=1;
+          g_array_append_val(artistas, novoArtista);
+      }
+   }
+
+   free(Id);
+   return inseridos;
+}
+
+
+char ** resultados (int N, int inseridos, GArray * artistas, int nMusicas,int tempoTotal)
+{
+  //Ordena os artistas por ordem decrescente de tempo de Audição com qsort e preenche o array de strings resultados 
+  char** resultados;
+  if (N==0)
+  {
+    // Se N for 0 devolve um array com uma string que contém o id do artista favorito, o número de músicas ouvidas e o tempo de audição total
+      resultados=malloc(1 * sizeof(char*));
+      resultados[0] = malloc(256 * sizeof(char));
+      int posicao= artistaMaisOuvido(artistas, inseridos);
+      Artistas* ARTISTA= &g_array_index(artistas,Artistas,posicao);
+      snprintf(resultados[0], 256, "%d %d %d", ARTISTA->artista ,nMusicas,tempoTotal);
   }
-  return posicao;
+  else if (N > inseridos)
+  {
+    /*Se N for maior que o número de artistas que o user ouviu, devolve um array com tantas strings como número de artistas ouvidos mais um (para a string nula final), 
+    cada string contém o id do artista favorito, o número de músicas ouvidas e o tempo de audição total deste */ 
+      resultados = malloc((inseridos+1) * sizeof(char*));
+      Artistas* ARTISTA=(Artistas*) artistas->data;
+      qsort(ARTISTA,inseridos, sizeof(Artistas),  comparaArtistas);
+      for(int i=0;i<inseridos;i++)
+      {
+        resultados[i]=malloc(256 * sizeof(char));
+        snprintf(resultados[i], 256, "%d %d %d", ARTISTA[i].artista ,ARTISTA[i].nMusicas,ARTISTA[i].tempoAudicao);
+      }
+      resultados[inseridos]=NULL;
+  }
+  else 
+ {
+  /* Devolve um array com N +1 strings, cada string contém o id do artista favorito, o número de músicas ouvidas e o tempo de audição total deste, menos a string final que é nula */ 
+     resultados = malloc((N+1) * sizeof(char*));
+     Artistas* ARTISTA=(Artistas*) artistas->data;
+     qsort(ARTISTA,inseridos, sizeof(Artistas),  comparaArtistas);
+     for(int i=0;i<N;i++)
+     {
+        resultados[i]=malloc(256 * sizeof(char));
+        snprintf(resultados[i], 256, "%d %d %d", ARTISTA[i].artista ,ARTISTA[i].nMusicas,ARTISTA[i].tempoAudicao);
+     }
+     resultados[N]=NULL;
+  }
+  g_array_free(artistas,TRUE);
+  return resultados;
 }
 
 char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int pAno, int N)
@@ -123,77 +203,20 @@ char**NartistasMaisOuvidos(History *userHistory, MusicData* musicController, int
   int nMusicas = (int)ano[pAno].musicas->len;
   GArray* artistas= g_array_new(FALSE, FALSE, sizeof(Artistas));
   int Ainseridos=0;
-  int existe, tempoTotal=0; int* Id;
+  int tempoTotal=0; 
   for(int i=0;i<nMusicas;i++)
   {
-    existe=0;
-    int numArtistas=getnumartistaMusicControl(musicController,musica[i].musicId);
-    Id=getarrayArtistasMusicControl( musicController, musica[i].musicId , numArtistas);
-    tempoTotal+=musica[i].tempoAudicao;
-   for(int k=0;k<numArtistas;k++)
-   {
-       for(int j=0;j<Ainseridos;j++)
-      {
-         Artistas* artista= &g_array_index(artistas,Artistas,j);
-         if(artista->artista==Id[k])
-         {
-          artista->nMusicas++;
-          artista->tempoAudicao+=musica[i].tempoAudicao;
-          existe=1;
-         }
-    }
-     if(!existe)
-    {
-      Artistas novoArtista={.artista=Id[k], .nMusicas=1, .tempoAudicao=musica[i].tempoAudicao};
-      Ainseridos+=1;
-      g_array_append_val(artistas, novoArtista);
-    }
-   
-   }
-   free(Id);
+     tempoTotal+=musica[i].tempoAudicao;
+     Ainseridos= adicionarArtista(musica, i, musicController, artistas, Ainseridos);
   }
-
   if (N==0)
   {    
-      char** resultados = malloc(1 * sizeof(char*));
-      resultados[0] = malloc(256 * sizeof(char));
-      int posicao= artistaMaisOuvido(artistas, Ainseridos);
-      Artistas* ARTISTA= &g_array_index(artistas,Artistas,posicao);
-      snprintf(resultados[0], 256, "%d %d %d", ARTISTA->artista ,nMusicas,tempoTotal);
-      g_array_free(artistas,TRUE);
-      return resultados;
+      return resultados(N,Ainseridos ,artistas, nMusicas,tempoTotal);
   }
-  
-  if (N > Ainseridos)
+  else
   {
-     char** resultados = malloc((Ainseridos+1) * sizeof(char*));
-     Artistas* ARTISTA=(Artistas*) artistas->data;
-     qsort(ARTISTA,Ainseridos, sizeof(Artistas),  comparaArtistas);
-     for(int i=0;i<Ainseridos;i++)
-     {
-      resultados[i]=malloc(256 * sizeof(char));
-      snprintf(resultados[i], 256, "%d %d %d", ARTISTA[i].artista ,ARTISTA[i].nMusicas,ARTISTA[i].tempoAudicao);
-
-     }
-     resultados[Ainseridos]=NULL;
-     g_array_free(artistas,TRUE);
-     return resultados;
+     return resultados(N,Ainseridos,artistas, nMusicas,tempoTotal);
   }
-  else 
-   {
-     char** resultados = malloc((N+1) * sizeof(char*));
-     Artistas* ARTISTA=(Artistas*) artistas->data;
-     qsort(ARTISTA,Ainseridos, sizeof(Artistas),  comparaArtistas);
-     for(int i=0;i<N;i++)
-     {
-      resultados[i]=malloc(256 * sizeof(char));
-       snprintf(resultados[i], 256, "%d %d %d", ARTISTA[i].artista ,ARTISTA[i].nMusicas,ARTISTA[i].tempoAudicao);
-     }
-     resultados[N]=NULL;
-     g_array_free(artistas,TRUE);
-     return resultados;
-  }
-  
 }
 
 char* HoraMaisAudicoes(History *userHistory, int anoP)
@@ -204,16 +227,15 @@ char* HoraMaisAudicoes(History *userHistory, int anoP)
   int hour = horas[0].hora;
   int N=ano[anoP].horas->len;
 
-
   for (int i = 1; i <N ; i++)
   {
-    
     if (horas[i].tempoAudicao > max || (horas[i].tempoAudicao== max && hour>horas[i].hora ))
     {
-      max = horas[i].tempoAudicao;
-      hour = horas[i].hora;
+        max = horas[i].tempoAudicao;
+        hour = horas[i].hora;
     }
   }
+
   char horaMais[3];
   if (hour < 10)
   {
@@ -231,11 +253,14 @@ int comparaGeneros(const void *a, const void *b)
 {
   Generos* gA= (Generos*) a;
   Generos* gB= (Generos*) b;
+
   int tempoA=gA->tempoAudicao;
   int tempoB=gB->tempoAudicao;
+
+  // Se os tempos forem iguais ordena por ordem alfabética dos géneros
   if(tempoA > tempoB || (tempoA== tempoB &&  strcmp(gA->genero, gB->genero)<0) )
   {
-     return -1;
+    return -1;
   }
   else
   {
@@ -247,8 +272,11 @@ int comparaAlbuns(const void *a, const void *b)
 {
   Albuns* A= (Albuns*) a;
   Albuns* B= (Albuns*) b;
+
   int tempoA=A->tempoAudicao;
   int tempoB=B->tempoAudicao;
+
+   // Se os tempos forem iguais ordena por ordem alfabética dos nomes dos albuns
   if(tempoA > tempoB || (tempoA== tempoB &&  strcmp(A->albumName, B->albumName)<0) )
   {
      return -1;
@@ -259,90 +287,110 @@ int comparaAlbuns(const void *a, const void *b)
   }
 }
 
-char * AlbumGenero(MusicData* musicController,History* userHistory,AlbumsData*albumController, int posicaoAno)
+  int adicionaGenero(Musica* musicas ,int i, MusicData* musicController, GArray* generos,int inseridos)
+  {
+    char* genero=getMusicGenreControl(&( musicas[i].musicId), musicController, 'i');
+    int existe=0;
+
+     for(int j=0;j< inseridos && !existe ;j++)
+       {
+         Generos* genre= &g_array_index(generos,Generos,j);
+         if(strcmp(genre->genero,genero)==0 && !existe)
+         {
+            genre->tempoAudicao+= musicas[i].tempoAudicao;
+            existe=1;
+         }
+       } 
+       if(!existe)
+       {
+        Generos novoGenero={ .tempoAudicao= musicas[i].tempoAudicao, .genero= strdup(genero)};
+         inseridos+=1;
+         g_array_append_val(generos, novoGenero);
+       }
+
+  free(genero);
+  return inseridos;
+}
+
+int adicionaAlbum( Musica* musicas, int i, MusicData* musicController, AlbumsData* albumController, GArray* albuns, int inseridos)
+{
+       int albumID= get_musicAlbum(musicController,musicas[i].musicId);
+       char* albumNome= get_Album_Name(albumController, albumID);
+       int existe=0;
+       for(int j=0;j<inseridos && !existe;j++)
+       {
+          Albuns* ALBUM =&g_array_index(albuns,Albuns,j);
+          if(albumID==  ALBUM->album)
+          {
+             ALBUM->tempoAudicao+= musicas[i].tempoAudicao;
+             existe=1;
+          }
+       }  
+     
+       if(!existe)
+       {
+          Albuns novoAlbum={ .tempoAudicao= musicas[i].tempoAudicao, .album=albumID, .albumName=strdup(albumNome)};
+          inseridos+=1;
+          g_array_append_val(albuns,novoAlbum);
+       }
+
+       free(albumNome);
+       return inseridos;
+}
+
+void freeGenero_Album(GArray * array, int N, char type)
+{
+    if(type=='g')
+    {
+        for (int i = 0; i < N; i++)
+        {
+          Generos* generos=&g_array_index(array, Generos,i );
+          free(generos->genero); 
+        }
+        g_array_free(array,TRUE);
+    }
+    else if (type=='a')
+    {
+        for (int i = 0; i < N; i++) 
+        {
+          Albuns * albuns=&g_array_index(array, Albuns,i );
+          free(albuns->albumName);
+        }
+        g_array_free(array,TRUE);
+    }
+}
+
+char * AlbumGenero(MusicData* musicController,  History* userHistory,AlbumsData* albumController, int posicaoAno)
 {
      Ano *ano = (Ano *)userHistory->anos->data;
      Musica * musicas= (Musica*) ano[posicaoAno].musicas->data;
      GArray* generos=g_array_new(FALSE, FALSE, sizeof(Generos));
      GArray* albuns=g_array_new(FALSE, FALSE, sizeof(Albuns));
-     int existeG;
-     int existeA;
      int GInseridos=0;
      int AInseridos=0;
-   
-    for(int i=0;i<(int)ano[posicaoAno].musicas->len ;i++)
-    { 
-      existeG=0;
-      existeA=0;
-     
-     
-      char* genero=get_musicGenre(musicController, musicas[i].musicId);
-      
-      int albumID= get_musicAlbum(musicController,musicas[i].musicId);
-      Album *album = lookup_album(albumController, albumID); /////FAZER DOUBLE GET NAO DA ALBUM É FEIO
-    
-      char* albumNome= getAlbumName(album);
-     
-       for(int j=0;j< GInseridos && !existeG ;j++)
-       {
-         Generos* genre= &g_array_index(generos,Generos,j);
-         if(strcmp(genre->genero,genero)==0 && !existeG)
-         {
-            genre->tempoAudicao+= musicas[i].tempoAudicao;
-            existeG=1;
-         }
-       } 
-      
-       for(int j=0;j<AInseridos && !existeA;j++)
-       {
-        Albuns* ALBUM =&g_array_index(albuns,Albuns,j);
-          if(albumID==  ALBUM->album)
-        {
-          ALBUM->tempoAudicao+= musicas[i].tempoAudicao;
-          existeA=1;
-        }
-       }  
-       if(!existeG)
-       {
-        Generos novoGenero={ .tempoAudicao= musicas[i].tempoAudicao, .genero= strdup(genero)};
-         GInseridos+=1;
-         g_array_append_val(generos, novoGenero);
-       }
-       if(!existeA)
-       {
-        Albuns novoAlbum={ .tempoAudicao= musicas[i].tempoAudicao, .album=albumID, .albumName=strdup(albumNome)};
-         AInseridos+=1;
-         g_array_append_val(albuns,novoAlbum);
-       }
-       
-      free(genero);
-       free(albumNome);
-       
-    }
-    
+
+     for(int i=0;i<(int)ano[posicaoAno].musicas->len ;i++)
+     { 
+        GInseridos= adicionaGenero(musicas, i, musicController, generos, GInseridos);
+        AInseridos= adicionaAlbum(musicas,i, musicController,albumController, albuns, AInseridos);    
+     }
+
      Generos* GENERO= (Generos*)generos->data;
      Albuns* ALBUNS=(Albuns*) albuns->data;
-    qsort(GENERO,GInseridos, sizeof(Generos), comparaGeneros);
-    qsort(ALBUNS, AInseridos, sizeof(Albuns),comparaAlbuns);
- 
-    char resultados[256];
-    snprintf(resultados, 256, "%s%d", GENERO[0].genero ,ALBUNS[0].album);
+     // Os qsort ordenam os arrays de Generos e de Albuns por ordem decrescente de tempo de audição
+     qsort(GENERO,GInseridos, sizeof(Generos), comparaGeneros);
+     qsort(ALBUNS, AInseridos, sizeof(Albuns),comparaAlbuns);
+     //Transforma o albumId e o genero numa única string
+     char resultados[256];
+     snprintf(resultados, 256, "%d%s" ,ALBUNS[0].album, GENERO[0].genero);
+     freeGenero_Album(generos, GInseridos, 'g');
+     freeGenero_Album(albuns, AInseridos, 'a');
 
-      for (int i = 0; i < GInseridos; i++) {
-      Generos* GENero=&g_array_index(generos, Generos,i );
-        free(GENero->genero); 
-    }
-    g_array_free(generos,TRUE);
-    for (int i = 0; i < AInseridos; i++) {
-      Albuns * ALBuns=&g_array_index(albuns, Albuns,i );
-      free(ALBuns->albumName);
-    }
-    g_array_free(albuns,TRUE);
-    return strdup(resultados);
+     return strdup(resultados);
 }
 
 
-
+// Tranforma os ints numa string tipo data
 char *DataParaChar(int ano, int mes, int dia)
 {
   char data[13];
@@ -362,6 +410,7 @@ char *DataParaChar(int ano, int mes, int dia)
   {
     snprintf(data, 11, "%d/%d/%d", ano, mes, dia);
   }
+
   return strdup(data);
 }
 
@@ -372,10 +421,10 @@ char *DataMaisMusicas(History *userHistory, int anoP)
   int maior = dias[0].nMusicas;
   int dia = dias[0].dia;
   int mes = dias[0].mes;
- 
+  // Procura a data em que foram ouvidas mais músicas
   for (int i = 1; i < (int)ano[anoP].dia->len; i++)
-  {
-    
+  {  
+    // Se tiver o mesmo número de músicas, a data com mais músicas será a mais recente
     if (maior < dias[i].nMusicas || (maior == dias[i].nMusicas && (mes < dias[i].mes || (mes == dias[i].mes && dia < dias[i].dia))))
     {
       dia = dias[i].dia;
@@ -384,7 +433,6 @@ char *DataMaisMusicas(History *userHistory, int anoP)
     }
   }
   char *data = DataParaChar(ano[anoP].ano, mes, dia);
-
   return data;
 }
 
@@ -402,13 +450,10 @@ int procuraAno(History* history, int year)
   return anoP;
 }
 
-
-
 void insereDia(int mes, int dia, GArray* Dias, int novo)
 {
   if (novo == 1)
   {
-    // Adicionando o primeiro dia
     Dia novoDia = {.dia = dia, .mes = mes, .nMusicas = 1};
     g_array_append_val(Dias, novoDia);
   }
@@ -416,8 +461,7 @@ void insereDia(int mes, int dia, GArray* Dias, int novo)
   {
     int i;
     int N = (int)Dias->len;
-
-    // Procurando o dia no array
+    // Verifica se o dia já existe 
     for (i = 0; i < N ; i++)
     {
       Dia* dias= &g_array_index(Dias,Dia,i);
@@ -426,10 +470,8 @@ void insereDia(int mes, int dia, GArray* Dias, int novo)
         dias->nMusicas++;
       }
     }
-
     if (i >= N)
     {
-      // Dia não encontrado, adiciona um novo
       Dia novoDia = {.dia = dia, .mes = mes, .nMusicas = 1};
       g_array_append_val(Dias, novoDia);
     }
@@ -513,7 +555,8 @@ void insereHora(GArray* horas,int hour,int duracao,int novo)
     int i;
     int N =(int) horas->len;
     int existe=0;
-    // Procurando o álbum no array
+
+    //Verifica se a hora já existe
     for (i = 0; i < N && existe==0 ; i++)
     {
       Hora* h= &g_array_index(horas, Hora, i);
@@ -523,10 +566,8 @@ void insereHora(GArray* horas,int hour,int duracao,int novo)
         existe=1;
       }
     }
-
     if (existe==0)
     {
-      // Álbum não encontrado, adiciona um novo
       Hora h= {.hora = hour, .tempoAudicao = duracao};
       g_array_append_val(horas, h);
     }
@@ -545,19 +586,16 @@ void insereMusica(GArray* musicas,int musicId,int duracao,int novo)
   {
     int i;
     int N =(int) musicas->len;
-    
-    // Procurando o álbum no array
+    //Verifica se a música já existe
     for (i = 0; i < N && existe==0 ; i++)
     {
       Musica* musica= &g_array_index(musicas, Musica, i);
       if( musicId == musica->musicId)
       {
         musica->tempoAudicao+=duracao;
-        //printf("%d \n",musica->tempoAudicao);
         existe=1;
       }
     }
-
     if (existe==0)
     {
       Musica m={ .musicId=musicId , .tempoAudicao=duracao};
@@ -565,12 +603,11 @@ void insereMusica(GArray* musicas,int musicId,int duracao,int novo)
     }
   }
 
-  }
+}
 
 
 void adicionarAno( GArray* Anos, int musicId, int ano, int mes, int dia, int hora, int duracao,  int novo, int posicao)
 {
-
   Ano novoAno;
   Ano* anoAtual;
 
@@ -581,7 +618,6 @@ void adicionarAno( GArray* Anos, int musicId, int ano, int mes, int dia, int hor
      novoAno.musicas=g_array_new(FALSE, FALSE, sizeof(Musica));
      novoAno.dia = g_array_new(FALSE, FALSE, sizeof(Dia));
 
-       // Adiciona o novo ano ao GArray de anos
      g_array_insert_val(Anos,posicao, novoAno);
   }
  
@@ -589,7 +625,7 @@ void adicionarAno( GArray* Anos, int musicId, int ano, int mes, int dia, int hor
   insereMusica(anoAtual->musicas,musicId,duracao,novo);
   insereHora(anoAtual->horas,hora, duracao,novo);
   insereDia(mes, dia, anoAtual->dia, novo);
-  
+
 }
 
 
@@ -614,27 +650,27 @@ Domingo* newDomingo(char* data){
 
   History *inicializaUserHistory(int userId,  int musicId, int ano, int mes, int dia, int hora, int duration)
 {
-  History *userHistory = malloc(sizeof(History));
-  userHistory->anos = g_array_new(FALSE, FALSE, sizeof(Ano));
-  adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration,  1, 0);
-  userHistory->id = userId;
-  return userHistory;
+    History *userHistory = malloc(sizeof(History));
+    userHistory->anos = g_array_new(FALSE, FALSE, sizeof(Ano));
+    adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration,  1, 0);
+    userHistory->id = userId;
+    return userHistory;
 }
 
 
 void adicionaUserHistory(History *userHistory,  int musicId, int ano, int mes, int dia, int hora, int duration)
 {
-    int anoPosicao = procuraAno(userHistory, ano);
-   
+    // Se anoPosicao for -1 quer dizer que o ano ainda não existe 
+    int anoPosicao = procuraAno(userHistory, ano); 
+
     if (anoPosicao == -1)
     {
        int pAno= (int) userHistory->anos->len;
-    adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration, 1, pAno);
-      
+       adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration, 1, pAno);
     }
     else
     {
-   adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration, 0, anoPosicao);
+       adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration, 0, anoPosicao);
     }
   
 }
@@ -643,6 +679,7 @@ void freeUserHistory(History *history)
 {
   int nAnos=(int) history->anos->len;
   Ano* anos= (Ano*) history->anos->data;
+
   for (int i = 0; i < nAnos; i++)
   {
     GArray* musica= anos[i].musicas;
@@ -663,29 +700,14 @@ void freeUserHistory(History *history)
       {
         g_array_free(hora, TRUE);
       }
-   
   }
 
   if (history->anos)   g_array_free(history->anos, TRUE);
   free(history);
 }
 
-// void freeArtistas(Artistas *artista)
-// {
-//   free(artista->musicas);
-//   free(artista);
-// }
 
 
-
-
-void destroy_history(Domingo *domingo)
-{
-
-  free(domingo->data);
-
-  g_hash_table_destroy(domingo->artistahistory);
-}
 
 UmArtista* new_umArtista (int artist_id, int segundos){
     UmArtista* n_umart = malloc(sizeof(UmArtista)); 
@@ -709,8 +731,33 @@ void inserir_umartista_na_semana(GHashTable* artisthistory, UmArtista* novo_arti
     *key = artist_id;
 
     g_hash_table_insert(artisthistory, key, novo_artista);
-   // free(key); //isto nao é solucao para nada apenas traz erros
 
+}
+
+
+
+int get_seconds_from_garray (UmArtista* artista){
+    return artista->totalsemanalsegundos;
+}
+
+
+gint compare_seconds(gconstpointer a, gconstpointer b) {
+    
+    UmArtista *artist_a = *(UmArtista **)a;
+    UmArtista *artist_b = *(UmArtista **)b;
+
+    int segundos_a = get_seconds_from_garray(artist_a);
+    int segundos_b = get_seconds_from_garray(artist_b);
+
+    // Compara pela duração em segundos (ordem decrescente)
+    int r = segundos_b - segundos_a;
+
+    // Se os segundos forem iguais, compara pelo artist_id para ficar com o de menor id 
+    if (r == 0) {
+        r = artist_a->artist_id - artist_b->artist_id;
+    }
+
+    return r;
 }
 
 
@@ -764,82 +811,7 @@ void passa_Domingo_para_garray(Domingo* domingo) {
 }
 
 
-gint compare_seconds(gconstpointer a, gconstpointer b) {
-    
-    UmArtista *artist_a = *(UmArtista **)a;
-    UmArtista *artist_b = *(UmArtista **)b;
 
-    int segundos_a = get_seconds_from_garray(artist_a);
-    int segundos_b = get_seconds_from_garray(artist_b);
-
-    // Compara pela duração em segundos (ordem decrescente)
-    int r = segundos_b - segundos_a;
-
-    // Se os segundos forem iguais, compara pelo artist_id para ficar com o de menor id 
-    if (r == 0) {
-        r = artist_a->artist_id - artist_b->artist_id;
-    }
-
-    return r;
-}
-
-// Função para adicionar um artista ao Domingo
-void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
-{
-  // transforma o char music_id em int para conseguir encontrar a estrutura Music
-  int music_id = transformaIds(tokens[2]);
-
-    int numartistas = getnumartistaMusicControl(musicController, music_id);
-
-    //array de artistas que constituem essa musica
-    int* arrayartistas = getarrayArtistasMusicControl(musicController,music_id, numartistas);
-  
-
-  GHashTable *artistahistory = domingo->artistahistory;
-  if (!artistahistory)
-  {
-    fprintf(stderr, "Erro: artistahistory é NULL.\n");
-    return;
-  }
-  char *segundosparaadicionar = remove_quotes(tokens[4]);
-
-
-  int segundos = duration_to_seconds(segundosparaadicionar);
-
-  
-  // É PRECISO ALTERAR PARA QUANDO O NUMARTISTA É 0 ISTO É QUANDO NAO É UM GRUPO
-  if (numartistas > 0)
-  {
-    for (int i = 0; i < numartistas; i++)
-    {
-      int artist_id = arrayartistas[i];
-
-      UmArtista *artist_data = lookup_artista_historico(artistahistory, artist_id);
-
-      if (!artist_data)
-      {
-
-        UmArtista *novo_artista = new_umArtista(artist_id, segundos);
-        inserir_umartista_na_semana(artistahistory, novo_artista, artist_id);
-      }
-      else
-      {
-
-        artist_data->totalsemanalsegundos += segundos;
-      }
-     } 
-      } else {
-        printf("SOMETHING IS VERY WRONG\n");
-    }
-  free(arrayartistas);
-  free(segundosparaadicionar);
-}
-
-  
-int get_garray_len (Domingo* domingo){
-    return(domingo->artistahistory_garray->len);
-}
-//GETTERS E SETTEERS
 
 UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
     return g_hash_table_lookup(Artista, &artist_id);
@@ -847,13 +819,62 @@ UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
 }
 
 
-GArray* get_garray_from_domingo (Domingo* domingo){
-    return (domingo->artistahistory_garray);
+
+
+// Função para adicionar um artista ao Domingo
+void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
+{
+  // transforma o char music_id em int para conseguir encontrar a estrutura Music
+    int music_id = transformaIds(tokens[2]);
+    int numartistas = getnumartistaMusicControl(musicController, music_id);
+    //array de artistas que constituem essa musica
+    int* arrayartistas = getarrayArtistasMusicControl(musicController,music_id, numartistas);
+
+    GHashTable *artistahistory = domingo->artistahistory;
+    if (!artistahistory)
+    {
+        fprintf(stderr, "Erro: artistahistory é NULL.\n");
+        return;
+    }
+
+    char *segundosparaadicionar = remove_quotes(tokens[4]);
+    int segundos = duration_to_seconds(segundosparaadicionar);
+
+    if (numartistas > 0)
+   {
+      for (int i = 0; i < numartistas; i++)
+      {
+        int artist_id = arrayartistas[i];
+        UmArtista *artist_data = lookup_artista_historico(artistahistory, artist_id);
+
+        if (!artist_data)
+        {
+          UmArtista *novo_artista = new_umArtista(artist_id, segundos);
+          inserir_umartista_na_semana(artistahistory, novo_artista, artist_id);
+        }
+        else
+        {
+          artist_data->totalsemanalsegundos += segundos;
+        }
+      } 
+    } 
+    else {
+        printf("SOMETHING IS VERY WRONG\n");
+    }
+
+  free(arrayartistas);
+  free(segundosparaadicionar);
 }
 
 
 
+
+
+
+
+
 GArray* get_artistahistory_garray_copy(Domingo* dom) {
+
     if (!dom || !dom->artistahistory_garray) return NULL;
 
     // Cria um novo GArray com as mesmas propriedades do original
@@ -861,14 +882,15 @@ GArray* get_artistahistory_garray_copy(Domingo* dom) {
 
     // Itera pelos elementos e copia cada um
     for (guint i = 0; i < dom->artistahistory_garray->len; i++) {
-        UmArtista* original = g_array_index(dom->artistahistory_garray, UmArtista*, i);
 
+        UmArtista* original = g_array_index(dom->artistahistory_garray, UmArtista*, i);
         // Cria uma cópia do elemento
         UmArtista* copy_element = new_umArtista(original->artist_id, original->totalsemanalsegundos);
 
         // Adiciona ao novo GArray
         g_array_append_val(copy, copy_element);
     }
+
     g_array_sort(copy, (GCompareFunc)compare_seconds);
 
     return copy;
@@ -877,35 +899,11 @@ GArray* get_artistahistory_garray_copy(Domingo* dom) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// int get_garray_len (Domingo* domingo){
-//     return(domingo->artistahistory_garray->len);
-// }
-
-
 int get_artist_id_from_garray (UmArtista* artista){
     return artista->artist_id;
 }
 
 
-int get_seconds_from_garray (UmArtista* artista){
-    return artista->totalsemanalsegundos;
-}
 
 
 

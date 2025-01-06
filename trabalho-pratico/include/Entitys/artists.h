@@ -9,7 +9,7 @@
 #ifndef ARTISTS_H
 #define ARTISTS_H
 
-/** VER SE É PRECISO MAIS ALGUMA COISA
+/** 
  * @brief Estrutura que representa um artista.
  */
 typedef struct artists Artist;

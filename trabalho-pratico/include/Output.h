@@ -100,10 +100,25 @@ void output4(Output* output4, char* name, char* type, int num, char c);
  */
 void output5(Output* output5, char** usernames, int numrecomendacoes);
 
-
-
-
-
+/**
+ * @brief Função de saída para a Query 6.
+ * 
+ * A função imprime as estatísticas pedidas na query 6 no arquivo de saída associado à estrutura `Output`. 
+ * Se N for igual a 0 imprime tempoAudicao,nMusicas,artistId,data,genero,album,hora. 
+ * Se N for igual a 1 imprime artistId, nMusicas,tempoAudicao.
+ * Se c for igual a 'S' a função imprime as estatísticas separadas por '=', caso contrário imprime-as separadas por ';'.
+ * 
+ * @param c Caractere que determina o formato da saída ('S' ou outro).
+ * @param output6 A estrutura `Output` que contém o arquivo de saída.
+ * @param tempoAudição Uma string com o tempo de audição, total (N==0) ou de um artista(N==1), no formato hh:mm:ss a ser impresso .
+ * @param nMusicas Número de músicas ouvidas, no total (N==0) ou de um artista(N==1) a ser impresso.
+ * @param artistId String do Id do artista, mais ouvido (N==0) ou  N mais ouvido( N==1), a ser impresso.
+ * @param data String da data a ser impressa.
+ * @param genero String do genero favorito a ser impressa.
+ * @param album String do Id do album favorito a ser impressa.
+ * @param hora String da hora em que o user ouviu mais músicas a ser impressa.
+ * @param N Int que determina que variáveis serão impressas
+ */
 void output6(char c, Output* output6, char* tempoAudicao,int nMusicas,char* artistId,char* data,char* genero,char* album, char* hora,int N);
 
 

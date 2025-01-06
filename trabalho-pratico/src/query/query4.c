@@ -6,7 +6,7 @@
 #include "Entitys/history.h"
 #include "Entitys/musics.h"
 #include "Output.h"
-#include "querie/query4.h"
+#include "query/query4.h"
 
 
 #include <stdio.h>

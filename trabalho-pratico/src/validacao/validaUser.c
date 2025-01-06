@@ -12,14 +12,11 @@
 
 int validaUser(char* email, char* date, char* type,MusicData* musicsController,char* songs,int numSongs, Output* Erros, char* linha){
 
-
-
     if (songs[1] != '[') {
         outputErros(Erros,linha);
         return 0;
     }
     
-
     if (!(strcmp(type, "\"premium\"") == 0 || strcmp(type, "\"normal\"") == 0)){
         outputErros(Erros,linha);
         return 0;
@@ -30,7 +27,6 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
         return 0;
     }
 
-
     if(!(validaEmail(email))){
         outputErros(Erros,linha);
         return 0;
@@ -40,19 +36,14 @@ int validaUser(char* email, char* date, char* type,MusicData* musicsController,c
 
     for (int i = 0; i < numSongs; i++) {
        
-        if (lookup_musica(musicsController,liked_songs_id[i]) == NULL) {
+        if (isMusicValid(musicsController,liked_songs_id[i])) {
             outputErros(Erros,linha);
             freeArray(liked_songs_id);
             return 0;
         }
-    }
+    }   
 
+    freeArray(liked_songs_id);
 
-
-
-
-freeArray(liked_songs_id);
-    
-return 1;
-
+    return 1;
 }

@@ -208,6 +208,16 @@ int diaDaSemana(int ano, int mes, int dia);
 void calcularDomingoAnterior(const char *data, char *resultado);
 
 
+/**
+ * @brief Dá resize de um array, através do realloc.
+ * 
+ * Duplica o tamanho de um array, de int's se type for 'i' ou de char's se type for 'c'.
+ * 
+ * @param array Array que será aumentado em tamanho.
+ * @param oldSize Tamanho do array antes da função.
+ * @param type Indica o tipo do array.
+ * @return Devolve o array.
+ */
 void* resize(void* array, int oldSize, char type);
 
 
@@ -246,4 +256,4 @@ int verificaOrdemDatas(char *data1, char *data2);
 
 
 
-#endif // UTILIDADES_H
+#endif 

@@ -15,8 +15,6 @@ struct albumsData{
     GHashTable* albumsTable;
 };
 
-
-
 // Função para inicializar a hash table
 GHashTable* init_albums_table() {
     
@@ -35,19 +33,12 @@ GHashTable* init_albums_table() {
 
 }
 
-
-
 // Função para inserir um album na hash table usando o id como chave
 void insert_albums_into_table(GHashTable* albuns_table,Album* newAlbum ,int id) {
     int* key = malloc(sizeof(int));  // Aloca memória para a chave
-
     *key = id;
     g_hash_table_insert(albuns_table, key, newAlbum);
 }
-
-
-
-
 
 AlbumsData* albumsFeed(char* diretoria, ArtistsData* artistController) {
 
@@ -56,21 +47,15 @@ AlbumsData* albumsFeed(char* diretoria, ArtistsData* artistController) {
         fprintf(stderr,"Alocação de memória do AlbumsController não foi bem sucedido");
         exit(1);
     }  
-  
  
     ALData->albumsTable = init_albums_table();
-
     //Inicia o Parser e abre o ficheiro "albums.csv" do dataset
     Parser* parserE= newParser(diretoria,"albums.csv");
-
     // Ler a primeira linha do ficheiro  
     char* linha= pegaLinha(parserE);
     free(linha);
 
-
-    while (1) {
-        
-        
+    while (1) {  
         parserE= parser(parserE);
     
         char** tokens = getTokens(parserE);
@@ -84,37 +69,32 @@ AlbumsData* albumsFeed(char* diretoria, ArtistsData* artistController) {
         Album* newAlbum = createAlbum(tokens);
         // Insere os dados na hash table
         insert_albums_into_table(ALData->albumsTable, newAlbum , transformaIds(tokens[0]));
-    
         atualizaAlbuns(tokens[2],artistController);    
-
-
 
         free(getLineError(parserE));
         free(getLine(parserE));
     
     }     
-
-
-
     return ALData;
-
 }
 
+// Função para procurar um album pelo id (chave da hash table)
+Album* lookup_album(AlbumsData* controller, int id) {
 
+    return g_hash_table_lookup(controller->albumsTable, &id);
+
+}
+char* get_Album_Name(AlbumsData* albumController, int albumId)
+{
+    Album* album=lookup_album( albumController, albumId);
+    return getAlbumName(album);
+}
 
 // Função para libertar a memória alocada pela Hash Table contida em albums Data 
 void destroyTableAlbum(AlbumsData* AlbumData){
 
     g_hash_table_destroy(AlbumData->albumsTable);
     printf("Destrui albumsData\n");
-
-}
-
-
-// Função para procurar um album pelo id (chave da hash table)
-Album* lookup_album(AlbumsData* controller, int id) {
-
-    return g_hash_table_lookup(controller->albumsTable, &id);
 
 }
 
@@ -148,3 +128,12 @@ void print_all_albums(AlbumsData* data) {
     printf("----- Fim da Hash Table -----\n");
 
 }
+
+
+
+int isAlbumValid(AlbumsData* controlador,int id){
+    Album* album = lookup_album(controlador,id);
+    if(album == NULL) return 1;
+    return 0;
+}
+

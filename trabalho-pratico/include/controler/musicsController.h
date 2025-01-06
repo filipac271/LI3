@@ -20,14 +20,7 @@ typedef struct musicData MusicData;
  */
 MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* albumData);
 
-/**
- * @brief Procura uma música pelo seu ID.
- * 
- * @param controller Ponteiro para a estrutura MusicData.
- * @param music_id ID da música a ser procurada.
- * @return Ponteiro para a música encontrada, ou NULL se não encontrada.
- */
-Music* lookup_musica(MusicData* controller, int music_id);
+
 
 
 /**
@@ -90,8 +83,6 @@ int getnumartistaMusicControl(MusicData* musicController, int id);
  */
 int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas);
 
-
-
 /**
  * @brief Obtém o ID de uma música.
  * 
@@ -137,16 +128,22 @@ int get_music_duration_seconds_control(MusicData* musicController, int id);
  */
 char* get_music_year_control(MusicData* musicController, int id);
 
-
+/**
+ * @brief Obtém o id do album de uma música.
+ * 
+ * @param musicController Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser pesquisada.
+ * @return Id do Album da música como int. 
+ */
 int get_musicAlbum(MusicData* musicController , int musicId);
 
-int get_numArtists(MusicData* musicController,int musicId);
+/**
+ * @brief Verifica se uma música com o ID fornecido é válida.
+ * 
+ * @param controlador Ponteiro para o controlador de músicas.
+ * @param id ID da música a ser verificada.
+ * @return 1 se a música não existir (inválida), 0 se a música existir (válida).
+ */
+int isMusicValid (MusicData* controlador , int id);
 
-//int* getArtistIdMusic(MusicData* musicController,int musicId);
-
-char* get_musicGenre(MusicData* musicController, int musicId);
-
-int getnumartistaMusicControl (MusicData* musicController, int id);
-
-int* getarrayArtistasMusicControl(MusicData* musicController, int id, int numartistas);
 #endif

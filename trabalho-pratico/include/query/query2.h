@@ -28,7 +28,7 @@ Discography* create_discography(int artist_id, int segundos);
  * Esta função executa a lógica associada à Query 2, que geralmente envolve manipular ou analisar 
  * os dados dos artistas com base na entrada fornecida.
  */
-void querie2(ArtistsData* ArtistController, char* line, int i);
+void query2(ArtistsData* ArtistController, char* line, int i);
 
 #endif
 

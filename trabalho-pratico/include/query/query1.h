@@ -20,6 +20,6 @@
  * @param artistController Controlador que contém os dados dos artistas.
  *
  */
-void querie1(UsersData *userController, char *line, int i, ArtistsData *artistController);
+void query1(UsersData *userController, char *line, int i, ArtistsData *artistController);
 
 #endif

@@ -68,7 +68,6 @@ void print_all_Data(MainController* data){
 
 }
 
-
 void destroyData(MainController* data){
     destroyTableArtist(data->artistsController);
     destroyTableAlbum(data->albumsController);
@@ -89,7 +88,6 @@ UsersData* getUserController(MainController* data){
 
 MusicData* getMusicController (MainController* data){
     return data->musicsController;
-
 }
 
 ArtistsData* getartistController (MainController* data){
@@ -103,5 +101,4 @@ AlbumsData* getalbumController (MainController* data){
 
 HistoryData* gethistoryController (MainController* data){
     return data->historyController;
-
 }

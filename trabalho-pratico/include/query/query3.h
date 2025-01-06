@@ -12,7 +12,7 @@ typedef struct querie3 Genero;
 
 
 /**
- * @brief Realiza a consulta de géneros musicais para um intervalo de idades e grava os resultados em um arquivo.
+ * @brief Realiza a consulta de géneros musicais para um intervalo de idades e grava os resultados num arquivo.
  * 
  * Esta função processa uma linha de entrada contendo um intervalo de idades e, para cada idade dentro desse intervalo,
  * consulta os géneros musicais e a quantidade de músicas associada a cada género. Os géneros são então ordenados e
@@ -24,6 +24,6 @@ typedef struct querie3 Genero;
  * @param userController Controlador contendo os dados dos usuários.
  * 
  */
-void querie3(int num, char* line, UsersData* userController);
+void query3(int num, char* line, UsersData* userController);
 
 #endif

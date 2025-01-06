@@ -7,16 +7,12 @@
 #include "Input.h"
 #include "sys/resource.h"
 
-
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-
-
-
 
 struct musicData {
   GHashTable* musicsTable;
@@ -43,7 +39,6 @@ GHashTable* iniciar_hash_musica(){
   }
 
   return(hash_musica);
-
 }
 
 GArray* iniciarDiferentesGeneros(){
@@ -56,8 +51,8 @@ GArray* iniciarDiferentesGeneros(){
 //Inserir música na Hash Table
 void inserir_musica_na_htable(GHashTable* musica, Music* nova_musica, int music_id) {
     int* key = malloc(sizeof(int));  // Aloca memória para a chave
-
     *key = music_id;
+
     g_hash_table_insert(musica, key, nova_musica);
 }
 
@@ -104,10 +99,8 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
 
     //Inicia o Parser e abre o ficheiro "musics.csv" do dataset
     Parser* parserE= newParser(diretoria,"musics.csv");
-
     // Ler a primeira linha do ficheiro 
     char* line= pegaLinha(parserE);
-
     //Enviar a linha para o ficheiro musics_erros.csv, esta não será inserida hashTable
     outputErros(Erros,line);
     free(line);
@@ -115,7 +108,6 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
     while (1) {
 
         parserE= parser(parserE); 
-
         char** tokens= getTokens(parserE);
 
         if (tokens==NULL) 
@@ -126,8 +118,7 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
         }
 
         // Linha do input para validação, esta será enviada para o output de erros caso não seja válida
-        char* linhaE=getLineError(parserE);
-        
+        char* linhaE=getLineError(parserE);  
         int isValid = validaMusic(tokens[4],tokens[2],artistsData, Erros,linhaE, albumData,tokens[3]);
 
         // Se a linha for válida é criado a música e é inserida na Hash Table das músicas, é também atualizada a discografia do seu artista
@@ -136,21 +127,16 @@ MusicData* musicsFeed(char* diretoria, ArtistsData* artistsData, AlbumsData* alb
           Music* nova_musica = new_music(tokens);
           // Soma o tempo da música à discografia de todos os seus autores
           inserir_discography_into_artist(artistsData,tokens[4],tokens[2]);
-
           // Inserir os dados na hash table
           inserir_musica_na_htable(MData->musicsTable,nova_musica,transformaIds(tokens[0]));
         }
 
         free(linhaE);
         free(getLine(parserE));
-
   }
-  
     // Liberta a memória alocada pelo Output Erros e fecha o ficheiro dos erros
     freeOutput(Erros);
-  
     return MData;
-
 }
 
 
@@ -174,7 +160,6 @@ int getnumGenerosDif (MusicData* musicController){
 
 // Função para procurar uma música pelo id (chave da hash table)
 Music* lookup_musica(MusicData* controller, int music_id){
- // printf("CENA %d\n", music_id);
 
   return g_hash_table_lookup(controller->musicsTable, &music_id);
 }
@@ -211,9 +196,6 @@ void print_all_musics(MusicData* musica) {
 }
 
 
-
-
-
 void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* artistcontroller){
 
   int music_id = transformaIds(idMusica);
@@ -226,7 +208,6 @@ void atualizaStreams (char* idMusica, MusicData* musicController, ArtistsData* a
     
   put_stream_into_Artist(numartistas,arrayartistas,artistcontroller);
 
-  
   free(arrayartistas);
   
 }
@@ -239,26 +220,7 @@ int get_musicAlbum(MusicData* musicController , int musicId)
      return album;
 }
 
-//Igual 1
-int get_numArtists(MusicData* musicController,int musicId)
-{
-  
-  Music* music=lookup_musica(musicController, musicId);
-  if(music==NULL)printf("%d\n", musicId);
-  int numartistas= get_numArtistsId(music);
-  return numartistas; 
-}
 
-// igual 2
- char* get_musicGenre(MusicData* musicController, int musicId)
- {
-     Music* music=lookup_musica(musicController, musicId);
-     char* genero=get_music_genre(music);
-     return genero;
- }
-
-
-//igual 2
 char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type){
   char* genero = NULL;
   if(type == 's'){
@@ -275,7 +237,7 @@ char* getMusicGenreControl(void* idMusic, MusicData* musicController,char type){
   return genero;
 }
 
-//Igual 1
+
 int getnumartistaMusicControl (MusicData* musicController, int id){
   Music* musica_atual = lookup_musica(musicController, id);
   return get_numArtistsId(musica_atual);
@@ -311,4 +273,12 @@ char* get_music_year_control(MusicData* musicController, int id) {
     Music* musica_atual = lookup_musica(musicController, id);
     return get_music_year(musica_atual);
 }
+
+int isMusicValid (MusicData* controlador , int id){
+  Music* musico = lookup_musica(controlador,id);
+  if (musico == NULL)return 1;
+  return 0;
+}
+
+
 

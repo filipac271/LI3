@@ -30,7 +30,7 @@ int validaMusic(char *duracaoAspas, char *music_artists, ArtistsData *artistsCon
   for (int i = 0; i < numArtistsId; i++)
   {
 
-    if (lookup_artist(artistsController, artistsId[i]) == NULL)
+    if (isArtistValid(artistsController,artistsId[i]))
     {
       freeArray(artistsId);
       outputErros(Erros, linha);
@@ -38,7 +38,7 @@ int validaMusic(char *duracaoAspas, char *music_artists, ArtistsData *artistsCon
     }
   }
 
-  if (lookup_album(albumController, transformaIds(albumId)) == NULL)
+  if (isAlbumValid(albumController,transformaIds(albumId)))
   {
     freeArray(artistsId);
     outputErros(Erros, linha);
