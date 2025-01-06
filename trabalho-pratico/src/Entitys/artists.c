@@ -1,4 +1,4 @@
-#include "Entitys/artists.h"
+#include "Entities/artists.h"
 #include "utilidades.h"
 
 #include <stdlib.h>

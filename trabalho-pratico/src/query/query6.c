@@ -1,5 +1,5 @@
 #include "controler/historyController.h" 
-#include "Entitys/history.h"
+#include "Entities/history.h"
 #include "utilidades.h"
 #include "Output.h"
 #include <stdio.h>

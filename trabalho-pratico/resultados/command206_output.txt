@@ -1,0 +1,6 @@
+Joshua=group=10:45:33=Puerto Rico
+Lil Ashley=individual=09:24:42=Puerto Rico
+The child=group=09:18:14=Puerto Rico
+Both Job=individual=08:31:09=Puerto Rico
+Chocolate Miss=individual=08:25:03=Puerto Rico
+Timothy Brown=individual=08:22:34=Puerto Rico

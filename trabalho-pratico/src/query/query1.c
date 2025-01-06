@@ -1,8 +1,8 @@
 
 #include "controler/usersController.h"
 #include "controler/artistsController.h"
-#include "Entitys/artists.h"
-#include "Entitys/users.h"
+#include "Entities/artists.h"
+#include "Entities/users.h"
 #include "Output.h"
 #include "utilidades.h"
 

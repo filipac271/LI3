@@ -1,5 +1,5 @@
-#include "Entitys/artists.h"
-#include "Entitys/musics.h"
+#include "Entities/artists.h"
+#include "Entities/musics.h"
 #include "controler/artistsController.h"
 #include "validacao/validaArtista.h"
 #include "utilidades.h"

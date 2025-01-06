@@ -1,4 +1,4 @@
-#include "Entitys/albums.h"
+#include "Entities/albums.h"
 #include "utilidades.h"
 
 #include "stdlib.h"

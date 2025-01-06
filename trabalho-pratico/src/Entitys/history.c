@@ -1,4 +1,4 @@
-#include "Entitys/musics.h"
+#include "Entities/musics.h"
 #include "controler/musicsController.h"
 #include "utilidades.h"
 #include <stdlib.h>
@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <glib.h>
 
-#include "Entitys/history.h"
-#include "Entitys/artists.h"
+#include "Entities/history.h"
+#include "Entities/artists.h"
 #include "controler/historyController.h"
 
 // Artistahistory
@@ -78,8 +78,7 @@ struct userHistory
 
 
 
-//Userhistory
-
+//As funções até à linha 641 são referentes ao UserHistory
 int comparaArtistas(const void *a, const void *b)
 {
   Artistas* A=(Artistas*)a;
@@ -478,54 +477,6 @@ void insereDia(int mes, int dia, GArray* Dias, int novo)
   }
 }
 
-void freeUmArtista (UmArtista* artista){
-    if(artista == NULL){
-        return;
-    } 
-    free(artista);
-}
-
-// Função para libertar o GArray e seus dados
-void free_garray_with_data(GArray* array) {
-    if (array != NULL) {
-        // Itera sobre o GArray e liberta cada elemento
-        guint i;
-        for (i = 0; i < array->len; i++) {
-            UmArtista* artista = g_array_index(array, UmArtista*, i);
-            freeUmArtista(artista);  // Liberta os dados (cada UmArtista)
-        }
-        g_array_free(array, FALSE);  
-    }
-}
-
-void free_garray_with_data2(GArray* array) {
-    if (array != NULL) {
-        // Itera sobre o GArray e liberta cada elemento
-        guint i;
-        for (i = 0; i < array->len; i++) {
-            UmArtista* artista = g_array_index(array, UmArtista*, i);
-            freeUmArtista(artista);  // Liberta os dados (cada UmArtista)
-        }
-        g_array_free(array, TRUE);  
-    }
-}
-
-void freeDomingo(Domingo* domingo) {
-    free(domingo->data);  
-
-    for (guint i = 0; i < domingo->artistahistory_garray->len; i++) {
-    // Obter o ponteiro para UmArtista no índice i
-    UmArtista* artista = g_array_index(domingo->artistahistory_garray, UmArtista*, i);
-
-    // Libertar a estrutura com a função específica
-    freeUmArtista(artista);
-    }
-    // Libertar o GArray
-    g_array_free(domingo->artistahistory_garray, TRUE);
-    free(domingo);
-
-}
-
 
 int procura_Artista(Artistas *artistas, int N, int artistId)
 {
@@ -539,8 +490,6 @@ int procura_Artista(Artistas *artistas, int N, int artistId)
   }
   return -1;
 }
-
-
 
 
 void insereHora(GArray* horas,int hour,int duracao,int novo)
@@ -628,36 +577,6 @@ void adicionarAno( GArray* Anos, int musicId, int ano, int mes, int dia, int hor
 
 }
 
-
-Domingo* newDomingo(char* data){
-   // Aloca memória para a estrutura
-    Domingo* novo_domingo = malloc(sizeof(Domingo));
-    if (!novo_domingo) {
-        fprintf(stderr, "Erro ao alocar memória para Domingo\n");
-        return NULL;
-    }
-
-    novo_domingo->data = strdup(data); // Duplica a string passada como parâmetro
-
-    // Cria a hash table para armazenar o histórico dos artistas   
-    novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, NULL, (GDestroyNotify)freeUmArtista);
-
-    novo_domingo->artistahistory_garray = g_array_new(FALSE, FALSE, sizeof(UmArtista*));
-  
-    return novo_domingo;
-}
-
-
-  History *inicializaUserHistory(int userId,  int musicId, int ano, int mes, int dia, int hora, int duration)
-{
-    History *userHistory = malloc(sizeof(History));
-    userHistory->anos = g_array_new(FALSE, FALSE, sizeof(Ano));
-    adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration,  1, 0);
-    userHistory->id = userId;
-    return userHistory;
-}
-
-
 void adicionaUserHistory(History *userHistory,  int musicId, int ano, int mes, int dia, int hora, int duration)
 {
     // Se anoPosicao for -1 quer dizer que o ano ainda não existe 
@@ -704,6 +623,75 @@ void freeUserHistory(History *history)
 
   if (history->anos)   g_array_free(history->anos, TRUE);
   free(history);
+}
+
+
+  History *inicializaUserHistory(int userId,  int musicId, int ano, int mes, int dia, int hora, int duration)
+{
+    History *userHistory = malloc(sizeof(History));
+    userHistory->anos = g_array_new(FALSE, FALSE, sizeof(Ano));
+    adicionarAno( userHistory->anos, musicId, ano, mes, dia, hora, duration,  1, 0);
+    userHistory->id = userId;
+    return userHistory;
+}
+
+
+
+
+//A partir daqui as funções são referentes à estrutura Domingo
+void freeUmArtista (UmArtista* artista){
+    if(artista == NULL){
+        return;
+    } 
+    free(artista);
+}
+
+// Função para libertar o GArray, os seus dados e a propria estrutura
+void free_garray_with_data(GArray* array) {
+    if (array != NULL) {
+        // Itera sobre o GArray e liberta cada elemento
+        guint i;
+        for (i = 0; i < array->len; i++) {
+            UmArtista* artista = g_array_index(array, UmArtista*, i);
+            freeUmArtista(artista);  // Liberta cada UmArtista
+        }
+        g_array_free(array, TRUE);  
+    }
+}
+
+void freeDomingo(Domingo* domingo) {
+    free(domingo->data);  
+
+    for (guint i = 0; i < domingo->artistahistory_garray->len; i++) {
+    // Obter o ponteiro para UmArtista no índice i
+    UmArtista* artista = g_array_index(domingo->artistahistory_garray, UmArtista*, i);
+
+    // Libertar a estrutura com a função específica
+    freeUmArtista(artista);
+    }
+    // Libertar o GArray
+    g_array_free(domingo->artistahistory_garray, TRUE);
+    free(domingo);
+
+}
+
+
+Domingo* newDomingo(char* data){
+   // Aloca memória para a estrutura
+    Domingo* novo_domingo = malloc(sizeof(Domingo));
+    if (!novo_domingo) {
+        fprintf(stderr, "Erro ao alocar memória para Domingo\n");
+        return NULL;
+    }
+
+    novo_domingo->data = strdup(data); // Duplica a string passada como parâmetro
+
+    // Cria a hash table para armazenar o histórico dos artistas   
+    novo_domingo->artistahistory = g_hash_table_new_full(g_int_hash, g_int_equal, NULL, (GDestroyNotify)freeUmArtista);
+
+    novo_domingo->artistahistory_garray = g_array_new(FALSE, FALSE, sizeof(UmArtista*));
+  
+    return novo_domingo;
 }
 
 
@@ -760,7 +748,7 @@ gint compare_seconds(gconstpointer a, gconstpointer b) {
     return r;
 }
 
-
+//Esta função passa o conteudo da Hash Table para um garray fazendo algumas alteraçoes
 void passa_Domingo_para_garray(Domingo* domingo) {
     if (domingo == NULL || domingo->artistahistory == NULL || domingo->artistahistory_garray == NULL) {
         return;
@@ -811,13 +799,10 @@ void passa_Domingo_para_garray(Domingo* domingo) {
 }
 
 
-
-
 UmArtista* lookup_artista_historico(GHashTable* Artista, int artist_id){
     return g_hash_table_lookup(Artista, &artist_id);
 
 }
-
 
 
 
@@ -868,11 +853,7 @@ void new_or_add(Domingo *domingo, char **tokens, MusicData *musicController)
 
 
 
-
-
-
-
-
+//Getter da copia do garray
 GArray* get_artistahistory_garray_copy(Domingo* dom) {
 
     if (!dom || !dom->artistahistory_garray) return NULL;
@@ -897,8 +878,7 @@ GArray* get_artistahistory_garray_copy(Domingo* dom) {
 }
 
 
-
-
+//getter do id
 int get_artist_id_from_garray (UmArtista* artista){
     return artista->artist_id;
 }
@@ -907,10 +887,7 @@ int get_artist_id_from_garray (UmArtista* artista){
 
 
 
-
-
-
-//FUNCOES PRINTS 
+//FUNCOES PRINTS apenas utilizadas para fazer debug
 void print_artisthistory (UmArtista* artista) {
     if (artista) {
         printf("ARTIST_ID: %d\n", artista->artist_id);

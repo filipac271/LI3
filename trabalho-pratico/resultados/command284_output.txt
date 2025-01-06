@@ -1,0 +1,10 @@
+Metal=927290
+Jazz=921694
+Pop=921654
+Reggae=921449
+Electronic=920974
+Classical=920621
+Country=919432
+Blues=918885
+Hip Hop=917520
+Rock=915206

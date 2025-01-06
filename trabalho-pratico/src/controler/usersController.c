@@ -2,7 +2,7 @@
 #include "controler/musicsController.h"
 #include "validacao/validaUser.h"
 #include "utilidades.h"
-#include "Entitys/users.h"
+#include "Entities/users.h"
 #include "Input.h"
 
 #include <glib.h>

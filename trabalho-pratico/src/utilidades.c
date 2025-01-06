@@ -8,7 +8,7 @@
 
 #include "utilidades.h"
 #include "controler/musicsController.h"
-#include "Entitys/history.h"
+#include "Entities/history.h"
 
 
 

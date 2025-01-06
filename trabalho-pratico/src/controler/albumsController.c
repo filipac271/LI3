@@ -1,7 +1,7 @@
 #include "utilidades.h"
 #include "Output.h"
 #include "Input.h"
-#include "Entitys/albums.h"
+#include "Entities/albums.h"
 #include "controler/albumsController.h"
 #include "controler/artistsController.h"
 
