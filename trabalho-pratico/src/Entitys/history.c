@@ -18,7 +18,7 @@ struct artistahistory{
 
 struct domingo{
     char* data ;
-    GHashTable* artistahistory; //mudar para garray
+    GHashTable* artistahistory; 
     GArray* artistahistory_garray;
 };
 
