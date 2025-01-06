@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <glib.h>
 
-#include "Entitys/users.h"
+#include "Entities/users.h"
 
 
 /**

@@ -16,7 +16,7 @@
 #include "controler/albumsController.h"
 
 #include "controler/historyController.h"
-#include "Entitys/history.h"
+#include "Entities/history.h"
 
 
 

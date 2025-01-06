@@ -5,7 +5,7 @@
 #include "controler/artistsController.h"
 #include "controler/musicsController.h"
 #include "controler/historyController.h"
-#include "Entitys/history.h"
+#include "Entities/history.h"
 
 
 /**

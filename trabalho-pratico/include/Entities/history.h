@@ -261,11 +261,27 @@ void print_artisthistory_entry(gpointer key, gpointer value, gpointer user_data)
  */
 void print_semana_completa(gpointer key, gpointer value, gpointer user_data);
 
-
-
-
+/**
+ * @brief Obtém uma cópia do GArray que contém o histórico dos artistas.
+ *
+ * Esta função retorna uma cópia do GArray associado ao histórico de artistas de `Domingo`. 
+ * Cada elemento do GArray original será copiado para um novo GArray.
+ *
+ * @param dom Um pointer para a estrutura `Domingo` que contém o histórico de artistas.
+ * @return Um pointer para um novo GArray contendo os dados copiados. Deve ser liberado com free_garray_with_data` após o uso.
+ */
 GArray* get_artistahistory_garray_copy(Domingo* dom);
 
-void free_garray_with_data2(GArray* array);
+/**
+ * @brief Libera a memória de um GArray, tanto a estrutura como os dados armazenados nela.
+ *
+ * Esta função liberta tanto o GArray quanto os dados do mesmo. Começa pro percorrer o Garray e vai libertanto UmArtista de cada vez
+ * com a função 'freeUmArtista'. No final liberta a estrutura Garray.
+ *
+ * @param array Um pointer para o GArray a ser libertado. O pointer não é válido após a chamada para esta função.
+ */
+void free_garray_with_data(GArray* array);
+
+
 
 #endif

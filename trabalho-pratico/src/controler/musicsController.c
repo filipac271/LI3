@@ -3,7 +3,7 @@
 #include "controler/albumsController.h"
 #include "utilidades.h"
 #include "validacao/validaMusic.h"
-#include "Entitys/musics.h"
+#include "Entities/musics.h"
 #include "Input.h"
 #include "sys/resource.h"
 

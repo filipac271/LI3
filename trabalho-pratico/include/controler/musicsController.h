@@ -1,6 +1,6 @@
 #ifndef MUSICSCONTROLLER_H
 #define MUSICSCONTROLLER_H
-#include "Entitys/musics.h"
+#include "Entities/musics.h"
 #include "controler/artistsController.h"
 #include "controler/albumsController.h"
 

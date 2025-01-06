@@ -1,6 +1,6 @@
 #include "controler/artistsController.h"
 #include "utilidades.h"
-#include "Entitys/artists.h"
+#include "Entities/artists.h"
 #include "Output.h"
 #include "query/query2.h"
 

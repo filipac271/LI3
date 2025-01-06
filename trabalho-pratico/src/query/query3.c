@@ -1,6 +1,6 @@
 #include "controler/usersController.h"
 #include "utilidades.h"
-#include "Entitys/users.h"
+#include "Entities/users.h"
 #include "Output.h"
 
 #include <stdio.h>

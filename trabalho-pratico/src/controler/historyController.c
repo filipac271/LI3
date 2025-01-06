@@ -3,8 +3,8 @@
 #include "controler/albumsController.h"
 #include "validacao/validaHistory.h"
 #include "utilidades.h"
-#include "Entitys/users.h"
-#include "Entitys/history.h"
+#include "Entities/users.h"
+#include "Entities/history.h"
 #include "Input.h"
 #include "Output.h"
 
@@ -14,7 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "Entitys/history.h"
+#include "Entities/history.h"
 #include "controler/historyController.h"
 
 
@@ -299,7 +299,7 @@ int id_maiores_ocorrencias(HistoryData* HistoryController, int* maior_n_ocorrenc
                 *maior_n_ocorrencias = max_ocorrencias;
             }
         }
-        free_garray_with_data2(top_semanal);
+        free_garray_with_data(top_semanal);
         //g_array_free(top_semanal, TRUE);
     }
     g_hash_table_destroy(hash_auxiliar);
@@ -371,7 +371,7 @@ if (data_inicio != NULL && data_fim != NULL && strcmp(data_inicio, "") != 0 && s
 
                 }
             }
-            free_garray_with_data2(top_semanal);
+            free_garray_with_data(top_semanal);
             //g_array_free(top_semanal, TRUE);
         }
     }

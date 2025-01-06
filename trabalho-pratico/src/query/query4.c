@@ -2,9 +2,9 @@
 #include "controler/historyController.h"
 #include "controler/musicsController.h"
 #include "utilidades.h"
-#include "Entitys/artists.h"
-#include "Entitys/history.h"
-#include "Entitys/musics.h"
+#include "Entities/artists.h"
+#include "Entities/history.h"
+#include "Entities/musics.h"
 #include "Output.h"
 #include "query/query4.h"
 

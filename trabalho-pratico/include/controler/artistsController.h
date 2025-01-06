@@ -1,7 +1,7 @@
 #ifndef ARTISTSCONTROLLER_H
 #define ARTISTSCONTROLLER_H
 #include <glib.h>
-#include "Entitys/artists.h"
+#include "Entities/artists.h"
 
 /**
  * @typedef 

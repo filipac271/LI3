@@ -3,7 +3,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "Entitys/albums.h"
+#include "Entities/albums.h"
 #include "controler/artistsController.h"
 
 /**
