@@ -1,7 +1,0 @@
-Alexander=individual=10:21:39=Tajikistan
-Connie Williams=individual=09:27:07=Tajikistan
-Lil Nicholas=individual=08:40:46=Tajikistan
-LightCyan Benefit=group=07:43:58=Tajikistan
-GreenYellow Early=individual=07:02:56=Tajikistan
-The morning=group=06:40:44=Tajikistan
-Type Lead=individual=06:28:47=Tajikistan

@@ -1,8 +1,0 @@
-MC Lonnie;individual;11:11:34;Cote d'Ivoire
-LightSeaGreen Main;individual;09:00:31;Cote d'Ivoire
-Jeffrey;individual;08:40:44;Cote d'Ivoire
-DJ Susan;individual;08:40:04;Cote d'Ivoire
-DJ Timothy;individual;08:32:45;Cote d'Ivoire
-Lil Pamela;individual;07:36:52;Cote d'Ivoire
-Jesse;individual;07:34:46;Cote d'Ivoire
-Lil Veronica;individual;07:32:33;Cote d'Ivoire

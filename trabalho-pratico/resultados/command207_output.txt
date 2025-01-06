@@ -1,4 +1,0 @@
-Door Response=group=11:37:13=Palau
-MC Andrea=individual=11:23:39=Palau
-MC Karen=individual=08:49:24=Palau
-NavajoWhite Ability=individual=08:34:48=Palau

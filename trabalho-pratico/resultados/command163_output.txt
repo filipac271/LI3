@@ -1,7 +1,0 @@
-Near Republican=group=10:55:20=Mexico
-BurlyWood Stock=group=10:24:49=Mexico
-DJ Amanda=individual=09:46:01=Mexico
-Lil Amanda=individual=09:15:38=Mexico
-DJ Meghan=individual=09:05:48=Mexico
-Lil Katherine=individual=08:29:26=Mexico
-MC Anthony=individual=08:26:09=Mexico

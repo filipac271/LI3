@@ -1,6 +1,0 @@
-Occur Picture=group=09:07:42=Lithuania
-Job Language=individual=08:52:49=Lithuania
-Provide Statement=group=08:50:39=Lithuania
-Election Always=individual=08:45:05=Lithuania
-Erin Ford=individual=08:25:53=Lithuania
-DJ Alexander=individual=08:05:12=Lithuania
