@@ -1,26 +1,25 @@
 # Laboratórios de Informática III (2024/2025) 🎵 
 
-Este repositório contém um projeto desenvolvido para a disciplina de **Laboratórios de Informática III**. O objetivo foi criar uma versão "simplificada" do backend do Spotify utilizando a linguagem **C**. ♫⋆｡♪ ₊˚♬ ﾟ.
+This repository contains a project developed for the **Informatics Laboratory III** course. The goal was to create a "simplified" version of Spotify's backend to learn encapsulation, modularity, and optimization using the **C** language. ♫⋆｡♪ ₊˚♬ ﾟ.
 
-## 📊 Nota Final
+## 📊 Final Grade
 
 🟢 **19/20**
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Technologies Used
 
-- Linguagem C
-- Bibliteca GLib
-- Comentarios Doxygen
-- Estruturas de dados (Hash table, listas, Garrays, etc)
-- Manipulação de arquivos
-- Algoritmos de procura e ordenação
+- C Programming Language
+- GLib Library
+- Doxygen Comments
+- Data Structures (Hash Table, Lists, GArrays, etc.)
+- File Handling
+- Search and Sorting Algorithms
 
-É de notar que este projeto foi desenvolvido em Linux utilizando o compilador GCC.
+It is important to note that this project was developed on Linux using the GCC compiler.
 
-## ✍️ Grupo
+## ✍️ Group Members
 
 * Diogo José Ribeiro e Ribeiro - A106906 - DIOGO4810
 * Carolina Silva Martins - A107285 - Carolllina
 * Filipa Cangueiro Gonçalves - A107329 - filipac271
-
 
